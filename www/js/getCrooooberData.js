@@ -75,7 +75,19 @@ function createResult(data, type, parameters){ //type=1:トップのボタン, t
 				pic_url: el.querySelector("img").getAttribute("src").replace("//", "http://")
 			};
 
-			dom_str += "<div onClick='getDetailInfo()' detailUrl='" + data.detail_url + "'>" + data.title + ": " + data.price + "<img src='" + data.pic_url + "'></div>";
+			//dom_str += "<div onClick='getDetailInfo()' detailUrl='" + data.detail_url + "'>" + data.title + ": " + data.price + "<img src='" + data.pic_url + "'></div>";
+
+			dom_str += "<div class='item_header_wrapper' onClick='getDetailInfo()' detailUrl='" + data.detail_url + "'>";
+			dom_str += "<div class='item_header_text_info'>";
+			dom_str += "<div>";
+			dom_str += data.title;
+			dom_str += "</div>";
+			dom_str += "<div>";
+			dom_str += data.price;
+			dom_str += "</div>";
+			dom_str += "</div>";
+			dom_str += "<img src='" + data.pic_url + "'>";
+			dom_str += "</div>";
 
 		}
 
@@ -144,10 +156,10 @@ function sendRequest(url, parameters, type){
 			//outLog(data);
 
 
-
+			/*
 			outLog("ajax success!!");
 			outLog("is this flow through??");
-			
+			*/
 			createResult(data, type, parameters);
 
 		},

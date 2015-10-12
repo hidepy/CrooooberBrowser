@@ -1,22 +1,5 @@
-function button_clicked(){
-
-	var url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
-	//var url = "http://www.croooober.com/bparts/search?";
-	var search_key = document.getElementById("search_key").value;
-
-	if((search_key != null) && (search_key != "")){
-
-		var parameters = "";
-		{
-			parameters += "word=" + encodeURIComponent(search_key);
-			parameters += "&length=50";
-		}
-
-		sendRequest(url, parameters, 1);
-	}
-	else{
-		outLog("no search key...");
-	}
+function button_clicked(event){
+	getHeaderInfo(event);
 }
 
 function button_clicked_to_local(){

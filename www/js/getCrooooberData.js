@@ -1,25 +1,15 @@
 //http://www.croooober.com/item/4041918
 
-function getDetailInfo(event){
-	outLog("getDetailInfo Driven");
-	console.log(event);
+function createResultItemsHeader(data, type, parameters){ //type=1:トップのボタン, type=2:さらに読み込むボタン
 
-	var url = event.getAttribute("detailurl");
-
-	console.log("send request to url:" + url);
-
-}
-
-
-function createResult(data, type, parameters){ //type=1:トップのボタン, type=2:さらに読み込むボタン
-
-	console.log("in createResult");
-	//outLog(data); //ここまで来てる
+	console.log("in createResultItemsHeader");
 
 	var dom_parser = new DOMParser();
 	var got_html_document = null;
 
 	//var _data = "<html><head><title>test</title></head><body><p>no item</p></body></html>";
+
+	//console.log(data);
 
 	try{
 		got_html_document = dom_parser.parseFromString(data, "text/html");
@@ -30,16 +20,18 @@ function createResult(data, type, parameters){ //type=1:トップのボタン, t
 			return false;
 		}
 		
-
 		//parseに失敗した場合...
 		if(got_html_document.getElementsByTagName("parsererror").length > 0){
 			got_html_document = null;
 		}
 
+
+		console.log(got_html_document.body);
+
 		//検索結果の件数取得
 		var dom_str = "";
 		var search_result_num = got_html_document.querySelector(".search_result_num");
-		{
+		if(search_result_num != null){
 			dom_str = "<div id='search_result_num'>ヒット件数：" + search_result_num.querySelector("span").innerHTML + "件</div>";
 		}
 
@@ -47,10 +39,10 @@ function createResult(data, type, parameters){ //type=1:トップのボタン, t
 
 		var el_item_box = got_html_document.querySelectorAll(".item_box");
 
+		console.log(el_item_box);
+
 		var item_header_data = {};
 		item_header_data = [];
-
-
 
 		for(var i = 0; i < el_item_box.length; i++){
 			var el = el_item_box[i];
@@ -65,34 +57,17 @@ function createResult(data, type, parameters){ //type=1:トップのボタン, t
 
 			item_header_data[i] = data;
 
-			//dom_str += "<div onClick='getDetailInfo()' detailUrl='" + data.detail_url + "'>" + data.title + ": " + data.price + "<img src='" + data.pic_url + "'></div>";
-
-			/*
-			dom_str += "<li class='item_header_wrapper list-divider' onClick='getDetailInfo(this)' detailUrl='" + data.detail_url + "'>";
-			dom_str += "<div class='item_header_text_info'>";
-			dom_str += "<div>";
-			dom_str += data.title;
-			dom_str += "</div>";
-			dom_str += "<div>";
-			dom_str += data.price;
-			dom_str += "</div>";
-			dom_str += "</div>";
-			dom_str += "<img src='" + data.pic_url + "'>";
-			dom_str += "</li>";
-			*/
-
 		}
 
-		console.log(item_header_data);
+		//console.log(item_header_data);
 
+		
 		var template_item_headers = Handlebars.compile($("#item_header_search_result").html());
 
-
-		console.log("before set value");
+		$("#contents_wrapper").empty();
 		$("#contents_wrapper").html(template_item_headers(item_header_data));
+		
 
-		//$("#contents_wrapper").empty();
-		//$("#contents_wrapper").html(template_item_headers(data));
 
 		/*
 		//次を読み込むボタンの作成
@@ -115,23 +90,106 @@ function createResult(data, type, parameters){ //type=1:トップのボタン, t
 	}
 }
 
+function createResultItemDetail(data){
+	console.log("in createResultItemDetail!!");
+
+	//必要情報の抜き出し
+	/*
+	title: #title > item_title
+	pictures: #slideshow_thumb img
+	tbody: .riq01 tbody
+	comment: .riq01 p
+	*/
+
+	var dom_parser = new DOMParser();
+	var got_html_document = null;
+
+	//var _data = "<html><head><title>test</title></head><body><p>no item</p></body></html>";
+
+	try{
+		got_html_document = dom_parser.parseFromString(data, "text/html");
+
+		if(got_html_document == null){
+			outLog("got_html_document is null...");
+
+			return false;
+		}
+		
+		//parseに失敗した場合...
+		if(got_html_document.getElementsByTagName("parsererror").length > 0){
+			got_html_document = null;
+		}
+
+
+		var el = got_html_document;
+
+		//必要箇所を抽出
+		var data = {
+			title: el.querySelector("#title > .item_title").innerHTML,
+			pictures: el.querySelectorAll("#slideshow_thumb img"),
+			tbody: el.querySelector(".riq01 tbody"),
+			comment: el.querySelectorAll(".riq01 p")
+		};
+
+		//取得したデータを、Handlebars.jsで当てはめていく
+		console.log(data);
+
+	}
+	catch(e){
+		console.log(e);
+	}
+
+}
+
+/* Crooooberから商品ヘッダ一覧を取得する */
+function getHeaderInfo(event){
+	var url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
+	//var url = "http://www.croooober.com/bparts/search?";
+	var search_key = document.getElementById("search_key").value;
+
+	if((search_key != null) && (search_key != "")){
+
+		var parameters = "";
+		{
+			parameters += "word=" + encodeURIComponent(search_key);
+			parameters += "&length=50";
+		}
+
+		sendRequest(url, parameters, 1, createResultItemsHeader);
+	}
+	else{
+		outLog("no search key...");
+	}
+}
+
+/* Crooooberから商品明細を取得する */
+function getDetailInfo(event){
+	outLog("getDetailInfo Driven");
+	console.log(event);
+
+	var url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContentDetail.php?";
+	var parameters = "detail_path=" + event.getAttribute("datailurl");
+
+	console.log("send request to url:" + parameters);
+      
+	sendRequest(url, parameters, null, createResultItemDetail);
+
+}
+
+
 var msg_no_searchKey = "検索キーが入力されていません";
 
 function initialize() {};
 
-
-
 //ajaxでリクエストを飛ばす
-function sendRequest(url, parameters, type){
-
-	//outLog("url:" + url + "/getCrooooberContents.php?" + parameters);
+function sendRequest(url, parameters, type, callback){
 
 	//$.support.cors = true;
 	//$.mobile.allowCrossDomainPages = true;
 
+	
 	$.ajax({
-		//url: url + parameters,
-		url: "debug_html.txt",
+		url: url + parameters,
 		beforeSend: function(jqXHR){
 			outLog("in beforeSend");
 
@@ -139,20 +197,14 @@ function sendRequest(url, parameters, type){
 		},
 		success: function(data) {
 
-			
-			//console.log(data);
+			console.log("ajax success!!");
 
-			createResult(data, type, parameters);
+			callback(data, type, parameters);
+			//callback(data.responseText, type, parameters);
+			//createResultItemsHeader(data, type, parameters);
 
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
-			/*
-			document.getElementById("userlist").innerHTML += "jqXHR:" + jqXHR.status + "<br>" + "errorThrown:" + errorThrown.message;
-			alert("Error:" + textStatus);
-			console.log(jqXHR);
-			console.log(textStatus);
-			console.log(errorThrown);
-			*/
 
 			outLog("in error");
 
@@ -160,5 +212,6 @@ function sendRequest(url, parameters, type){
 			dumpObject(jqXHR, 0);
 		}
 	});
+	
 }
 

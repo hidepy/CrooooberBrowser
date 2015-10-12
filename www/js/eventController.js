@@ -53,4 +53,20 @@ $(document).ready(function(){
 	$("#search_button").click(function(event){
 		button_clicked();
 	});
+
+	
+	/*
+	//テスト
+	var values = {
+	  title: 'Hello Handlebars!',
+	  img: {
+	    url: 'http://example.com',
+	    alt: 'Something..'
+	  },
+	  text: 'My first Handlebars!'
+	};
+	var template = Handlebars.compile($('#input').html());
+
+	$('#output').html(template(values));
+	*/
 });

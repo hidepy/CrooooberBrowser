@@ -31,10 +31,6 @@
         <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 
-
-
-
-
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <title>Croooober Browser</title>
 
@@ -42,6 +38,9 @@
         <link href="jquery-mobile/jquery.mobile.structure-1.0.min.css" rel="stylesheet" type="text/css"/>
         <script src="jquery-mobile/jquery-1.6.4.min.js" type="text/javascript"></script>
         <script src="jquery-mobile/jquery.mobile-1.0.min.js" type="text/javascript"></script>
+
+        <!-- Handlebars.js -->
+        <script type="text/javascript" src="js/handlebars-v4.0.2.js"></script>
 
         <script type="text/javascript" src="js/commonFunctions.js"></script>
         <script type="text/javascript" src="js/DomParserExtention.js"></script>
@@ -67,11 +66,44 @@
         -->
         </div>
 
+        <!--
+        <script id="input" type="text/x-handlebars-template">
+            <section class="inner">
+              <h1 class="header">{{title}}</h1>
+              <div class="box">
+                <img src="{{img.url}}" alt="{{img.alt}}" />
+                <p class="flex">{{text}}</p>
+              </div>
+            </section>
+        </script>
+        <div id="output"></div>
+        -->
+
+
         <div data-role="content" id="contents_wrapper"> 
 
+            <!-- before using Handlebars.js
             <ul id="userlist" data-count-theme="b" data-role="listview" data-split-icon="plus" data-split-theme="b" data-theme="b" data-divider-theme="b">
-            </ul>       
-        </div>
+            </ul>
+            -->
+
+            <script id="item_header_search_result" type="text/x-handlebars-template">
+            <ul>
+                {{#each this}}
+                    <li class="item_header_wrapper list-divider" datailurl="{{detail_url}}" onclick="getDetailInfo(this)">
+                        <div class="item_header_text_info">
+                            <div>{{title}}</div>
+                            <div>{{price}}</div>
+                        </div>
+                        <img src="{{pic_url}}">
+                    </li>
+                {{/each}}
+            </ul>
+            </script>
+
+
+
+        </div> <!-- end of content -->
         
     </div>
 

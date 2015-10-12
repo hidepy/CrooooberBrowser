@@ -7,6 +7,8 @@ function outLog(msg){
 function getDetailInfo(event){
 	var url = event.target.getAttribute("datailUrl");
 
+	alert("event driven!!");
+
 	console.log("send request to url:" + url);
 
 }

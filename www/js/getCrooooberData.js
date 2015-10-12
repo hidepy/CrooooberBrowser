@@ -1,13 +1,11 @@
+//http://www.croooober.com/item/4041918
 
-function outLog(msg){
-	console.log(msg);
-	document.getElementById("contents_wrapper").innerHTML += msg + "<br>";
-}
 
 function getDetailInfo(event){
-	var url = event.target.getAttribute("datailUrl");
+	outLog("getDetailInfo Driven");
+	console.log(event);
 
-	alert("event driven!!");
+	var url = event.getAttribute("detailurl");
 
 	console.log("send request to url:" + url);
 
@@ -79,7 +77,7 @@ function createResult(data, type, parameters){ //type=1:トップのボタン, t
 
 			//dom_str += "<div onClick='getDetailInfo()' detailUrl='" + data.detail_url + "'>" + data.title + ": " + data.price + "<img src='" + data.pic_url + "'></div>";
 
-			dom_str += "<div class='item_header_wrapper' onClick='getDetailInfo()' detailUrl='" + data.detail_url + "'>";
+			dom_str += "<li class='item_header_wrapper list-divider' onClick='getDetailInfo(this)' detailUrl='" + data.detail_url + "'>";
 			dom_str += "<div class='item_header_text_info'>";
 			dom_str += "<div>";
 			dom_str += data.title;
@@ -89,7 +87,7 @@ function createResult(data, type, parameters){ //type=1:トップのボタン, t
 			dom_str += "</div>";
 			dom_str += "</div>";
 			dom_str += "<img src='" + data.pic_url + "'>";
-			dom_str += "</div>";
+			dom_str += "</li>";
 
 		}
 
@@ -118,20 +116,7 @@ var msg_no_searchKey = "検索キーが入力されていません";
 
 function initialize() {};
 
-function dumpObject(obj, depth){
-	var depth_blank = "";
-	for(var i = 0; i < depth; i++){
-		depth_blank += " ";
-	}
 
-	for(var prop in obj){
-		outLog(depth_blank + prop + ":" + obj[prop]);
-
-		if(typeof obj[prop] == "object"){
-			dumpObject(obj[prop], depth + 1);
-		}
-	}
-}
 
 //ajaxでリクエストを飛ばす
 function sendRequest(url, parameters, type){
@@ -182,34 +167,3 @@ function sendRequest(url, parameters, type){
 	});
 }
 
-function button_clicked(){
-
-	var url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
-	//var url = "http://www.croooober.com/bparts/search?";
-	var search_key = document.getElementById("search_key").value;
-
-	if((search_key != null) && (search_key != "")){
-
-		var parameters = "";
-		{
-			parameters += "word=" + encodeURIComponent(search_key);
-			parameters += "&length=50";
-		}
-
-		sendRequest(url, parameters, 1);
-	}
-	else{
-		outLog("no search key...");
-	}
-}
-
-function button_clicked_to_local(){
-	var url = "users/getTestData.php";
-
-	sendRequest(url, "", 1);
-}
-
-function button_clicked_clear(event){
-	document.getElementById("search_key").value = "";
-
-}

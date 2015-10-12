@@ -114,10 +114,3 @@ h1 {
     -webkit-animation:fade 3000ms infinite;
 }
 
-.item_header_wrapper{
-    color: white;
-    background-color: rgb(90, 167, 29);
-    border-style: solid;
-    border-color: green;
-    border-width: 1px;
-}

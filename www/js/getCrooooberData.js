@@ -1,5 +1,16 @@
 //http://www.croooober.com/item/4041918
 
+var template_item_headers;
+var template_item_detail;
+
+$(document).ready(function(){
+	
+
+	template_item_headers = Handlebars.compile($("#item_header_search_result").html());
+	template_item_detail = Handlebars.compile($("#item_detail").html());
+
+});
+
 function createResultItemsHeader(data, type, parameters){ //type=1:トップのボタン, type=2:さらに読み込むボタン
 
 	console.log("in createResultItemsHeader");
@@ -62,7 +73,7 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 		//console.log(item_header_data);
 
 		
-		var template_item_headers = Handlebars.compile($("#item_header_search_result").html());
+		
 
 		$("#contents_wrapper").empty();
 		$("#contents_wrapper").html(template_item_headers(item_header_data));
@@ -133,6 +144,15 @@ function createResultItemDetail(data){
 
 		//取得したデータを、Handlebars.jsで当てはめていく
 		console.log(data);
+
+		console.log($("#item_detail"));
+		
+		$("#detail_content_wrapper").empty();
+		$("#detail_content_wrapper").html(template_item_detail(data));
+
+		//全てが完了したら、ポップアップを開く
+		$("#popup_item_detail").popup();
+		$("#popup_item_detail").popup("open");
 
 	}
 	catch(e){

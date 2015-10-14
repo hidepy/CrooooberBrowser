@@ -1,4 +1,7 @@
 function button_clicked(event){
+	console.log("button_clicked event driven");
+	console.log(event);
+
 	getHeaderInfo(event);
 }
 
@@ -13,7 +16,7 @@ function button_clicked_clear(event){
 
 }
 
-//検索キー入力エリアでENterボタン押下時処理
+//検索キー入力エリアでEnterボタン押下時処理
 function textbox_enter_pressed(event){
 	button_clicked();
 }
@@ -25,7 +28,7 @@ $(document).ready(function(){
 	//Enter押下イベントのアタッチ
 	$("#search_key").keydown(function(event){
 		if(event.which == 13){
-			console.log("in enter event");
+			console.log("本当にこの検索イベント入ってる？enter");
 			textbox_enter_pressed();
 		}
 		
@@ -34,22 +37,8 @@ $(document).ready(function(){
 
 	//検索ボタン押下イベントのアタッチ
 	$("#search_button").click(function(event){
+		console.log("本当にこの検索イベント入ってる？");
 		button_clicked();
 	});
 
-	
-	/*
-	//テスト
-	var values = {
-	  title: 'Hello Handlebars!',
-	  img: {
-	    url: 'http://example.com',
-	    alt: 'Something..'
-	  },
-	  text: 'My first Handlebars!'
-	};
-	var template = Handlebars.compile($('#input').html());
-
-	$('#output').html(template(values));
-	*/
 });

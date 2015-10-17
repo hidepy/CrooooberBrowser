@@ -4,13 +4,13 @@ header("Access-Control-Allow-Origin: *");
 
 $detail_path = $_GET["detail_path"];
 
-if(isset($detail_id)){
+if(isset($detail_path)){
 
 
 	//echo htmlspecialchars($target_word, ENT_QUOTES);
 	//$access_url = "http://ejje.weblio.jp/content/" + htmlspecialchars($target_word, ENT_QUOTES);
 	//$access_url = "http://ejje.weblio.jp/content/".$target_word;
-	$access_url = "http://www.croooober.com" + $detail_path;
+	$access_url = "http://www.croooober.com".$detail_path;
 
 	$got_html = file_get_contents($access_url);
 	echo $got_html;

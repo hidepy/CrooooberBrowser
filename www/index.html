@@ -62,6 +62,9 @@
         <script src="jquery-mobile/jquery-1.6.4.min.js" type="text/javascript"></script>
         <script src="jquery-mobile/jquery.mobile-1.0.min.js" type="text/javascript"></script>
 
+        <!-- Handlebars.js -->
+        <script type="text/javascript" src="js/handlebars-v4.0.2.js"></script>
+
         <script type="text/javascript" src="js/commonFunctions.js"></script>
         <script type="text/javascript" src="js/eventController.js"></script>
         <script type="text/javascript" src="js/getCrooooberData.js"></script>
@@ -115,7 +118,7 @@
     </head>
 <body>
 
-<div id="page" data-role="page" data-theme="b">
+<div id="page" data-role="page" data-theme="b" id="main">
     <div data-role="header" data-theme="b"　style="position: fixed;">
 
         <h3>Croooober browserだよっ！！</h3>
@@ -125,6 +128,9 @@
         </div>
 
         <button class="ui-btn" id="search_button">検索</button>
+
+        <a href="#dialog" data-rel="dialog" data-transition="pop" id="open_dialog">Open dialog</a>
+
         <!--<button class="ui-btn" onclick="button_clicked_to_local()">詳細オプション</button>
 
         <button class="ui-btn" onclick="button_clicked_clear">条件をクリア</button>
@@ -132,11 +138,50 @@
     </div>
 
     <div data-role="content" id="contents_wrapper"> 
+            
+            <script id="item_header_search_result" type="text/x-handlebars-template">
+            <ul>
+                {{#each this}}
+                    <li class="item_header_wrapper list-divider" datailurl="{{detail_url}}" onclick="getDetailInfo(this)">
+                        <div class="item_header_text_info">
+                            <div>{{title}}</div>
+                            <div>{{price}}</div>
+                        </div>
+                        <img src="{{pic_url}}">
+                    </li>
+                {{/each}}
+            </ul>
+            </script>
+
 
         <ul id="userlist" data-count-theme="b" data-role="listview" data-split-icon="plus" data-split-theme="b" data-theme="b" data-divider-theme="b">
         </ul>       
     </div>
     
+</div>
+
+<div data-role="page" id="dialog">
+    <div data-role="header" >
+        <h1>商品詳細</h1>
+    </div>
+
+    <div data-role="content" id="detail_content_wrapper">
+        <script id="item_detail" type="text/x-handlebars-template">
+            
+            <h2>{{title}}</h2>
+
+            <p><a href="#main" data-rel="back">閉じる</a></p>
+
+            <div>
+            {{#each pictures}}
+                <img src="{{currentSrc}}">
+            {{/each}}
+            </div>
+
+            <p><a href="#main" data-rel="back">閉じる</a></p>
+
+        </script>
+    </div>
 </div>
 
 <!--

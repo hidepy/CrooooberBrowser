@@ -1,3 +1,14 @@
+var template_item_headers;
+var template_item_detail;
+
+$(document).ready(function(){
+	
+
+	template_item_headers = Handlebars.compile($("#item_header_search_result").html());
+	template_item_detail = Handlebars.compile($("#item_detail").html());
+
+});
+
 
 function createResultItemsHeader(data, type, parameters){ //type=1:トップのボタン, type=2:さらに読み込むボタン
 	console.log("in createResult");
@@ -34,7 +45,8 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 
 		var el_item_box = got_html_document.querySelectorAll(".item_box");
 
-		//console.log(el_item_box);
+		var item_header_data = {};
+		item_header_data = [];
 
 		for(var i = 0; i < el_item_box.length; i++){
 			var el = el_item_box[i];
@@ -47,13 +59,16 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 				pic_url: el.querySelector("img").getAttribute("src").replace("//", "http://")
 			};
 
-			dom_str += "<div onClick='getDetailInfo()' detailUrl='" + data.detail_url + "'>" + data.title + ": " + data.price + "<img src='" + data.pic_url + "'></div>";
-
+			//dom_str += "<div onClick='getDetailInfo()' detailUrl='" + data.detail_url + "'>" + data.title + ": " + data.price + "<img src='" + data.pic_url + "'></div>";
+			item_header_data[i] = data;
 		}
 
+		$("#contents_wrapper").empty();
+		$("#contents_wrapper").html(template_item_headers(item_header_data));
 
 
 		//次を読み込むボタンの作成
+		/*
 		switch(type){
 			case 1:
 				//最初のロード時
@@ -64,12 +79,72 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 				document.getElementById("userlist").innerHTML += dom_str;
 				break;
 		}
+		*/
 
 		//document.getElementById("userlist").innerHTML += "<button class='ui-btn' onclick='button_clicked()'>さらに検索</button>";
 	}
 	catch(e){
 		console.log(e)
 	}
+}
+
+
+function createResultItemDetail(data){
+	console.log("in createResultItemDetail!!");
+
+	//必要情報の抜き出し
+	/*
+	title: #title > item_title
+	pictures: #slideshow_thumb img
+	tbody: .riq01 tbody
+	comment: .riq01 p
+	*/
+
+	var dom_parser = new DOMParser();
+	var got_html_document = null;
+
+	//var _data = "<html><head><title>test</title></head><body><p>no item</p></body></html>";
+
+	try{
+		got_html_document = dom_parser.parseFromString(data, "text/html");
+
+		if(got_html_document == null){
+			outLog("got_html_document is null...");
+
+			return false;
+		}
+		
+		//parseに失敗した場合...
+		if(got_html_document.getElementsByTagName("parsererror").length > 0){
+			got_html_document = null;
+		}
+
+
+		var el = got_html_document;
+
+		//必要箇所を抽出
+		var data = {
+			title: el.querySelector("#title > .item_title").innerHTML,
+			pictures: el.querySelectorAll("#slideshow_thumb img"),
+			tbody: el.querySelector(".riq01 tbody"),
+			comment: el.querySelectorAll(".riq01 p")
+		};
+
+		//取得したデータを、Handlebars.jsで当てはめていく
+		//console.log(data);
+		
+		
+		$("#detail_content_wrapper").empty();
+		$("#detail_content_wrapper").html(template_item_detail(data));
+		
+
+		$("#open_dialog").trigger("click");
+
+	}
+	catch(e){
+		console.log(e);
+	}
+
 }
 
 var msg_no_searchKey = "検索キーが入力されていません";

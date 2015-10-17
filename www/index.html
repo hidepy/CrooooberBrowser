@@ -124,6 +124,31 @@
 }(DOMParser));
         </script>
 
+
+        <style>
+        #search_condition_wrapper{
+            width: 100%;
+        }
+        #search_button{
+            width: 100%;
+        }
+        .d_picture{
+            display: inline;
+        }
+        .d_picture > img{
+            width: 24%;
+            height: auto;
+        }
+        #d_pic > img{
+            width: 100%;
+            max-width: 640px;
+        }
+        #button_search_more{
+            display: none;
+        }
+        </style>
+
+
     </head>
 <body>
 
@@ -132,13 +157,14 @@
 
         <h3>Croooober browserだよっ！！</h3>
 
-        <div>
+        <div id="search_condition_wrapper">
             <input type="text" id="search_key" />
+
+            <div>
+                <button class="ui-btn" id="search_button">検索</button>
+                <button class="ui-btn" id="detail_search_setting_button">検索設定</button>
+            </div>
         </div>
-
-        <button class="ui-btn" id="search_button">検索</button>
-
-        <a href="#dialog" data-rel="dialog" data-transition="pop" id="open_dialog">Open dialog</a>
 
         <!--<button class="ui-btn" onclick="button_clicked_to_local()">詳細オプション</button>
 
@@ -148,21 +174,28 @@
 
     <div data-role="content" id="contents_wrapper"> 
             
-            <script id="item_header_search_result" type="text/x-handlebars-template">
-                {{#each this}}
-                    <div class="item_header_wrapper list-divider ui-btn" datailurl="{{detail_url}}" onclick="getDetailInfo(this)">
-                        <div class="item_header_text_info">
-                            <div class="h_title">{{title}}</div>
-                            <div class="h_price">{{price}}</div>
-                        </div>
-                        <img src="{{pic_url}}">
+        <script id="item_header_search_result" type="text/x-handlebars-template">
+            {{#each this}}
+                <div class="item_header_wrapper list-divider ui-btn" datailurl="{{detail_url}}" onclick="getDetailInfo(this)">
+                    <div class="item_header_text_info">
+                        <div class="h_title">{{title}}</div>
+                        <div class="h_price">{{price}}</div>
                     </div>
-                {{/each}}
-            </script>
+                    <img src="{{pic_url}}">
+                </div>
+            {{/each}}
+        </script>
 
+        <div>
+            <button id="button_search_more">さらに検索</button>
+        </div>
 
+        <!--
         <ul id="userlist" data-count-theme="b" data-role="listview" data-split-icon="plus" data-split-theme="b" data-theme="b" data-divider-theme="b">
+
         </ul>       
+        -->
+
     </div>
     
 </div>
@@ -184,26 +217,25 @@
                 </div>
             </div>
 
+            <p><a href="#page_main" data-rel="back">戻る</a></p>
+
             <div id="d_pic">
-            <img src="{{picture}}" />
+                <img src="{{picture}}" />
             </div>
 
             <div id="d_debug"></div>
 
-            <p><a href="#page_main" data-rel="back">戻る</a></p>
-
-            <div id="d_pictures">
+            <ul id="d_pictures">
             {{#each pictures}}
-                <div class="d_picture">
-                    <img src="{{this}}" style="width: 100%" />
-                    <span>img_url is: {{{this}}}</span>
-                </div>
+                <li class="d_picture">
+                    <img src="{{this}}" onClick="detail_thumbnail_clicked(this)" />
+                </li>
             {{/each}}
-            </div>
+            </ul>
 
             <div id="d_comment">
                 <h3>コメント</h3>
-                <div>{{comment}}</div>
+                <div>{{{comment}}}</div>
             </div>
 
             <div id="d_maker">
@@ -214,16 +246,6 @@
             <div id="d_rank">
                 <h3>商品ランク</h3>
                 <div>{{rank}}</div>
-            </div>
-
-            <div id="d_target_vehicle">
-                <h3>対象車種</h3>
-               <div>{{target_vehicle}}</div>
-            </div>
-
-            <div id="d_shipping_rank">
-                <h3>送料ランク</h3>
-                <div>{{shipping_rank}}</div>
             </div>
 
             <p><a href="#page_main" data-rel="back">戻る</a></p>

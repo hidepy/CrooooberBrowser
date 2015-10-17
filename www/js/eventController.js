@@ -20,6 +20,13 @@ function textbox_enter_pressed(event){
 	button_clicked();
 }
 
+//詳細ページのサムネイル画像押下時
+function detail_thumbnail_clicked(event){
+	console.log("thumb nail clicked");
+	document.querySelector("#d_pic > img").setAttribute("src", event.src);
+}
+
+
 
 /* イベントハンドラの登録 */
 $(document).ready(function(){

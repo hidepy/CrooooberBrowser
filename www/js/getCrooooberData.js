@@ -1,6 +1,8 @@
 var template_item_headers;
 var template_item_detail;
 
+var header_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
+
 $(document).ready(function(){
 	
 	/* handlebars.js 用 */
@@ -70,18 +72,16 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 
 
 		//次を読み込むボタンの作成
-		/*
 		switch(type){
 			case 1:
 				//最初のロード時
-				document.getElementById("userlist").innerHTML = dom_str;
+				
 				break;	
 			case 2:
 				//2ページ目以降の場合
-				document.getElementById("userlist").innerHTML += dom_str;
+				
 				break;
 		}
-		*/
 
 		//document.getElementById("userlist").innerHTML += "<button class='ui-btn' onclick='button_clicked()'>さらに検索</button>";
 	}
@@ -116,7 +116,7 @@ function createResultItemDetail(data, type, parameters){
 
 		var el = got_html_document;
 
-		var el_tbody = el.querySelectorAll(".riq01 tbody > tr");
+		var el_tbody = el.querySelectorAll(".riq01 .ta01 > tbody > tr");
 
 		var id = parameters.split("/")[2];
 		var url = parameters.split("=")[1];
@@ -131,13 +131,10 @@ function createResultItemDetail(data, type, parameters){
 
 			return arr;
 		})(el);
-			
 
 		//console.log(url);
 
 		//console.log(pictures);
-
-		//console.log(el_tbody);
 
 		//必要箇所を抽出
 		var data = {
@@ -147,16 +144,12 @@ function createResultItemDetail(data, type, parameters){
 			price: el.querySelector(".price_box > .price_in > .price").innerHTML,
 			pictures: pictures,
 			picture: el.querySelector("#slideshow_thumb img").getAttribute("src").replace("//", "http://"),
-			maker_name: el_tbody[0].querySelector("td").innerHTML,
+			maker_name: el_tbody[0].querySelector("td > a").innerHTML,
 			rank: el_tbody[1].querySelector(".star_box").innerHTML,
-			target_vehicle: el_tbody[2].querySelector("td").innerHTML,
-			shipping_rank: el_tbody[3].querySelector("td").innerHTML,
-			comment: el.querySelector(".riq01 > p"),
+			comment: el.querySelector(".riq01 .riq01_in > p").innerHTML,
+			tbody: el.querySelector(".riq01 .ta01 > tbody").innerHTML,
 			ref_date_time: formatDate(new Date())
 		};
-
-//document.getElementById("d_debug").innerHTML = dumpObject(el.querySelector("img"), 0);
-
 
 		//取得したデータを、Handlebars.jsで当てはめていく
 		//console.log(data);
@@ -175,8 +168,8 @@ function createResultItemDetail(data, type, parameters){
 var msg_no_searchKey = "検索キーが入力されていません";
 
 function getHeaderInfo(event){
-	var url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
-	//var url = "http://www.croooober.com/bparts/search?";
+	var url = header_search_url; //ヘッダ検索用のURL
+
 	var search_key = document.getElementById("search_key").value;
 
 	if((search_key != null) && (search_key != "")){
@@ -203,7 +196,7 @@ function getDetailInfo(event){
 
 	sendRequest(url, parameters, null, createResultItemDetail, function(){
 		
-		/*
+		
 		//前回表示が出るとまずい...
 		$("#detail_content_wrapper").empty();
 		//とりあえず、持っている情報を出力しておく
@@ -211,7 +204,7 @@ function getDetailInfo(event){
 			title: event.querySelector(".h_title").innerHTML,
 			price: event.querySelector(".h_price").innerHTML
 		}));
-		*/
+		
 
 		// 詳細ページに切り替え
 		$('body').pagecontainer('change', '#page_item_detail',　{ transition: 'slide' } );

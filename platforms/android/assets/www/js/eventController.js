@@ -1,6 +1,5 @@
 function button_clicked(event){
 	console.log("button_clicked event driven");
-	console.log(event);
 
 	getHeaderInfo(event);
 }
@@ -28,7 +27,7 @@ $(document).ready(function(){
 	//Enter押下イベントのアタッチ
 	$("#search_key").keydown(function(event){
 		if(event.which == 13){
-			console.log("本当にこの検索イベント入ってる？enter");
+			console.log("enter event driven");
 			textbox_enter_pressed();
 		}
 		
@@ -37,7 +36,7 @@ $(document).ready(function(){
 
 	//検索ボタン押下イベントのアタッチ
 	$("#search_button").click(function(event){
-		console.log("本当にこの検索イベント入ってる？");
+		console.log("search button click event driven");
 		button_clicked();
 	});
 

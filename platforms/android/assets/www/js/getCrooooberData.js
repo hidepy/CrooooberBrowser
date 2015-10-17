@@ -3,9 +3,12 @@ var template_item_detail;
 
 $(document).ready(function(){
 	
-
+	/* handlebars.js 用 */
 	template_item_headers = Handlebars.compile($("#item_header_search_result").html());
 	template_item_detail = Handlebars.compile($("#item_detail").html());
+
+
+	/* 格納された */
 
 });
 
@@ -28,7 +31,6 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 			return false;
 		}
 		
-
 		//parseに失敗した場合...
 		if(got_html_document.getElementsByTagName("parsererror").length > 0){
 			got_html_document = null;
@@ -55,7 +57,7 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 				title: el.querySelector("h3 > a").innerHTML,
 				detail_url: el.querySelector("h3 > a").getAttribute("href"),
 				feature: el.querySelector(".box_in > ul"), //以下にli有り
-				price: el.querySelector(".price").innerHTML,
+				price: el.querySelector(".price span").innerHTML,
 				pic_url: el.querySelector("img").getAttribute("src").replace("//", "http://")
 			};
 
@@ -89,16 +91,8 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 }
 
 
-function createResultItemDetail(data){
+function createResultItemDetail(data, type, parameters){
 	console.log("in createResultItemDetail!!");
-
-	//必要情報の抜き出し
-	/*
-	title: #title > item_title
-	pictures: #slideshow_thumb img
-	tbody: .riq01 tbody
-	comment: .riq01 p
-	*/
 
 	var dom_parser = new DOMParser();
 	var got_html_document = null;
@@ -122,23 +116,54 @@ function createResultItemDetail(data){
 
 		var el = got_html_document;
 
+		var el_tbody = el.querySelectorAll(".riq01 tbody > tr");
+
+		var id = parameters.split("/")[2];
+		var url = parameters.split("=")[1];
+		var pictures = (function(el){
+			var arr = [];
+
+			var el_imges = el.querySelectorAll("#slideshow_thumb img");
+
+			for(var i = 0; i < el_imges.length; i++){
+				arr[i] = el_imges[i].getAttribute("src").replace("//", "http://");
+			}
+
+			return arr;
+		})(el);
+			
+
+		//console.log(url);
+
+		//console.log(pictures);
+
+		//console.log(el_tbody);
+
 		//必要箇所を抽出
 		var data = {
+			id: id,
+			url: url,
 			title: el.querySelector("#title > .item_title").innerHTML,
-			pictures: el.querySelectorAll("#slideshow_thumb img"),
-			tbody: el.querySelector(".riq01 tbody"),
-			comment: el.querySelectorAll(".riq01 p")
+			price: el.querySelector(".price_box > .price_in > .price").innerHTML,
+			pictures: pictures,
+			picture: el.querySelector("#slideshow_thumb img").getAttribute("src").replace("//", "http://"),
+			maker_name: el_tbody[0].querySelector("td").innerHTML,
+			rank: el_tbody[1].querySelector(".star_box").innerHTML,
+			target_vehicle: el_tbody[2].querySelector("td").innerHTML,
+			shipping_rank: el_tbody[3].querySelector("td").innerHTML,
+			comment: el.querySelector(".riq01 > p"),
+			ref_date_time: formatDate(new Date())
 		};
+
+//document.getElementById("d_debug").innerHTML = dumpObject(el.querySelector("img"), 0);
+
 
 		//取得したデータを、Handlebars.jsで当てはめていく
 		//console.log(data);
 		
-		
-		$("#detail_content_wrapper").empty();
-		$("#detail_content_wrapper").html(template_item_detail(data));
-		
+		//今回取得した情報をlocalstorageに格納
 
-		$("#open_dialog").trigger("click");
+		$("#detail_content_wrapper").html(template_item_detail(data));
 
 	}
 	catch(e){
@@ -162,9 +187,6 @@ function getHeaderInfo(event){
 			parameters += "&length=50";
 		}
 
-
-		console.log("in getHeaderInfo");
-		console.log(createResultItemsHeader);
 		sendRequest(url, parameters, 1, createResultItemsHeader);
 	}
 	else{
@@ -178,24 +200,43 @@ function getDetailInfo(event){
 
 	var url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContentDetail.php?";
 	var parameters = "detail_path=" + event.getAttribute("datailurl");
-      
-	sendRequest(url, parameters, null, createResultItemDetail);
+
+	sendRequest(url, parameters, null, createResultItemDetail, function(){
+		
+		/*
+		//前回表示が出るとまずい...
+		$("#detail_content_wrapper").empty();
+		//とりあえず、持っている情報を出力しておく
+		$("#detail_content_wrapper").html(template_item_detail({
+			title: event.querySelector(".h_title").innerHTML,
+			price: event.querySelector(".h_price").innerHTML
+		}));
+		*/
+
+		// 詳細ページに切り替え
+		$('body').pagecontainer('change', '#page_item_detail',　{ transition: 'slide' } );
+
+	});
 
 }
 
-
 //ajaxでリクエストを飛ばす
-function sendRequest(url, parameters, type, callback){
+function sendRequest(url, parameters, type, callback, before_callback){
 
 	//$.support.cors = true;
 	//$.mobile.allowCrossDomainPages = true;
-
-	console.log(callback);
 
 	$.ajax({
 		url: url + parameters,
 		beforeSend: function(jqXHR){
 			outLog("in beforeSend");
+
+			
+			if(before_callback){
+				before_callback();
+			}
+
+			$.mobile.loading('show');
 
 			//dumpObject(jqXHR, 0);
 		},
@@ -215,6 +256,46 @@ function sendRequest(url, parameters, type, callback){
 
 			alert("Error:" + textStatus);
 			dumpObject(jqXHR, 0);
+		},
+		complete: function(){
+
+			outLog("in complete");
+
+			$.mobile.loading('hide');
 		}
 	});
+}
+
+function saveDetailItem2Storage(data){
+	//処理時間を考慮し、追加時は特に件数チェックは行わない
+
+
+	var item_hash = JSON.parse(window.localStorage.getItem("item_detail_info_list"));
+
+	if(!item_hash){
+		item_hash = {};
+	}
+
+
+	//このハッシュは、itemのidをキーとして、dataオブジェクトが格納されている
+	/*
+	{
+		271236: {
+			id
+			url
+			title...
+		},
+		212896: {
+			id
+			url
+			title...
+		}
+		...
+	}
+	*/
+
+	item_hash[data.id] = JSON.stringify(data);
+
+
+
 }

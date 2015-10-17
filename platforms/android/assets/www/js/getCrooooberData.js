@@ -1,9 +1,6 @@
-//http://www.croooober.com/item/4041918
-
 var template_item_headers;
 var template_item_detail;
 
-/*
 $(document).ready(function(){
 	
 
@@ -11,18 +8,16 @@ $(document).ready(function(){
 	template_item_detail = Handlebars.compile($("#item_detail").html());
 
 });
-*/
+
 
 function createResultItemsHeader(data, type, parameters){ //type=1:トップのボタン, type=2:さらに読み込むボタン
-
-	console.log("in createResultItemsHeader");
+	console.log("in createResult");
+	//outLog(data); //ここまで来てる
 
 	var dom_parser = new DOMParser();
 	var got_html_document = null;
 
 	//var _data = "<html><head><title>test</title></head><body><p>no item</p></body></html>";
-
-	//console.log(data);
 
 	try{
 		got_html_document = dom_parser.parseFromString(data, "text/html");
@@ -33,32 +28,25 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 			return false;
 		}
 		
+
 		//parseに失敗した場合...
 		if(got_html_document.getElementsByTagName("parsererror").length > 0){
 			got_html_document = null;
 		}
 
+
 		//検索結果の件数取得
 		var dom_str = "";
 		var search_result_num = got_html_document.querySelector(".search_result_num");
-		if(search_result_num != null){
+		{
 			dom_str = "<div id='search_result_num'>ヒット件数：" + search_result_num.querySelector("span").innerHTML + "件</div>";
 		}
 
-		/* 【この部分をHandlebar.jsで置き換え！】 */
 
 		var el_item_box = got_html_document.querySelectorAll(".item_box");
 
-		console.log(el_item_box);
-
 		var item_header_data = {};
 		item_header_data = [];
-
-		dom_str += "<ul>";
-
-		outLog(el_item_box.length);
-
-		return;
 
 		for(var i = 0; i < el_item_box.length; i++){
 			var el = el_item_box[i];
@@ -67,36 +55,20 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 				title: el.querySelector("h3 > a").innerHTML,
 				detail_url: el.querySelector("h3 > a").getAttribute("href"),
 				feature: el.querySelector(".box_in > ul"), //以下にli有り
-				price: el.querySelector(".price > span").innerHTML,
+				price: el.querySelector(".price").innerHTML,
 				pic_url: el.querySelector("img").getAttribute("src").replace("//", "http://")
 			};
 
+			//dom_str += "<div onClick='getDetailInfo()' detailUrl='" + data.detail_url + "'>" + data.title + ": " + data.price + "<img src='" + data.pic_url + "'></div>";
 			item_header_data[i] = data;
-
-			dom_str += '<li class="item_header_wrapper list-divider" datailurl="' + data.detail_url + '" onclick="getDetailInfo(this)">';
-			dom_str += '<div class="item_header_text_info">';
-			dom_str += '<div>' + data.title + '</div>';
-			dom_str += '<div>' + data.price + '</div>';
-			dom_str += '</div>';
-			dom_str +='<img src="' + data.pic_url + '">';
-			dom_str += '</li>';
-
 		}
 
-		dom_str += "</ul>";
-
-		//console.log(item_header_data);
-
-		document.getElementById("contents_wrapper").innerHTML = dom_str;
-		
-		/*
 		$("#contents_wrapper").empty();
 		$("#contents_wrapper").html(template_item_headers(item_header_data));
-		*/
 
 
-		/*
 		//次を読み込むボタンの作成
+		/*
 		switch(type){
 			case 1:
 				//最初のロード時
@@ -115,6 +87,7 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 		console.log(e)
 	}
 }
+
 
 function createResultItemDetail(data){
 	console.log("in createResultItemDetail!!");
@@ -158,19 +131,14 @@ function createResultItemDetail(data){
 		};
 
 		//取得したデータを、Handlebars.jsで当てはめていく
-
-
-
-		/*
-		console.log($("#item_detail"));
+		//console.log(data);
+		
 		
 		$("#detail_content_wrapper").empty();
 		$("#detail_content_wrapper").html(template_item_detail(data));
+		
 
-		//全てが完了したら、ポップアップを開く
-		$("#popup_item_detail").popup();
-		$("#popup_item_detail").popup("open");
-		*/
+		$("#open_dialog").trigger("click");
 
 	}
 	catch(e){
@@ -179,7 +147,8 @@ function createResultItemDetail(data){
 
 }
 
-/* Crooooberから商品ヘッダ一覧を取得する */
+var msg_no_searchKey = "検索キーが入力されていません";
+
 function getHeaderInfo(event){
 	var url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
 	//var url = "http://www.croooober.com/bparts/search?";
@@ -193,6 +162,9 @@ function getHeaderInfo(event){
 			parameters += "&length=50";
 		}
 
+
+		console.log("in getHeaderInfo");
+		console.log(createResultItemsHeader);
 		sendRequest(url, parameters, 1, createResultItemsHeader);
 	}
 	else{
@@ -212,15 +184,13 @@ function getDetailInfo(event){
 }
 
 
-var msg_no_searchKey = "検索キーが入力されていません";
-
-function initialize() {};
-
 //ajaxでリクエストを飛ばす
 function sendRequest(url, parameters, type, callback){
 
 	//$.support.cors = true;
 	//$.mobile.allowCrossDomainPages = true;
+
+	console.log(callback);
 
 	$.ajax({
 		url: url + parameters,
@@ -230,12 +200,13 @@ function sendRequest(url, parameters, type, callback){
 			//dumpObject(jqXHR, 0);
 		},
 		success: function(data) {
+			//outLog("in success. data is below:");
+			//outLog(data);
 
-			console.log("ajax success!!");
-
+			outLog("ajax success!!");
+			
 			callback(data, type, parameters);
-			//callback(data.responseText, type, parameters);
-			//createResultItemsHeader(data, type, parameters);
+			//createResult(data, type, parameters);
 
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
@@ -246,6 +217,4 @@ function sendRequest(url, parameters, type, callback){
 			dumpObject(jqXHR, 0);
 		}
 	});
-	
 }
-

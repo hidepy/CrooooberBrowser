@@ -132,6 +132,7 @@
         #search_button{
             width: 100%;
         }
+
         .h_picture{
             height: 180px;
             width: auto;
@@ -146,9 +147,10 @@
         #d_pic > img{
             width: 100%;
             max-width: 640px;
+            max-height: 480px;
         }
         #button_search_more{
-            display: inline;
+            display: none;
         }
         </style>
 
@@ -157,7 +159,7 @@
 <body>
 
 <div id="page" data-role="page" data-theme="a" id="page_main">
-    <div data-role="header" data-theme="a"　style="position: fixed;">
+    <div data-role="header" data-theme="a"　data-position="fixed">
 
         <h3>Croooober browserだよっ！！</h3>
 
@@ -177,15 +179,16 @@
     </div>
 
     <div data-role="content"> 
-        
-        <div id="search_result_num">
-        </div>
+
+        <div id="search_result_num"></div>
 
         <div id="contents_wrapper">
 
             <script id="item_header_search_result" type="text/x-handlebars-template">
+
                 {{#each this}}
                     <div class="item_header_wrapper list-divider ui-btn" datailurl="{{detail_url}}" onclick="getDetailInfo(this)">
+                        <div class="item_header_id">{{item_number}}</div>
                         <div class="item_header_text_info">
                             <div class="h_title">{{title}}</div>
                             <div class="h_price">{{price}}</div>
@@ -206,6 +209,17 @@
         </ul>       
         -->
 
+    </div>
+
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+          <ul>
+            <li><a href="#" id="f_to_top">トップ</a></li>
+            <li><a href="#">設定</a></li>
+            <li><a href="#">ヘルプ</a></li>
+            <li><a href="#">問い合わせ</a></li>
+          </ul>
+        </div>
     </div>
     
 </div>

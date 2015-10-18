@@ -88,5 +88,8 @@ $(document).ready(function(){
 		search_more_button_clicked(event.target);
 	});
 
+	$("#f_to_top").click(function(){
+		$( 'html,body' ).animate( {scrollTop:0} , 'slow' ) ;
+    });
 
 });

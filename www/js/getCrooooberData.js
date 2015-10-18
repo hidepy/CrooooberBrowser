@@ -33,8 +33,6 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 	var dom_parser = new DOMParser();
 	var got_html_document = null;
 
-	//var _data = "<html><head><title>test</title></head><body><p>no item</p></body></html>";
-
 	try{
 		got_html_document = dom_parser.parseFromString(data, "text/html");
 
@@ -51,14 +49,33 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 
 
 		//検索結果の件数取得
-		var dom_str = "";
 		var search_result_num = got_html_document.querySelector(".search_result_num");
+		var search_result_max_num = "-";
 		if(search_result_num){
-			document.getElementById("search_result_num").innerHTML = search_result_num.innerHTML;
+
+			//最大件数の取得
+			search_result_max_num = search_result_num.querySelector("span").innerHTML;
+
+			document.getElementById("search_result_num").innerHTML = "ヒット件数：　" + search_result_max_num;//search_result_num.innerHTML;
 		}
 
-
 		var el_item_box = got_html_document.querySelectorAll(".item_box");
+
+
+		/* 
+
+
+		取得できなかった場合は？
+
+
+		*/
+
+
+		//前回取得したアイテム数
+		var el_search_more_button = document.getElementById("button_search_more"); //さらに検索 ボタン
+		var previous_length_str = el_search_more_button.getAttribute("current_display_item_length");
+		var previous_length = (previous_length_str && previous_length_str != "") ? Number(previous_length_str) : 0;
+
 
 		//var item_header_data = {};
 		var item_header_data = [];
@@ -67,6 +84,7 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 			var el = el_item_box[i];
 
 			var data = {
+				item_number: (i + 1) + previous_length,
 				title: el.querySelector("h3 > a").innerHTML,
 				detail_url: el.querySelector("h3 > a").getAttribute("href"),
 				feature: el.querySelector(".box_in > ul"), //以下にli有り
@@ -74,20 +92,24 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 				pic_url: el.querySelector("img").getAttribute("src").replace("//", "http://")
 			};
 
-			//dom_str += "<div onClick='getDetailInfo()' detailUrl='" + data.detail_url + "'>" + data.title + ": " + data.price + "<img src='" + data.pic_url + "'></div>";
 			item_header_data[i] = data;
 		}
 
 		//検索結果の商品一覧にデータをはめ込む
 		{
-			if(type == 1){ //初回検索の場合、現在のビューをリセット
+			if(type == 1){ 
+				//初回検索の場合、現在のビューをリセット
 				$("#contents_wrapper").empty();
+				
+				//直前まで保存していた商品リストを破棄
+				current_header_items = [];
+
 			}
 
 			var display_data;
 
 			//続いて検索の場合、前回検索までの値を連結する
-			if(type > 0){
+			if(type > 1){
 				console.log("sarching with " + type + "times, concatting previous array");
 				display_data = current_header_items.concat(item_header_data);
 			}
@@ -101,25 +123,29 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 			current_header_items = display_data;
 		}
 
-
 		//次を読み込むボタンの作成
 		{
-			var el_search_more_button = document.getElementById("button_search_more")
-			
-			//表示状態にする
-			el_search_more_button.style.display = "inline";
-
 			//検索条件を保存
 			el_search_more_button.setAttribute("search_condition", JSON.stringify(parameters));
 
 			//try(再読み込み回数をセット)
 			el_search_more_button.setAttribute("try_num", type);
 
+			//最大件数のセット
+			el_search_more_button.setAttribute("max_length", search_result_max_num);
+
+			//現在の表示数のセット
+			el_search_more_button.setAttribute("current_display_item_length",  previous_length + el_item_box.length);
+
+
+			//最大件数に、今回検索数が達していない場合、表示状態にする
+			el_search_more_button.style.display = ((previous_length + el_item_box.length) < Number(search_result_max_num)) ? "inline" : "none";
+
 		}
 
 	}
 	catch(e){
-		console.log(e)
+		console.log(e);
 	}
 }
 
@@ -162,9 +188,6 @@ function createResultItemDetail(data, type, parameters){
 			return arr;
 		})(el);
 
-		console.log(id);
-		console.log(url);
-
 		//console.log(pictures);
 
 		//必要箇所を抽出
@@ -202,8 +225,6 @@ function getHeaderInfo(event){
 	var url = header_search_url; //ヘッダ検索用のURL
 
 	var search_key = document.getElementById("search_key").value;
-
-
 
 	if((search_key != null) && (search_key != "")){
 

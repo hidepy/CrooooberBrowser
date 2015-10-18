@@ -1,3 +1,9 @@
+/*
+ *
+ * メイン画面のイベント
+ *
+ */
+ 
 function button_clicked(event){
 	console.log("button_clicked event driven");
 
@@ -20,15 +26,44 @@ function textbox_enter_pressed(event){
 	button_clicked();
 }
 
+
+
+
+
+/*
+ *
+ * 商品詳細画面のイベント
+ *
+ */
+
 //詳細ページのサムネイル画像押下時
 function detail_thumbnail_clicked(event){
 	console.log("thumb nail clicked");
 	document.querySelector("#d_pic > img").setAttribute("src", event.src);
 }
 
+//詳細ページの閉じるボタン
+function detail_close_clicked(event){
+	console.log("close clicked");
+}
+
+//さらに検索ボタン
+function search_more_button_clicked(event){
+	console.log("searh more button clicked");
+
+	getHeaderInfoMore(event);
+
+}
 
 
-/* イベントハンドラの登録 */
+
+
+/*
+ *
+ *イベントハンドラの登録 
+ *
+ */
+
 $(document).ready(function(){
 
 	//Enter押下イベントのアタッチ
@@ -46,5 +81,12 @@ $(document).ready(function(){
 		console.log("search button click event driven");
 		button_clicked();
 	});
+
+	//さらに検索ボタン押下イベントのアタッチ
+	$("#button_search_more").click(function(event){
+		console.log("search more button click event driven");
+		search_more_button_clicked(event.target);
+	});
+
 
 });

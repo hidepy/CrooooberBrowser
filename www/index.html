@@ -80,48 +80,48 @@
         <script type="text/javascript" src="js/getCrooooberData.js"></script>
 
         <script>
-/*
- * DOMParser HTML extension
- * 2012-09-04
- * 
- * By Eli Grey, http://eligrey.com
- * Public domain.
- * NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
- */
- 
-/*! @source https://gist.github.com/1129031 */
-/*global document, DOMParser*/
- 
-(function(DOMParser) {
-    "use strict";
- 
-    var
-      DOMParser_proto = DOMParser.prototype
-    , real_parseFromString = DOMParser_proto.parseFromString
-    ;
- 
-    // Firefox/Opera/IE throw errors on unsupported types
-    try {
-        // WebKit returns null on unsupported types
-        if ((new DOMParser).parseFromString("", "text/html")) {
-            // text/html parsing is natively supported
-            return;
-        }
-    } catch (ex) {}
- 
-    DOMParser_proto.parseFromString = function(markup, type) {
-        if (/^\s*text\/html\s*(?:;|$)/i.test(type)) {
-            var
-              doc = document.implementation.createHTMLDocument("")
-            ;
- 
-            doc.body.innerHTML = markup;
-            return doc;
-        } else {
-            return real_parseFromString.apply(this, arguments);
-        }
-    };
-}(DOMParser));
+            /*
+             * DOMParser HTML extension
+             * 2012-09-04
+             * 
+             * By Eli Grey, http://eligrey.com
+             * Public domain.
+             * NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+             */
+             
+            /*! @source https://gist.github.com/1129031 */
+            /*global document, DOMParser*/
+             
+            (function(DOMParser) {
+                "use strict";
+             
+                var
+                  DOMParser_proto = DOMParser.prototype
+                , real_parseFromString = DOMParser_proto.parseFromString
+                ;
+             
+                // Firefox/Opera/IE throw errors on unsupported types
+                try {
+                    // WebKit returns null on unsupported types
+                    if ((new DOMParser).parseFromString("", "text/html")) {
+                        // text/html parsing is natively supported
+                        return;
+                    }
+                } catch (ex) {}
+             
+                DOMParser_proto.parseFromString = function(markup, type) {
+                    if (/^\s*text\/html\s*(?:;|$)/i.test(type)) {
+                        var
+                          doc = document.implementation.createHTMLDocument("")
+                        ;
+             
+                        doc.body.innerHTML = markup;
+                        return doc;
+                    } else {
+                        return real_parseFromString.apply(this, arguments);
+                    }
+                };
+            }(DOMParser));
         </script>
 
 
@@ -131,6 +131,10 @@
         }
         #search_button{
             width: 100%;
+        }
+        .h_picture{
+            height: 180px;
+            width: auto;
         }
         .d_picture{
             display: inline;
@@ -144,7 +148,7 @@
             max-width: 640px;
         }
         #button_search_more{
-            display: none;
+            display: inline;
         }
         </style>
 
@@ -172,22 +176,28 @@
     -->
     </div>
 
-    <div data-role="content" id="contents_wrapper"> 
-            
-        <script id="item_header_search_result" type="text/x-handlebars-template">
-            {{#each this}}
-                <div class="item_header_wrapper list-divider ui-btn" datailurl="{{detail_url}}" onclick="getDetailInfo(this)">
-                    <div class="item_header_text_info">
-                        <div class="h_title">{{title}}</div>
-                        <div class="h_price">{{price}}</div>
+    <div data-role="content"> 
+        
+        <div id="search_result_num">
+        </div>
+
+        <div id="contents_wrapper">
+
+            <script id="item_header_search_result" type="text/x-handlebars-template">
+                {{#each this}}
+                    <div class="item_header_wrapper list-divider ui-btn" datailurl="{{detail_url}}" onclick="getDetailInfo(this)">
+                        <div class="item_header_text_info">
+                            <div class="h_title">{{title}}</div>
+                            <div class="h_price">{{price}}</div>
+                        </div>
+                        <img src="{{pic_url}}" class="h_picture">
                     </div>
-                    <img src="{{pic_url}}">
-                </div>
-            {{/each}}
-        </script>
+                {{/each}}
+            </script>
+        </div>
 
         <div>
-            <button id="button_search_more">さらに検索</button>
+            <button id="button_search_more" search_condition="">さらに検索</button>
         </div>
 
         <!--
@@ -248,6 +258,8 @@
                 <div>{{rank}}</div>
             </div>
 
+            <button id="d_button2Croooober" class="ui-btn">Crooooberで見る(購入する場合など)</button>
+            <button id="d_delete_cache" class="ui_btn">ページのキャッシュを削除(再度最新の情報を取得する場合)</button>
             <p><a href="#page_main" data-rel="back">戻る</a></p>
 
         </script>

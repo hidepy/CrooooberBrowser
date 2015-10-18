@@ -1,7 +1,18 @@
+var is_debug = false;
+
 var template_item_headers;
 var template_item_detail;
 
 var header_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
+var detail_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContentDetail.php?";
+
+//現在表示されている商品リストを保持しておく
+var current_header_items = [];
+
+if(is_debug){
+	header_search_url = "http://localhost/CrooooberBrowser/debug_html.txt";
+	detail_search_url = "http://localhost/CrooooberBrowser/debug_html_detail.txt";
+}
 
 $(document).ready(function(){
 	
@@ -10,12 +21,12 @@ $(document).ready(function(){
 	template_item_detail = Handlebars.compile($("#item_detail").html());
 
 
-	/* 格納された */
+	/* ストレージからキャッシュ済の商品詳細を取得 */
 
 });
 
 
-function createResultItemsHeader(data, type, parameters){ //type=1:トップのボタン, type=2:さらに読み込むボタン
+function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 	console.log("in createResult");
 	//outLog(data); //ここまで来てる
 
@@ -42,15 +53,15 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 		//検索結果の件数取得
 		var dom_str = "";
 		var search_result_num = got_html_document.querySelector(".search_result_num");
-		{
-			dom_str = "<div id='search_result_num'>ヒット件数：" + search_result_num.querySelector("span").innerHTML + "件</div>";
+		if(search_result_num){
+			document.getElementById("search_result_num").innerHTML = search_result_num.innerHTML;
 		}
 
 
 		var el_item_box = got_html_document.querySelectorAll(".item_box");
 
-		var item_header_data = {};
-		item_header_data = [];
+		//var item_header_data = {};
+		var item_header_data = [];
 
 		for(var i = 0; i < el_item_box.length; i++){
 			var el = el_item_box[i];
@@ -67,23 +78,45 @@ function createResultItemsHeader(data, type, parameters){ //type=1:トップの�
 			item_header_data[i] = data;
 		}
 
-		$("#contents_wrapper").empty();
-		$("#contents_wrapper").html(template_item_headers(item_header_data));
+		//検索結果の商品一覧にデータをはめ込む
+		{
+			if(type == 1){ //初回検索の場合、現在のビューをリセット
+				$("#contents_wrapper").empty();
+			}
+
+			var display_data;
+
+			//続いて検索の場合、前回検索までの値を連結する
+			if(type > 0){
+				console.log("sarching with " + type + "times, concatting previous array");
+				display_data = current_header_items.concat(item_header_data);
+			}
+			else{
+				display_data = item_header_data;
+			}
+
+			$("#contents_wrapper").html(template_item_headers(display_data));
+
+			//前回までの値に結果を格納しておく
+			current_header_items = display_data;
+		}
 
 
 		//次を読み込むボタンの作成
-		switch(type){
-			case 1:
-				//最初のロード時
-				
-				break;	
-			case 2:
-				//2ページ目以降の場合
-				
-				break;
+		{
+			var el_search_more_button = document.getElementById("button_search_more")
+			
+			//表示状態にする
+			el_search_more_button.style.display = "inline";
+
+			//検索条件を保存
+			el_search_more_button.setAttribute("search_condition", JSON.stringify(parameters));
+
+			//try(再読み込み回数をセット)
+			el_search_more_button.setAttribute("try_num", type);
+
 		}
 
-		//document.getElementById("userlist").innerHTML += "<button class='ui-btn' onclick='button_clicked()'>さらに検索</button>";
 	}
 	catch(e){
 		console.log(e)
@@ -96,8 +129,6 @@ function createResultItemDetail(data, type, parameters){
 
 	var dom_parser = new DOMParser();
 	var got_html_document = null;
-
-	//var _data = "<html><head><title>test</title></head><body><p>no item</p></body></html>";
 
 	try{
 		got_html_document = dom_parser.parseFromString(data, "text/html");
@@ -113,13 +144,12 @@ function createResultItemDetail(data, type, parameters){
 			got_html_document = null;
 		}
 
-
 		var el = got_html_document;
 
 		var el_tbody = el.querySelectorAll(".riq01 .ta01 > tbody > tr");
 
-		var id = parameters.split("/")[2];
-		var url = parameters.split("=")[1];
+		var id = parameters.detail_path.split("/")[1];
+		var url = parameters.detail_path;
 		var pictures = (function(el){
 			var arr = [];
 
@@ -132,7 +162,8 @@ function createResultItemDetail(data, type, parameters){
 			return arr;
 		})(el);
 
-		//console.log(url);
+		console.log(id);
+		console.log(url);
 
 		//console.log(pictures);
 
@@ -172,12 +203,27 @@ function getHeaderInfo(event){
 
 	var search_key = document.getElementById("search_key").value;
 
+
+
 	if((search_key != null) && (search_key != "")){
 
+		/*
 		var parameters = "";
 		{
 			parameters += "word=" + encodeURIComponent(search_key);
 			parameters += "&length=50";
+		}
+		
+
+		if(is_debug){
+			parameters = "";
+		}
+		*/
+
+		var parameters = {};
+		{
+			parameters.word = encodeURIComponent(search_key);
+			parameters.length = 50;
 		}
 
 		sendRequest(url, parameters, 1, createResultItemsHeader);
@@ -187,15 +233,46 @@ function getHeaderInfo(event){
 	}
 }
 
+/* 追加で商品一覧を取得する */
+function getHeaderInfoMore(event){
+	var url = header_search_url;
+
+	//現在までのトライ回数を取得する
+	var try_num = event.getAttribute("try_num");
+
+	//その時点までの検索条件を取得する
+	var parameters = JSON.parse(event.getAttribute("search_condition"));
+
+	if(parameters){
+		parameters.page = Number(try_num) + 1; //次に読み込むページ番号
+
+		sendRequest(url, parameters, Number(try_num) + 1, createResultItemsHeader);
+	}
+	else{
+		outLog("failure to get search condition...");
+	}
+
+}
+
 /* Crooooberから商品明細を取得する */
 function getDetailInfo(event){
 	outLog("getDetailInfo Driven");
 
-	var url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContentDetail.php?";
+	var url = detail_search_url;
+	
+	/*
 	var parameters = "detail_path=" + event.getAttribute("datailurl");
 
+	if(is_debug){
+		parameters = "";
+	}
+	*/
+
+	var parameters = {
+		detail_path: event.getAttribute("datailurl")
+	};
+
 	sendRequest(url, parameters, null, createResultItemDetail, function(){
-		
 		
 		//前回表示が出るとまずい...
 		$("#detail_content_wrapper").empty();
@@ -205,7 +282,6 @@ function getDetailInfo(event){
 			price: event.querySelector(".h_price").innerHTML
 		}));
 		
-
 		// 詳細ページに切り替え
 		$('body').pagecontainer('change', '#page_item_detail',　{ transition: 'slide' } );
 
@@ -219,11 +295,19 @@ function sendRequest(url, parameters, type, callback, before_callback){
 	//$.support.cors = true;
 	//$.mobile.allowCrossDomainPages = true;
 
+	var str_parameters = convJSON2QueryString(parameters);
+
+	console.log("str_parameters is: " + str_parameters);
+
+	if(is_debug){
+		str_parameters = "";
+	}
+
 	$.ajax({
-		url: url + parameters,
+		//url: url + parameters,
+		url: url + str_parameters,
 		beforeSend: function(jqXHR){
 			outLog("in beforeSend");
-
 			
 			if(before_callback){
 				before_callback();

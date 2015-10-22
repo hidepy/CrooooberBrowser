@@ -6,6 +6,8 @@ var template_item_detail;
 var header_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
 var detail_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContentDetail.php?";
 
+var croooober_url = "http://www.croooober.com";
+
 //現在表示されている商品リストを保持しておく
 var current_header_items = [];
 
@@ -76,6 +78,10 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 		var previous_length_str = el_search_more_button.getAttribute("current_display_item_length");
 		var previous_length = (previous_length_str && previous_length_str != "") ? Number(previous_length_str) : 0;
 
+		if(type == 1){
+			//初回検索になった場合、件数をリセット
+			previous_length = 0;
+		}
 
 		//var item_header_data = {};
 		var item_header_data = [];
@@ -194,6 +200,7 @@ function createResultItemDetail(data, type, parameters){
 		var data = {
 			id: id,
 			url: url,
+			full_url: (croooober_url + url),
 			title: el.querySelector("#title > .item_title").innerHTML,
 			price: el.querySelector(".price_box > .price_in > .price").innerHTML,
 			pictures: pictures,
@@ -364,36 +371,3 @@ function sendRequest(url, parameters, type, callback, before_callback){
 	});
 }
 
-function saveDetailItem2Storage(data){
-	//処理時間を考慮し、追加時は特に件数チェックは行わない
-
-
-	var item_hash = JSON.parse(window.localStorage.getItem("item_detail_info_list"));
-
-	if(!item_hash){
-		item_hash = {};
-	}
-
-
-	//このハッシュは、itemのidをキーとして、dataオブジェクトが格納されている
-	/*
-	{
-		271236: {
-			id
-			url
-			title...
-		},
-		212896: {
-			id
-			url
-			title...
-		}
-		...
-	}
-	*/
-
-	item_hash[data.id] = JSON.stringify(data);
-
-
-
-}

@@ -55,7 +55,14 @@ function search_more_button_clicked(event){
 
 }
 
+function detail_open_croooober_page(event){
+	console.log("detail_open_croooober_page");
 
+	var url = event.target.getAttribute("crooooberPageUrl");
+
+	window.open(url, "_system","");
+
+}
 
 
 /*
@@ -88,8 +95,13 @@ $(document).ready(function(){
 		search_more_button_clicked(event.target);
 	});
 
+	//トップへ
 	$("#f_to_top").click(function(){
 		$( 'html,body' ).animate( {scrollTop:0} , 'slow' ) ;
+    });
+
+    $("#d_button2Croooober").click(function(event){
+    	detail_open_croooober_page(event);
     });
 
 });

@@ -76,6 +76,7 @@
         <script type="text/javascript" src="js/handlebars-v4.0.2.js"></script>
 
         <script type="text/javascript" src="js/commonFunctions.js"></script>
+        <script type="text/javascript" src="js/storageManager.js"></script>
         <script type="text/javascript" src="js/eventController.js"></script>
         <script type="text/javascript" src="js/getCrooooberData.js"></script>
 
@@ -159,7 +160,7 @@
 <body>
 
 <div id="page" data-role="page" data-theme="a" id="page_main">
-    <div data-role="header" data-theme="a"　data-position="fixed">
+    <div data-role="header"　data-position="fixed" data-fullscreen="true" data-theme="a">
 
         <h3>Croooober browserだよっ！！</h3>
 
@@ -203,6 +204,9 @@
             <button id="button_search_more" search_condition="">さらに検索</button>
         </div>
 
+        <div>
+            page_end
+        </div>
         <!--
         <ul id="userlist" data-count-theme="b" data-role="listview" data-split-icon="plus" data-split-theme="b" data-theme="b" data-divider-theme="b">
 
@@ -211,7 +215,7 @@
 
     </div>
 
-    <div data-role="footer" data-position="fixed">
+    <div data-role="footer" data-fullscreen="true" data-position="fixed">
         <div data-role="navbar">
           <ul>
             <li><a href="#" id="f_to_top">トップ</a></li>
@@ -272,8 +276,11 @@
                 <div>{{rank}}</div>
             </div>
 
-            <button id="d_button2Croooober" class="ui-btn">Crooooberで見る(購入する場合など)</button>
-            <button id="d_delete_cache" class="ui_btn">ページのキャッシュを削除(再度最新の情報を取得する場合)</button>
+            <a href="http://www.croooober.com/item/4041918">url: http://www.croooober.com/item/4041918</a>
+
+            <a href="{{full_url}}" target="_system">{{full_url}}</a>
+            <button id="d_button2Croooober" class="ui-btn" crooooberPageUrl="{{full_url}}">Crooooberで見る(購入する場合など)</button>
+            <button id="d_delete_cache" class="ui-btn">ページのキャッシュを削除(再度最新の情報を取得する場合)</button>
             <p><a href="#page_main" data-rel="back">戻る</a></p>
 
         </script>

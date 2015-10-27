@@ -125,6 +125,11 @@
             }(DOMParser));
         </script>
 
+</script>
+
+
+
+
 
         <style>
         #search_condition_wrapper{
@@ -276,7 +281,13 @@
                 <div>{{rank}}</div>
             </div>
 
-            <a href="http://www.croooober.com/item/4041918">url: http://www.croooober.com/item/4041918</a>
+            
+            <a href="#" onclick='navigator.app.loadUrl("http://google.com", {openExternal : true});'>google</a>
+            <a href="#" onclick="window.open('http://www.kidzout.com', '_system');">www.kidzout.com</a>
+
+            <a href="http://www.croooober.com/item/4041918">既定のページを開く。systtemなし</a>
+            <a href="http://www.croooober.com/item/4041918" target="_system">既定のページを開く。systtemあり</a>
+            <a href="http://www.croooober.com/item/4041918" onClick='window.open("http://www.google.com/","_system", "")'>既定のページを開く。systtemあり</a>
 
             <a href="{{full_url}}" target="_system">{{full_url}}</a>
             <button id="d_button2Croooober" class="ui-btn" crooooberPageUrl="{{full_url}}">Crooooberで見る(購入する場合など)</button>
@@ -287,9 +298,9 @@
     </div>
 </div>
 
-<!--
+
     <script type="text/javascript" src="cordova.js"></script>
--->
+
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript">
         app.initialize();

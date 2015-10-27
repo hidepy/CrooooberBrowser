@@ -31,6 +31,10 @@ StorageManager.prototype.convStorage2Hash = function(){
 	return item_hash;
 }
 
+StorageManager.prototype.getAllItem = function(){
+	return this.detailItemHash;
+}
+
 /* ハッシュに格納されている商品詳細情報を取得する */
 StorageManager.prototype.getDetailItem = function(key){
 	return this.detailItemHash[key];
@@ -50,8 +54,11 @@ StorageManager.prototype.deleteItem = function(key){
 StorageManager.prototype.saveDetailItem2Storage = function(data){
 	//処理時間を考慮し、追加時は特に件数チェックは行わない
 
+	console.log("in saveDetailItem2Storage");
+
 	this.detailItemHash[data.id] = data;
 
-	window.localStorage.setItem(JSON.stringify(this.detailItemHash));
+	window.localStorage.setItem("item_detail_info_list", JSON.stringify(this.detailItemHash));
+
 }
 

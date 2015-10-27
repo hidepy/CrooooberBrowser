@@ -8,6 +8,8 @@ var detail_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/get
 
 var croooober_url = "http://www.croooober.com";
 
+var storageManager;
+
 //現在表示されている商品リストを保持しておく
 var current_header_items = [];
 
@@ -24,7 +26,7 @@ $(document).ready(function(){
 
 
 	/* ストレージからキャッシュ済の商品詳細を取得 */
-
+	storageManager = new StorageManager();
 });
 
 
@@ -180,7 +182,7 @@ function createResultItemDetail(data, type, parameters){
 
 		var el_tbody = el.querySelectorAll(".riq01 .ta01 > tbody > tr");
 
-		var id = parameters.detail_path.split("/")[1];
+		var id = parameters.detail_path.split("/")[2];
 		var url = parameters.detail_path;
 		var pictures = (function(el){
 			var arr = [];
@@ -216,6 +218,7 @@ function createResultItemDetail(data, type, parameters){
 		//console.log(data);
 		
 		//今回取得した情報をlocalstorageに格納
+		storageManager.saveDetailItem2Storage(data);
 
 		$("#detail_content_wrapper").html(template_item_detail(data));
 
@@ -224,6 +227,22 @@ function createResultItemDetail(data, type, parameters){
 		console.log(e);
 	}
 
+}
+
+/* storageから作成したhash内にヒットした場合、そっちからページを生成 */
+function createResultItemDetailFromCache(key){
+	console.log("in createResultItemDetailFromCache");
+
+	var item = storageManager.getDetailItem(key);
+
+	if(item){
+		//キャッシュからコンテンツを生成
+		$("#detail_content_wrapper").html(template_item_detail(item));
+
+		return true;
+	}
+
+	return false;
 }
 
 var msg_no_searchKey = "検索キーが入力されていません";
@@ -300,26 +319,35 @@ function getDetailInfo(event){
 		detail_path: event.getAttribute("datailurl")
 	};
 
-	sendRequest(url, parameters, null, createResultItemDetail, function(){
-		
-		//前回表示が出るとまずい...
-		$("#detail_content_wrapper").empty();
-		//とりあえず、持っている情報を出力しておく
-		$("#detail_content_wrapper").html(template_item_detail({
-			title: event.querySelector(".h_title").innerHTML,
-			price: event.querySelector(".h_price").innerHTML
-		}));
-		
-		// 詳細ページに切り替え
-		$('body').pagecontainer('change', '#page_item_detail',　{ transition: 'slide' } );
+	var id = parameters.detail_path.split("/")[2];
 
-	});
+	console.log(parameters.detail_path);
+
+	if(createResultItemDetailFromCache(id)){
+			// 詳細ページに切り替え
+			$('body').pagecontainer('change', '#page_item_detail',　{ transition: 'slide' } );
+	}
+	else{
+		sendRequest(url, parameters, null, createResultItemDetail, function(){
+			
+			//前回表示が出るとまずい...
+			$("#detail_content_wrapper").empty();
+			//とりあえず、持っている情報を出力しておく
+			$("#detail_content_wrapper").html(template_item_detail({
+				title: event.querySelector(".h_title").innerHTML,
+				price: event.querySelector(".h_price").innerHTML
+			}));
+			
+			// 詳細ページに切り替え
+			$('body').pagecontainer('change', '#page_item_detail',　{ transition: 'slide' } );
+
+		});
+	}
 
 }
 
 //ajaxでリクエストを飛ばす
 function sendRequest(url, parameters, type, callback, before_callback){
-
 	//$.support.cors = true;
 	//$.mobile.allowCrossDomainPages = true;
 

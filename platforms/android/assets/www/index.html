@@ -75,11 +75,13 @@
         <!-- Handlebars.js -->
         <script type="text/javascript" src="js/handlebars-v4.0.2.js"></script>
 
+        <script type="text/javascript" src="js/DomParserExtention.js"></script>
         <script type="text/javascript" src="js/commonFunctions.js"></script>
         <script type="text/javascript" src="js/storageManager.js"></script>
         <script type="text/javascript" src="js/eventController.js"></script>
         <script type="text/javascript" src="js/getCrooooberData.js"></script>
 
+<!--
         <script>
             /*
              * DOMParser HTML extension
@@ -124,8 +126,7 @@
                 };
             }(DOMParser));
         </script>
-
-</script>
+-->
 
 
 
@@ -158,30 +159,37 @@
         #button_search_more{
             display: none;
         }
+        #search_condition_bunrui_list_wrapper > li{
+
+        }
+        #search_condition_bunrui_list_wrapper > .bunrui_list_selected{
+            background-color: #222222;
+            color: white;
+        }
+
+
         </style>
 
 
     </head>
 <body>
 
-<div id="page" data-role="page" data-theme="a" id="page_main">
-    <div data-role="header"　data-position="fixed" data-fullscreen="true" data-theme="a">
+<div data-role="page" data-theme="a" id="page_main" data-tap-toggle="false">
+    <div data-role="header"　data-position="fixed" data-theme="a" data-fullscreen="false">
 
         <h3>Croooober browserだよっ！！</h3>
 
         <div id="search_condition_wrapper">
             <input type="text" id="search_key" />
 
-            <div>
-                <button class="ui-btn" id="search_button">検索</button>
-                <button class="ui-btn" id="detail_search_setting_button">検索設定</button>
+            <div data-role="navbar">
+                <ul>
+                    <li><button class="ui-btn" id="search_button">検索</button></li>
+                    <li><button class="ui-btn" id="detail_search_setting_button">検索設定</button></li>
+                </ul>
             </div>
         </div>
 
-        <!--<button class="ui-btn" onclick="button_clicked_to_local()">詳細オプション</button>
-
-        <button class="ui-btn" onclick="button_clicked_clear">条件をクリア</button>
-    -->
     </div>
 
     <div data-role="content"> 
@@ -193,12 +201,14 @@
             <script id="item_header_search_result" type="text/x-handlebars-template">
 
                 {{#each this}}
-                    <div class="item_header_wrapper list-divider ui-btn" datailurl="{{detail_url}}" onclick="getDetailInfo(this)">
-                        <div class="item_header_id">{{item_number}}</div>
+                    <div class="item_header_wrapper ui-btn" datailurl="{{detail_url}}" onclick="getDetailInfo(this)">
+                        
                         <div class="item_header_text_info">
-                            <div class="h_title">{{title}}</div>
-                            <div class="h_price">{{price}}</div>
+                            <span class="item_header_id">{{item_number}}</span>
+                            <span class="h_title">{{title}}</span>
+                            <span class="h_price">{{price}}</span>
                         </div>
+
                         <img src="{{pic_url}}" class="h_picture">
                     </div>
                 {{/each}}
@@ -220,17 +230,17 @@
 
     </div>
 
-    <div data-role="footer" data-fullscreen="true" data-position="fixed">
+    <div data-role="footer" data-position="fixed" data-tap-toggle="false" data-fullscreen="false" data-theme="b" class="ui-bar">
+
         <div data-role="navbar">
           <ul>
             <li><a href="#" id="f_to_top">トップ</a></li>
-            <li><a href="#">設定</a></li>
-            <li><a href="#">ヘルプ</a></li>
-            <li><a href="#">問い合わせ</a></li>
+            <li><a href="#">お気に入り</a></li>
           </ul>
         </div>
     </div>
-    
+
+
 </div>
 
 <div data-role="page" id="page_item_detail">
@@ -281,20 +291,85 @@
                 <div>{{rank}}</div>
             </div>
 
-            
-            <a href="#" onclick='navigator.app.loadUrl("http://google.com", {openExternal : true});'>google</a>
-            <a href="#" onclick="window.open('http://www.kidzout.com', '_system');">www.kidzout.com</a>
-
-            <a href="http://www.croooober.com/item/4041918">既定のページを開く。systtemなし</a>
-            <a href="http://www.croooober.com/item/4041918" target="_system">既定のページを開く。systtemあり</a>
-            <a href="http://www.croooober.com/item/4041918" onClick='window.open("http://www.google.com/","_system", "")'>既定のページを開く。systtemあり</a>
-
-            <a href="{{full_url}}" target="_system">{{full_url}}</a>
-            <button id="d_button2Croooober" class="ui-btn" crooooberPageUrl="{{full_url}}">Crooooberで見る(購入する場合など)</button>
+            <button id="d_button2Croooober" class="ui-btn" onclick="window.open('{{full_url}}', '_system');" crooooberPageUrl="{{full_url}}">Crooooberで見る(購入する場合など)</button>
             <button id="d_delete_cache" class="ui-btn">ページのキャッシュを削除(再度最新の情報を取得する場合)</button>
             <p><a href="#page_main" data-rel="back">戻る</a></p>
 
         </script>
+    </div>
+</div>
+
+
+<div data-role="page" id="page_setting_search_condition">
+    <div data-role="header" >
+        <h1>詳細検索設定</h1>
+    </div>
+
+    <div data-role="content" id="search_condition_wrapper">
+        <p><a href="#page_main" data-rel="back">戻る</a></p>
+
+            <button class="ui-btn" id="search_condition_clear">検索条件をクリア</button>
+
+            <div data-role="fieldcontain">
+                <label for="setting_search_condition_keyword">検索キー</label>
+                <input type="text" id="setting_search_condition_keyword" />
+            </div>
+
+            <div class="ui-field-contain">
+                <fieldset data-role="controlgroup">
+                  <legend>ソート</legend>
+                  <input id="search_condition_sort_newer" name="search_condition_sort" type="radio" value="1" />
+                  <label for="search_condition_sort_newer">新着順</label>
+                  <input id="search_condition_sort_kakakuLower" name="search_condition_sort" type="radio" value="2" />
+                  <label for="search_condition_sort_kakakuLower">価格が安い順</label>
+                  <input id="search_condition_sort_kakakuHigher" name="search_condition_sort" type="radio" value="3" />
+                  <label for="search_condition_sort_kakakuHigher">価格が高い順</label>
+                </fieldset>
+            </div>
+
+            <div data-role="fieldcontain">
+                <ul data-role="listview" id="search_condition_bunrui_list_wrapper">
+                    <li id="licat">(指定なし)</li>
+                    <li data-role="list-divider">バイクパーツ</li>
+                    <li id="licat9010">マフラー</li>
+                    <li id="licat9015">外装</li>
+                    <li id="licat9020">ハンドル・ハンドル廻り</li>
+                    <li id="licat9025">メーター</li>
+                    <li id="licat9030">ステップ・スタンド</li>
+                    <li id="licat9035">足まわり</li>
+                    <li id="licat9040">駆動系</li>
+                    <li id="licat9045">ホイール・タイヤ</li>
+                    <li id="licat9050">ブレーキ</li>
+                    <li id="licat9055">電装品</li>
+                    <li id="licat9060">冷却系</li>
+                    <li id="licat9065">吸気・燃料系</li>
+                    <li id="licat9070">エンジン・フレーム</li>
+                    <li id="licat9075">その他(バイクパーツ)</li>
+                    <li data-role="list-divider">バイク用品</li>
+                    <li id="licat9210">ヘルメット</li>
+                    <li id="licat9220">ウエア</li>
+                    <li id="licat9230">ブーツ・シューズ</li>
+                    <li id="licat9240">グローブ・ゴーグル</li>
+                    <li id="licat9250">プロテクター</li>
+                    <li id="licat9260">ツーリング用品</li>
+                    <li id="licat9270">メンテナンス</li>
+                    <li id="licat9280">ケミカル・オイル</li>
+                    <li id="licat9299">その他(バイク用品)</li>
+                </ul>
+            </div>
+
+            <div data-role="fieldcontain">
+                <label for="setting_search_condition_kakaku_low">下限</label>
+                <input type="text" id="setting_search_condition_kakaku_low" />
+
+                <label for="setting_search_condition_kakaku_high">上限</label>
+                <input type="text" id="setting_search_condition_kakaku_high" />
+            </div>
+
+            <button class="ui-btn" id="detail_search_button">条件指定検索</button>
+
+        <p><a href="#page_main" data-rel="back">戻る</a></p>
+        
     </div>
 </div>
 
@@ -308,3 +383,34 @@
 
 </body>
 </html>
+
+
+
+<!--
+http://www.croooober.com/bparts/search?category=bparts
+q=vtr250
+connector=and コネクタ
+nq=
+c_bunrui_cd=20_90_10 分類検索をする場合
+shouhin_maker_id=
+s_bunrui_cd=
+design_kubun=
+design_kubun_id=
+shaken_taiou_umu=
+shaken_taiou_umu_id=
+stars_division=
+tekigou_maker_name=
+tekigou_shashu_id=
+tekigou_shashu_name=
+kakaku_low=1000 価格範囲を指定する場合
+kakaku_high=5000
+area=
+new_flag=
+wws_flag=
+campaign_flag=
+view_tab=0
+kakaku=asc  価格でソートする場合
+per_page=20
+view_type=1
+
+-->

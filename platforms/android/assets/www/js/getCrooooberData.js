@@ -18,6 +18,7 @@ if(is_debug){
 	detail_search_url = "http://localhost/CrooooberBrowser/debug_html_detail.txt";
 }
 
+
 $(document).ready(function(){
 	
 	/* handlebars.js 用 */
@@ -59,6 +60,8 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 
 			//最大件数の取得
 			search_result_max_num = search_result_num.querySelector("span").innerHTML;
+
+			search_result_max_num = (search_result_max_num != null) ? search_result_max_num.replace(",", "") : "";
 
 			document.getElementById("search_result_num").innerHTML = "ヒット件数：　" + search_result_max_num;//search_result_num.innerHTML;
 		}
@@ -145,9 +148,10 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 			//現在の表示数のセット
 			el_search_more_button.setAttribute("current_display_item_length",  previous_length + el_item_box.length);
 
-
 			//最大件数に、今回検索数が達していない場合、表示状態にする
 			el_search_more_button.style.display = ((previous_length + el_item_box.length) < Number(search_result_max_num)) ? "inline" : "none";
+
+			//console.log("最大件数: " + search_result_max_num + ", 現在までの長さ: " + (previous_length + el_item_box.length) + ", ボタン可視性: " + el_search_more_button.style.display + ", 判定結果: " + ((previous_length + el_item_box.length) < Number(search_result_max_num)));
 
 		}
 
@@ -220,6 +224,8 @@ function createResultItemDetail(data, type, parameters){
 		//今回取得した情報をlocalstorageに格納
 		storageManager.saveDetailItem2Storage(data);
 
+		console.log("before set detail item to html");
+
 		$("#detail_content_wrapper").html(template_item_detail(data));
 
 	}
@@ -247,12 +253,12 @@ function createResultItemDetailFromCache(key){
 
 var msg_no_searchKey = "検索キーが入力されていません";
 
-function getHeaderInfo(event){
+function getHeaderInfo(detail_param){
 	var url = header_search_url; //ヘッダ検索用のURL
 
 	var search_key = document.getElementById("search_key").value;
 
-	if((search_key != null) && (search_key != "")){
+	if(detail_param || ( (search_key != null) && (search_key != ""))){ //詳細検索条件が存在するか、又は、キーワードが存在する
 
 		/*
 		var parameters = "";
@@ -271,6 +277,16 @@ function getHeaderInfo(event){
 		{
 			parameters.word = encodeURIComponent(search_key);
 			parameters.length = 50;
+
+		}
+
+		if(detail_param){ //詳細検索時のパラメータ
+			parameters.word = detail_param.word;
+			parameters.connector = detail_param.connector;
+			parameters.bunrui = detail_param.bunrui;
+			parameters.kakaku_low = detail_param.kakaku_low;
+			parameters.kakaku_high = detail_param.kakaku_high;
+			parameters.sort_type = detail_param.sort;
 		}
 
 		sendRequest(url, parameters, 1, createResultItemsHeader);

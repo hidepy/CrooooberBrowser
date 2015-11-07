@@ -24,6 +24,8 @@
     <preference name="disable-cursor" value="false" />
     <preference name="android-minSdkVersion" value="14" />
     <preference name="android-installLocation" value="auto" />
+
+    <!--
     <gap:plugin name="org.apache.cordova.battery-status" />
     <gap:plugin name="org.apache.cordova.camera" />
     <gap:plugin name="org.apache.cordova.media-capture" />
@@ -37,14 +39,19 @@
     <gap:plugin name="org.apache.cordova.file-transfer" source="npm" />
     <gap:plugin name="org.apache.cordova.geolocation" />
     <gap:plugin name="org.apache.cordova.globalization" />
+    -->
+
     <!--
     <gap:plugin name="org.apache.cordova.inappbrowser" source="npm" />
     -->
     <gap:plugin name="org.apache.cordova.inappbrowser" source="npm" />
+
+    <!--
     <gap:plugin name="org.apache.cordova.media" />
     <gap:plugin name="org.apache.cordova.network-information" />
     <gap:plugin name="org.apache.cordova.splashscreen" />
     <gap:plugin name="org.apache.cordova.vibration" />
+    -->
     <!-- cordova5.1.1 needs this description and plugin install-->
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
 

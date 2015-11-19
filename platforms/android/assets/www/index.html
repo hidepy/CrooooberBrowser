@@ -139,13 +139,40 @@
 <body>
 
 <div data-role="page" id="page_main" data-tap-toggle="false" data-theme="a">
-    <div data-role="header" data-position="fixed" data-add-back-btn="true" data-tap-toggle="false">
+    <div id="main_header" data-role="header" data-position="fixed" data-tap-toggle="false">
 
-        <h3>Croooober browser</h3>
+        <h1>Croooober browser</h1>
         <div class="ui-btn-right">
             <!--<a href="#" id="detail_search_setting_button" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all ui-nodisc-icon ui-alt-icon">検索設定</a>-->
             <a href="#" id="detail_search_setting_button" class="square_btn ui-btn ui-nodisc-icon ui-alt-icon ui-icon-gear ui-btn-icon-top">詳細検索</a>
+            <a href="#menu-right" class="square_btn ui-btn ui-nodisc-icon ui-alt-icon ui-icon-bars ui-btn-icon-top">MENU</a>
         </div>
+
+    </div> <!-- / header -->
+
+    <div data-role="panel" id="menu-right" data-display="overlay" data-position="right" data-theme="b">
+        <a href="#" class="ui-btn-right ui-nodisc-icon" data-rel="close" data-role="button" data-icon="delete" data-iconpos="notext">close</a>
+        <h3>MENU</h3>
+        <div data-role="collapsibleset" data-corners="false" data-inset="false">
+            <div data-role="collapsible">
+                <h3>お気に入り</h3>
+                <ul data-role="listview">
+                    <li><a href="#">Canary</a></li>
+                    <li><a href="#">Cat</a></li>
+                </ul>
+            </div>
+            <div data-role="collapsible">
+                <h3>保存した検索条件</h3>
+                <ul data-role="listview">
+                    <li><a href="#">Canary</a></li>
+                    <li><a href="#">Cat</a></li>
+                </ul>
+            </div>
+        </div>
+    </div> <!-- / menu -->
+    
+    <div id="main"class="content" role="main">
+
         <div id="search_condition_wrapper">
 
             <div id="search_item" data-role="fieldcontain" class="ui-hide-label">
@@ -161,12 +188,8 @@
             </div>
              -->
         </div>
-    </div>
 
-    
-    
-    <div id="main"class="content" role="main"> 
-        <div id="search_result_num"></div>
+        <p id="search_result_num"></p>
 
         <div id="contents_wrapper">
             
@@ -178,7 +201,7 @@
                         <div class="thumb_box"><img src="{{pic_url}}" class="h_picture"></div>
                         <div class="title_box"><span class="item_header_id">{{item_number}}</span>
                         <span class="h_title">{{title}}</span></div>
-                        <p class="h_price">{{price}}</p>
+                        <p class="h_price">{{price}}<button id="favorite_btn" class="icon_btn ui-btn ui-corner-all ui-icon-star ui-btn-icon-notext ui-btn-inline">favorite</button></p>
                          
                     </li>
                 {{/each}}
@@ -208,7 +231,7 @@
         <div data-role="navbar" data-iconpos="left">
           <ul>
             <li><a href="#" id="f_to_top" data-icon="carat-u">トップ</a></li>
-            <li><a href="#" data-icon="star">お気に入り</a></li>
+            <li><a href="#" data-icon="star">検索条件を保存</a></li>
           </ul>
         </div>
     </div>
@@ -218,6 +241,7 @@
 
 <div data-role="page" id="page_item_detail">
     <div data-role="header" >
+        <a href="#page_main" data-rel="back" class="square_btn ui-btn ui-nodisc-icon ui-alt-icon ui-icon-back ui-btn-icon-top">BACK</a>
         <h1>商品詳細</h1>
     </div>
 
@@ -226,14 +250,14 @@
             
             <h2 id="d_title">{{title}}</h2>
 
-            <div>
-                <span>価格:</span>
-                <div id="d_price">
+            <div class="price_area">
+                商品価格:
+                <span id="d_price">
                     {{price}}
-                </div>
+                </span>
             </div>
 
-            <p><a href="#page_main" data-rel="back">戻る</a></p>
+            <!--<p><a href="#page_main" data-rel="back">戻る</a></p>-->
 
             <div id="d_pic">
                 <div id="item_img" style="background-image: url('{{picture}}')"></div>
@@ -264,22 +288,26 @@
                 <div>{{rank}}</div>
             </div>
 
-            <button id="d_button2Croooober" class="ui-btn" onclick="window.open('{{full_url}}', '_system');" crooooberPageUrl="{{full_url}}">Crooooberで見る(購入する場合など)</button>
-            <button id="d_delete_cache" class="ui-btn">ページのキャッシュを削除(再度最新の情報を取得する場合)</button>
-            <p><a href="#page_main" data-rel="back">戻る</a></p>
+            <button id="d_favorite_btn"  class="ui-btn ui-alt-icon ui-icon-star ui-btn-icon-left" >お気に入りに追加</button>
+            <button id="d_button2Croooober"  class="ui-btn ui-alt-icon ui-icon-action ui-btn-icon-left" onclick="window.open('{{full_url}}', '_system');" crooooberPageUrl="{{full_url}}">Crooooberで見る(購入する場合など)</button>
+            <button id="d_delete_cache" class="ui-btn">ページのキャッシュを削除<small>(再度最新の情報を取得する場合)</small></button>
+            <!--<p><a href="#page_main" data-rel="back">戻る</a></p>-->
 
         </script>
     </div>
+
+    <a href="#page_main" data-rel="back" class="square_btn ui-btn ui-nodisc-icon ui-alt-icon ui-icon-back ui-btn-icon-top">BACK</a>
 </div>
 
 
 <div data-role="page" id="page_setting_search_condition">
     <div data-role="header" >
+        <a href="#page_main" data-rel="back" class="square_btn ui-btn ui-nodisc-icon ui-alt-icon ui-icon-back ui-btn-icon-top">BACK</a>
         <h1>詳細検索設定</h1>
     </div>
 
     <div data-role="content" id="search_condition_wrapper">
-        <p><a href="#page_main" data-rel="back">戻る</a></p>
+        <!--<p><a href="#page_main" data-rel="back">戻る</a></p>-->
 
             <button class="ui-btn" id="search_condition_clear">検索条件をクリア</button>
 
@@ -341,9 +369,11 @@
 
             <button class="ui-btn" id="detail_search_button">条件指定検索</button>
 
-        <p><a href="#page_main" data-rel="back">戻る</a></p>
+        <!--<p><a href="#page_main" data-rel="back">戻る</a></p>-->
         
     </div>
+
+    <a href="#page_main" data-rel="back" class="square_btn ui-btn ui-nodisc-icon ui-alt-icon ui-icon-back ui-btn-icon-top">BACK</a>
 </div>
 
 

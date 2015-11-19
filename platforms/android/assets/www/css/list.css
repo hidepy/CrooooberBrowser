@@ -1,17 +1,30 @@
 body{
     font-family: 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, Osaka, 'MS PGothic', arial, helvetica, sans-serif;
     font-weight: normal;
-}
-
-.ui-header .ui-title, .ui-footer .ui-title{
-    margin: 0 10px;
-    text-align: left;
     font-size: 14px;
 }
 
-a.square_btn{
-    font-size: 8px;
+.ui-header .ui-title{
+    font-size: 18px;
+}
+
+#main_header.ui-header .ui-title{
+    margin: 0 10px;
+    text-align: left;
+}
+
+a.square_btn.ui-btn{
+    font-size: 10px;
     font-weight: normal;
+    line-height: 10px;
+    width: 45px;
+    padding: 25px 0 10px;
+    background: transparent;
+    border: none;
+}
+
+.square_btn.ui-btn-icon-top:after{
+    top: .37em;
 }
 
 /*
@@ -23,8 +36,8 @@ a.square_btn{
 }
 */
 #search_item{
-    padding: 0 5px;
-    margin: 5px auto;
+    padding: 0 10px;
+    margin: 10px auto;
     border: none;
 }
 
@@ -90,7 +103,7 @@ a.square_btn{
 
 .ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb{
     height: 100px;
-    //padding-right: 2.5em;
+    padding-right: 7px;
     padding-left: 110px;
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
@@ -101,17 +114,26 @@ a.square_btn{
 .title_box {
     white-space: normal;
     height: 55px;
-    font-size: .9em;
+    font-size: 14px;
     overflow: hidden; 
     text-overflow: ellipsis;
 }
 
 .ui-listview>li p.h_price{
-    font-size: 1.2em;
+    font-size: 18px;
     font-weight: bolder;
-    margin: 0;
+    margin: 5px 0;
     text-align: right;
 }
 
+.icon_btn {
+    margin: 0;
+    border: none;
+}
+#favorite_btn{
+     margin-left: 5px;
+}
 
-
+#favorite_btn.icon_btn.ui-btn-icon-notext:after {
+    background-color: #ddd;  
+}

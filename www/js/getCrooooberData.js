@@ -362,6 +362,51 @@ function getDetailInfo(event){
 
 }
 
+//ヘッダ一覧画面からお気に入りボタンを押した場合
+function addFavoriteItemFromHeader(e){
+
+	console.log("in addFavoriteItemFromHeader");
+
+	console.log(e);
+	var el_target = e.target;
+
+
+	try{
+		//ださいけどparent parentする。面倒なんで
+		var url = el_target.getAttribute("datailurl"); //li 要素のdetailUrlを取得
+
+		console.log(url);
+
+		storageManager.saveFavoriteItem2StorageWithUrl(url); //ヘッダ一覧からお気に入り保存用のメソッドコール
+
+		console.log("現在のお気に入り一覧:");
+		console.log(storageManager.getAllFavoriteItems());
+	}catch(e){
+		console.log("error occured in addFavoriteItemFromHeader");
+	}
+
+}
+
+function addFavoriteItemFromDetail(el_target){
+	console.log("in addFavoriteItemFromDetail");
+
+	try{
+		var el_title = document.getElementById("d_title");
+
+		if(el_title){
+			var detail_info = storageManager.getDetailItem(el_title.getAttribute("detail_id"));
+
+			(detail_info) ? storageManager.saveFavoriteItem2StorageWithDetailData(detail_info) : console.log("お気に入り登録に失敗しました(詳細情報取得失敗)");
+
+			console.log("現在のお気に入り一覧:");
+			console.log(storageManager.getAllFavoriteItems());
+		}
+
+	}catch(e){
+		console.log("error occured in addFavoriteItemFromDetail");
+	}
+}
+
 //ajaxでリクエストを飛ばす
 function sendRequest(url, parameters, type, callback, before_callback){
 	//$.support.cors = true;

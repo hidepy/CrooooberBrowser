@@ -16,18 +16,20 @@
 */
 
 var StorageManager = function(){
+	this.cacheName = "item_detail_info_list";
+	this.favorName = "favorite_list";
+
 	this.detailItemHash = this.convStorage2Hash(); //詳細ページの情報を保持するハッシュ
+	this.favoriteItemHash = this.convStorage2FavoriteItemHash(); //お気に入りのロード
+
 	this.limit = 100; //商品詳細の最大保持件数
 	this.limitItems(); //保持件数に制限をかける
-
-	this.favorite = {}; //お気に入りのロード
-
 
 };
 
 /* local storageからオブジェクトを生成 */
 StorageManager.prototype.convStorage2Hash = function(){
-	var item_hash = JSON.parse(window.localStorage.getItem("item_detail_info_list"));
+	var item_hash = JSON.parse(window.localStorage.getItem(this.cacheName));
 
 	if(!item_hash){
 		item_hash = {};
@@ -63,7 +65,7 @@ StorageManager.prototype.saveDetailItem2Storage = function(data){
 
 	this.detailItemHash[data.id] = data;
 
-	window.localStorage.setItem("item_detail_info_list", JSON.stringify(this.detailItemHash));
+	window.localStorage.setItem(this.cacheName, JSON.stringify(this.detailItemHash));
 
 }
 
@@ -93,12 +95,58 @@ StorageManager.prototype.limitItems = function(){
 	}
 
 	//localStorageを同期
-	window.localStorage.setItem("item_detail_info_list", JSON.stringify(this.detailItemHash));
+	window.localStorage.setItem(this.cacheName, JSON.stringify(this.detailItemHash));
 
 }
 
-StorageManager.prototype.getFavoriteItems = function(){
+
+
+
+//-------------------- お気に入り関連 --------------------
+StorageManager.prototype.convStorage2FavoriteItemHash = function(){
+
+	var item_hash = {};
+	try{
+		item_hash = JSON.parse(window.localStorage.getItem(this.favorName));
+	}catch(e){
+		item_hash = {};
+		//window.localStorage.setItem(this.favorName, JSON.stringify({}));
+
+	}
+
+	return item_hash;
+}
+
+StorageManager.prototype.getAllFavoriteItems = function(){
+	return this.favoriteItemHash;
+}
+
+//ヘッダ一覧画面でお気に入りを押した場合
+// 後の修正が大変なので、フローは1本化するべきか？
+StorageManager.prototype.saveFavoriteItem2StorageWithUrl = function(detail_url){
 	
+	console.log("in saveFavoriteItem2StorageWithUrl");
+
+	var id = detail_url.split("/")[2];
+
+	// 既に登録済か確認
+	if(this.favoriteItemHash[id]){
+		return;
+	}
+
+	this.favoriteItemHash[id] = {
+		id: id,
+		flg_dont_have_detail: true
+	}; //flgが立っている = 詳細情報を検索していない
+
+	window.localStorage.setItem(this.favorName, JSON.stringify(this.favoriteItemHash));
+}
+
+StorageManager.prototype.saveFavoriteItem2StorageWithDetailData = function(data){
+
+	this.favoriteItemHash[data.id] = data;
+
+	window.localStorage.setItem(this.favorName, JSON.stringify(this.favoriteItemHash));
 }
 
 

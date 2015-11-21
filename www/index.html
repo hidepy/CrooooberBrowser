@@ -153,13 +153,32 @@
     <div data-role="panel" id="menu-right" data-display="overlay" data-position="right" data-theme="b">
         <a href="#" class="ui-btn-right ui-nodisc-icon" data-rel="close" data-role="button" data-icon="delete" data-iconpos="notext">close</a>
         <h3>MENU</h3>
+        <a href="#page_favorite">お気に入り</a>
         <div data-role="collapsibleset" data-corners="false" data-inset="false">
             <div data-role="collapsible">
                 <h3>お気に入り</h3>
+
+                <!--<script id="favorite_item_display_area" type="text/x-handlebars-template">
+                    <ul class="ui-listview ui-corner-all">
+
+                    {{#each this}}
+                        <li class=" ui-li-static ui-body-inherit ui-li-has-thumb">
+                            <span>{{id}}</span>
+                            <span>{{price}}</span>                             
+                        </li>
+                    {{/each}}
+
+                    </ul>
+                </script>
+            -->
+
+                <!--
                 <ul data-role="listview">
                     <li><a href="#">Canary</a></li>
                     <li><a href="#">Cat</a></li>
+
                 </ul>
+                -->
             </div>
             <div data-role="collapsible">
                 <h3>保存した検索条件</h3>
@@ -171,7 +190,7 @@
         </div>
     </div> <!-- / menu -->
     
-    <div id="main"class="content" role="main">
+    <div id="main" class="content" role="main">
 
         <div id="search_condition_wrapper">
 
@@ -201,9 +220,8 @@
                         <div class="thumb_box"><img src="{{pic_url}}" class="h_picture"></div>
                         <div class="title_box"><span class="item_header_id">{{item_number}}</span>
                         <span class="h_title">{{title}}</span></div>
-                        <span class="h_price">{{price}}</span>
                         <button id="favorite_btn" onclick="addFavoriteItemFromHeader(event)" datailurl="{{detail_url}}" class="icon_btn ui-btn ui-corner-all ui-icon-star ui-btn-icon-notext ui-btn-inline">favorite</button>
-                         
+                        <p class="h_price">{{price}}</p>   
                     </li>
                 {{/each}}
 
@@ -299,6 +317,34 @@
 
     <a href="#page_main" data-rel="back" class="square_btn ui-btn ui-nodisc-icon ui-alt-icon ui-icon-back ui-btn-icon-top">BACK</a>
 </div>
+
+
+<div data-role="page" id="page_favorite">
+    <div data-role="header" >
+        <a href="#page_main" data-rel="back" class="square_btn ui-btn ui-nodisc-icon ui-alt-icon ui-icon-back ui-btn-icon-top">BACK</a>
+        <h1>お気に入り</h1>
+    </div>
+
+    <div data-role="content" id="favorite_content_wrapper">
+        <script id="favorite_item_display_area" type="text/x-handlebars-template">
+            <ul class="ui-listview ui-corner-all">
+
+            {{#each this}}
+                <li class="ui-li-static ui-body-inherit ui-li-has-thumb" datailurl="{{detail_url}}" onclick="getDetailInfo(this)">
+                    <div class="thumb_box"><img src="{{pic_url}}" class="h_picture"></div>
+                    <div class="title_box"><span class="item_header_id">{{id}}</span>
+                    <span class="h_title">{{title}}</span></div>
+                    <p class="h_price">{{price}}</p>                          
+                </li>
+            {{/each}}
+
+            </ul>
+               
+        </script>
+    </div>
+
+    <a href="#page_main" data-rel="back" class="square_btn ui-btn ui-nodisc-icon ui-alt-icon ui-icon-back ui-btn-icon-top">BACK</a>
+</div> <!-- / #page_favorite -->
 
 
 <div data-role="page" id="page_setting_search_condition">

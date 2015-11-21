@@ -101,7 +101,7 @@ a.square_btn.ui-btn{
     color: white;
 }
 
-.ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb{
+.ui-listview>.ui-li-static.ui-li-has-thumb{
     height: 100px;
     padding-right: 7px;
     padding-left: 110px;
@@ -131,9 +131,16 @@ a.square_btn.ui-btn{
     border: none;
 }
 #favorite_btn{
-     margin-left: 5px;
+    float: right;
+    margin: 0 0 0 5px;
+    padding: 2px;
+    min-height: auto;
 }
 
 #favorite_btn.icon_btn.ui-btn-icon-notext:after {
     background-color: #ddd;  
+}
+
+#favorite_btn.marked.icon_btn.ui-btn-icon-notext:after{
+    background-color: #FFC800;
 }

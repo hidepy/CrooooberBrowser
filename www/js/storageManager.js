@@ -121,12 +121,14 @@ StorageManager.prototype.getAllFavoriteItems = function(){
 	return this.favoriteItemHash;
 }
 
+StorageManager.prototype.getAllFavoriteItemsAsArr = function(){
+	return convHash2Arr(this.favoriteItemHash);
+}
+
 //ヘッダ一覧画面でお気に入りを押した場合
 // 後の修正が大変なので、フローは1本化するべきか？
 StorageManager.prototype.saveFavoriteItem2StorageWithUrl = function(detail_url){
 	
-	console.log("in saveFavoriteItem2StorageWithUrl");
-
 	var id = detail_url.split("/")[2];
 
 	// 既に登録済か確認
@@ -136,6 +138,17 @@ StorageManager.prototype.saveFavoriteItem2StorageWithUrl = function(detail_url){
 
 	this.favoriteItemHash[id] = {
 		id: id,
+		url: "none...",
+		full_url: "none...",
+		title: "no title...",
+		price: "",
+		pictures: "",
+		picture: "",
+		maker_name: "",
+		rank: "",
+		comment: "no comment...",
+		tbody: "",
+		ref_date_time: formatDate(new Date()),
 		flg_dont_have_detail: true
 	}; //flgが立っている = 詳細情報を検索していない
 

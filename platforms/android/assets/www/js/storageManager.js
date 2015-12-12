@@ -20,6 +20,8 @@ var StorageManager = function(){
 	this.limit = 100; //商品詳細の最大保持件数
 	this.limitItems(); //保持件数に制限をかける
 
+	this.favorite = {}; //お気に入りのロード
+
 
 };
 
@@ -95,6 +97,9 @@ StorageManager.prototype.limitItems = function(){
 
 }
 
+StorageManager.prototype.getFavoriteItems = function(){
+	
+}
 
 
 /*

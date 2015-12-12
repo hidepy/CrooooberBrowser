@@ -1,0 +1,139 @@
+body{
+    font-family: 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, Osaka, 'MS PGothic', arial, helvetica, sans-serif;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.ui-header .ui-title{
+    font-size: 18px;
+}
+
+#main_header.ui-header .ui-title{
+    margin: 0 10px;
+    text-align: left;
+}
+
+a.square_btn.ui-btn{
+    font-size: 10px;
+    font-weight: normal;
+    line-height: 10px;
+    width: 45px;
+    padding: 25px 0 10px;
+    background: transparent;
+    border: none;
+}
+
+.square_btn.ui-btn-icon-top:after{
+    top: .37em;
+}
+
+/*
+#search_condition_wrapper{
+    width: 100%;
+}
+#search_button{
+    width: 100%;
+}
+*/
+#search_item{
+    padding: 0 10px;
+    margin: 10px auto;
+    border: none;
+}
+
+
+#main ul.ui-listview{
+    margin-top: 5px;
+    margin-bottom: 0; 
+
+}
+
+#search_result_num{
+    text-align: center;
+}
+.thumb_box img.h_picture{
+    height: 100%;
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+    -o-flex-shrink: 0;
+    -moz-flex-shrink: 0;
+}
+
+.thumb_box{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    justify-content: center;
+    -webkit-justify-content: center;
+    -o-justify-content: center;
+    -moz-justify-content: center;
+    align-items: center;
+    -webkit-align-items: center;
+    -o-align-items: center;
+    -moz-align-items: center;
+    background: #ddd;
+}
+
+.d_picture{
+    display: inline;
+}
+.d_picture > img{
+    width: 24%;
+    height: auto;
+}
+#d_pic > img{
+    width: 100%;
+    max-width: 640px;
+    max-height: 480px;
+}
+#button_search_more{
+    display: none;
+}
+#search_condition_bunrui_list_wrapper > li{
+
+}
+#search_condition_bunrui_list_wrapper > .bunrui_list_selected{
+    background-color: #222222;
+    color: white;
+}
+
+.ui-listview>.ui-li-has-thumb>.ui-btn, .ui-listview>.ui-li-static.ui-li-has-thumb{
+    height: 100px;
+    padding-right: 7px;
+    padding-left: 110px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.title_box {
+    white-space: normal;
+    height: 55px;
+    font-size: 14px;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+.ui-listview>li p.h_price{
+    font-size: 18px;
+    font-weight: bolder;
+    margin: 5px 0;
+    text-align: right;
+}
+
+.icon_btn {
+    margin: 0;
+    border: none;
+}
+#favorite_btn{
+     margin-left: 5px;
+}
+
+#favorite_btn.icon_btn.ui-btn-icon-notext:after {
+    background-color: #ddd;  
+}

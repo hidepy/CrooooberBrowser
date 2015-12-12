@@ -1,0 +1,51 @@
+#item_img{
+	margin: 0 -1em;
+	height: 280px;
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+h2#d_title{
+	font-size: 16px;
+	margin: 5px 0;
+}
+
+.price_area{
+	text-align: right;
+	font-size: 12px;
+    margin: 5px 0;
+}
+
+.price_area span#d_price{
+	font-size: 18px;
+	font-weight: bolder;
+}
+
+#page_item_detail h3{
+	padding: 10px;
+    background: #003E6F;
+    color: #fff;
+    text-shadow: none;
+    margin: 10px -1em;
+    font-size: 14px;
+}
+
+#page_item_detail button {
+    font-size: 14px;
+    display: block;
+    width: 95%;
+    margin: 10px auto;
+    background: #FFD577;
+    text-shadow: none;
+    font-weight: normal;
+    border: none;
+    border-radius: 5px;
+    color: #333;
+    height: 40px;
+    border-bottom: 2px solid #D2B467;
+}
+
+button#d_delete_cache {
+    font-size: 12px;    
+}

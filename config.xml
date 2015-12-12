@@ -86,7 +86,9 @@
     <allow-navigation href="https://*/*" />
     <allow-navigation href="data:*" />
     <!-- 2015/10/07 add end -->
+    <!--
     <plugin name="cordova-plugin-whitelist" version="1" />
+-->
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
     <allow-intent href="tel:*" />

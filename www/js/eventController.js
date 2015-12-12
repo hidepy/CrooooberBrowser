@@ -39,7 +39,8 @@ function textbox_enter_pressed(event){
 //詳細ページのサムネイル画像押下時
 function detail_thumbnail_clicked(event){
 	console.log("thumb nail clicked");
-	document.querySelector("#d_pic > img").setAttribute("src", event.src);
+	//document.querySelector("#d_pic > img").setAttribute("src", event.src);
+	$("#item_img").css("background-image", "url("+event.src+")");
 }
 
 //詳細ページの閉じるボタン

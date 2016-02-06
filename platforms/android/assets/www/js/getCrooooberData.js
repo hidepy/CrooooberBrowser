@@ -2,6 +2,7 @@ var is_debug = false;
 
 var template_item_headers;
 var template_item_detail;
+var template_favorite;
 
 var header_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
 var detail_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContentDetail.php?";
@@ -24,10 +25,13 @@ $(document).ready(function(){
 	/* handlebars.js 用 */
 	template_item_headers = Handlebars.compile($("#item_header_search_result").html());
 	template_item_detail = Handlebars.compile($("#item_detail").html());
-
+	template_favorite = Handlebars.compile($("#favorite_item_display_area").html());
 
 	/* ストレージからキャッシュ済の商品詳細を取得 */
 	storageManager = new StorageManager();
+
+	//storageに保存されているお気に入りをhtmlに描画
+	$("#favorite_content_wrapper").html(template_favorite(storageManager.getAllFavoriteItemsAsArr()));
 });
 
 
@@ -360,6 +364,56 @@ function getDetailInfo(event){
 		});
 	}
 
+}
+
+//ヘッダ一覧画面からお気に入りボタンを押した場合
+function addFavoriteItemFromHeader(e){
+
+	console.log("in addFavoriteItemFromHeader");
+
+	console.log(e);
+	var el_target = e.target;
+
+
+	try{
+		//ださいけどparent parentする。面倒なんで
+		var url = el_target.getAttribute("datailurl"); //li 要素のdetailUrlを取得
+
+		console.log(url);
+
+		storageManager.saveFavoriteItem2StorageWithUrl(url); //ヘッダ一覧からお気に入り保存用のメソッドコール
+
+		$("#favorite_content_wrapper").html(template_favorite(storageManager.getAllFavoriteItemsAsArr()));
+
+		//console.log("現在のお気に入り一覧:");
+		//console.log(storageManager.getAllFavoriteItems());
+
+	}catch(e){
+		console.log("error occured in addFavoriteItemFromHeader");
+	}
+
+}
+
+function addFavoriteItemFromDetail(el_target){
+	console.log("in addFavoriteItemFromDetail");
+
+	try{
+		var el_title = document.getElementById("d_title");
+
+		if(el_title){
+			var detail_info = storageManager.getDetailItem(el_title.getAttribute("detail_id"));
+
+			(detail_info) ? storageManager.saveFavoriteItem2StorageWithDetailData(detail_info) : console.log("お気に入り登録に失敗しました(詳細情報取得失敗)");
+
+			$("#favorite_content_wrapper").html(template_favorite(storageManager.getAllFavoriteItemsAsArr()));
+
+			//console.log("現在のお気に入り一覧:");
+			//console.log(storageManager.getAllFavoriteItems());
+		}
+
+	}catch(e){
+		console.log("error occured in addFavoriteItemFromDetail");
+	}
 }
 
 //ajaxでリクエストを飛ばす

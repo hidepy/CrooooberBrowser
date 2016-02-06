@@ -93,10 +93,19 @@ a.square_btn.ui-btn{
 #button_search_more{
     display: none;
 }
+
+/* 詳細検索リストのカテゴリ項目 */
 #search_condition_bunrui_list_wrapper > li{
 
 }
 #search_condition_bunrui_list_wrapper > .bunrui_list_selected{
+    background-color: #222222;
+    color: white;
+}
+#search_condition_bunrui_list_wrapper_car > li{
+
+}
+#search_condition_bunrui_list_wrapper_car > .bunrui_list_selected{
     background-color: #222222;
     color: white;
 }
@@ -143,4 +152,29 @@ a.square_btn.ui-btn{
 
 #favorite_btn.marked.icon_btn.ui-btn-icon-notext:after{
     background-color: #FFC800;
+}
+
+.h_newArrival_show{
+    display: inline;
+}
+.h_newArrival_hide{
+    display: none !important;
+}
+.h_new_show{
+    display: inline;
+}
+.h_new_hide{
+    display: none !important;
+}
+.h_old_show{
+    display: inline;
+}
+.h_old_hide{
+    display: none !important;
+}
+.h_junk_show{
+    display: inline;
+}
+.h_junk_hide{
+    display: none !important;
 }

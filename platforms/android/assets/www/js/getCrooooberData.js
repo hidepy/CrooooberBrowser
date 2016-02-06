@@ -3,6 +3,7 @@ var is_debug = false;
 var template_item_headers;
 var template_item_detail;
 var template_favorite;
+var template_search_condition;
 
 var header_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
 var detail_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContentDetail.php?";
@@ -14,11 +15,13 @@ var storageManager;
 //現在表示されている商品リストを保持しておく
 var current_header_items = [];
 
+//現在の検索条件
+var current_search_condition = {};
+
 if(is_debug){
 	header_search_url = "http://localhost/CrooooberBrowser/debug_html.txt";
 	detail_search_url = "http://localhost/CrooooberBrowser/debug_html_detail.txt";
 }
-
 
 $(document).ready(function(){
 	
@@ -26,14 +29,22 @@ $(document).ready(function(){
 	template_item_headers = Handlebars.compile($("#item_header_search_result").html());
 	template_item_detail = Handlebars.compile($("#item_detail").html());
 	template_favorite = Handlebars.compile($("#favorite_item_display_area").html());
+	template_search_condition = Handlebars.compile($("#stored_search_condition_display_area").html());
 
 	/* ストレージからキャッシュ済の商品詳細を取得 */
 	storageManager = new StorageManager();
 
+	/* バイク用品検索か車用品検索か決定 */
+	$("input[name=select_bike_or_car]").val([storageManager.searchType]);
+	/* 検索区分によって、詳細検索内のリスト可視性を変更する */
+	controlBunruiList(storageManager.searchType);
+
 	//storageに保存されているお気に入りをhtmlに描画
 	$("#favorite_content_wrapper").html(template_favorite(storageManager.getAllFavoriteItemsAsArr()));
-});
 
+	//storageに保存されている検索条件をhtmlに描画
+	$("#stored_search_condition_content_wrapper").html(template_search_condition(storageManager.getAllSearchConditionItemsAsArr()));
+});
 
 function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 	console.log("in createResult");
@@ -56,7 +67,6 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 			got_html_document = null;
 		}
 
-
 		//検索結果の件数取得
 		var search_result_num = got_html_document.querySelector(".search_result_num");
 		var search_result_max_num = "-";
@@ -75,9 +85,7 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 
 		/* 
 
-
 		取得できなかった場合は？
-
 
 		*/
 
@@ -97,14 +105,19 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 
 		for(var i = 0; i < el_item_box.length; i++){
 			var el = el_item_box[i];
+			var el_feature = el.querySelector(".box_in > ul");
 
 			var data = {
 				item_number: (i + 1) + previous_length,
 				title: el.querySelector("h3 > a").innerHTML,
 				detail_url: el.querySelector("h3 > a").getAttribute("href"),
-				feature: el.querySelector(".box_in > ul"), //以下にli有り
+				feature: el_feature,
 				price: el.querySelector(".price span").innerHTML,
-				pic_url: el.querySelector("img").getAttribute("src").replace("//", "http://")
+				pic_url: el.querySelector("img").getAttribute("src").replace("//", "http://"),
+				is_newArrival: (el_feature.querySelector(".i_li01")) ? "h_newArrival_show" : "h_newArrival_hide",
+				is_new: (el_feature.querySelector(".i_li02")) ? "h_new_show" : "h_new_hide",
+				is_old: (el_feature.querySelector(".i_li03")) ? "h_old_show" : "h_old_hide",
+				is_junk: (el_feature.querySelector(".i_li04")) ? "h_junk_show" : "h_junk_hide"
 			};
 
 			item_header_data[i] = data;
@@ -255,45 +268,72 @@ function createResultItemDetailFromCache(key){
 	return false;
 }
 
+
+/******************************
+
+保存した検索条件から検索の場合に、
+車 / バイク のチェックボックスも保存しておかないといけない！！！！
+	今は選択されているラジオボタンチェックの方で検索しちゃう
+
+*******************************/
+
+function getHeaderInfoFromStoredCondition(key){
+	var param = storageManager.searchConditionHash[key];
+
+	getHeaderInfo(param);
+}
+
 var msg_no_searchKey = "検索キーが入力されていません";
 
 function getHeaderInfo(detail_param){
+
 	var url = header_search_url; //ヘッダ検索用のURL
 
 	var search_key = document.getElementById("search_key").value;
 
+	//バイク検索又は車検索ボタンの値を保存
+	storageManager.setSearchType( $('input[name=select_bike_or_car]:checked').val() );
+
 	if(detail_param || ( (search_key != null) && (search_key != ""))){ //詳細検索条件が存在するか、又は、キーワードが存在する
-
-		/*
-		var parameters = "";
-		{
-			parameters += "word=" + encodeURIComponent(search_key);
-			parameters += "&length=50";
-		}
-		
-
-		if(is_debug){
-			parameters = "";
-		}
-		*/
 
 		var parameters = {};
 		{
 			parameters.word = encodeURIComponent(search_key);
 			parameters.length = 50;
+			if(storageManager.getSearchType() == "car"){
+				parameters.is_car_search = true; //carが選択されている場合は車用品検索
+			}
 
 		}
 
 		if(detail_param){ //詳細検索時のパラメータ
 			parameters.word = detail_param.word;
-			parameters.connector = detail_param.connector;
-			parameters.bunrui = detail_param.bunrui;
-			parameters.kakaku_low = detail_param.kakaku_low;
-			parameters.kakaku_high = detail_param.kakaku_high;
-			parameters.sort_type = detail_param.sort;
+			if(detail_param.connector){
+				parameters.connector = detail_param.connector;
+			}
+			if(detail_param.bunrui){
+				parameters.bunrui = detail_param.bunrui;
+			}
+			if(detail_param.kakaku_low){
+				parameters.kakaku_low = detail_param.kakaku_low;
+			}
+			if(detail_param.kakaku_high){
+				parameters.kakaku_high = detail_param.kakaku_high;
+			}
+			if(detail_param.sort){
+				parameters.sort_type = detail_param.sort;
+			}
 		}
 
 		sendRequest(url, parameters, 1, createResultItemsHeader);
+
+		//現在の検索条件を保存する
+		current_search_condition = parameters;
+		
+		if(detail_param){
+			current_search_condition["is_detail_search"] = true;
+		}
+
 	}
 	else{
 		outLog("no search key...");
@@ -326,14 +366,6 @@ function getDetailInfo(event){
 	outLog("getDetailInfo Driven");
 
 	var url = detail_search_url;
-	
-	/*
-	var parameters = "detail_path=" + event.getAttribute("datailurl");
-
-	if(is_debug){
-		parameters = "";
-	}
-	*/
 
 	var parameters = {
 		detail_path: event.getAttribute("datailurl")
@@ -342,6 +374,8 @@ function getDetailInfo(event){
 	var id = parameters.detail_path.split("/")[2];
 
 	console.log(parameters.detail_path);
+
+	console.log("id is: " + id);
 
 	if(createResultItemDetailFromCache(id)){
 			// 詳細ページに切り替え
@@ -366,14 +400,27 @@ function getDetailInfo(event){
 
 }
 
+//詳細画面の削除ボタンを押下した場合
+function deleteCacheItem(e){
+
+	var el_detail_title = document.getElementById("d_title");
+
+	if(el_detail_title){
+		var id = el_detail_title.getAttribute("detail_id");
+
+		storageManager.deleteItem(id);
+	}
+
+}
+
 //ヘッダ一覧画面からお気に入りボタンを押した場合
 function addFavoriteItemFromHeader(e){
 
 	console.log("in addFavoriteItemFromHeader");
 
-	console.log(e);
-	var el_target = e.target;
+	e.stopPropagation();
 
+	var el_target = e.target;
 
 	try{
 		//ださいけどparent parentする。面倒なんで
@@ -381,12 +428,19 @@ function addFavoriteItemFromHeader(e){
 
 		console.log(url);
 
-		storageManager.saveFavoriteItem2StorageWithUrl(url); //ヘッダ一覧からお気に入り保存用のメソッドコール
+		var target_header_data = {};
+
+		//現在表示中のヘッダリストから一致するデータを抽出して渡す
+		for(var i = 0; i < current_header_items.length; i++){
+			if(current_header_items[i].detail_url == url){
+				target_header_data = current_header_items[i];
+				break;
+			}
+		}
+
+		storageManager.saveFavoriteItem2StorageWithUrl(target_header_data); //ヘッダ一覧からお気に入り保存用のメソッドコール
 
 		$("#favorite_content_wrapper").html(template_favorite(storageManager.getAllFavoriteItemsAsArr()));
-
-		//console.log("現在のお気に入り一覧:");
-		//console.log(storageManager.getAllFavoriteItems());
 
 	}catch(e){
 		console.log("error occured in addFavoriteItemFromHeader");
@@ -401,11 +455,17 @@ function addFavoriteItemFromDetail(el_target){
 		var el_title = document.getElementById("d_title");
 
 		if(el_title){
+
 			var detail_info = storageManager.getDetailItem(el_title.getAttribute("detail_id"));
 
-			(detail_info) ? storageManager.saveFavoriteItem2StorageWithDetailData(detail_info) : console.log("お気に入り登録に失敗しました(詳細情報取得失敗)");
+			if(detail_info){
+				storageManager.saveFavoriteItem2StorageWithDetailData(detail_info);
 
-			$("#favorite_content_wrapper").html(template_favorite(storageManager.getAllFavoriteItemsAsArr()));
+				$("#favorite_content_wrapper").html(template_favorite(storageManager.getAllFavoriteItemsAsArr()));
+			}
+			else{
+				console.log("お気に入り登録に失敗しました(詳細情報取得失敗)")
+			}
 
 			//console.log("現在のお気に入り一覧:");
 			//console.log(storageManager.getAllFavoriteItems());
@@ -413,6 +473,32 @@ function addFavoriteItemFromDetail(el_target){
 
 	}catch(e){
 		console.log("error occured in addFavoriteItemFromDetail");
+	}
+}
+
+//検索条件を保存する
+function addSearchCondition(){
+	storageManager.setSearchCondition(current_search_condition);
+	alert_ex("検索条件を保存しました");
+
+	$("#stored_search_condition_content_wrapper").html(template_search_condition(storageManager.getAllSearchConditionItemsAsArr()));
+}
+
+// 詳細検索ページの分類リストの可視性を制御する
+//	画面ロード時、又は、ラジオボタン変更時に使用
+function controlBunruiList(current_target){
+
+	//分類選択リストのチェックを外す
+	$("#search_condition_bunrui_list_wrapper > li").removeClass("bunrui_list_selected");
+	$("#search_condition_bunrui_list_wrapper_car > li").removeClass("bunrui_list_selected");
+
+   	if(current_target == "car"){
+		document.getElementById("search_condition_bunrui_list_wrapper_car").style.display = "inline";
+		document.getElementById("search_condition_bunrui_list_wrapper").style.display = "none";
+	}
+	else{
+		document.getElementById("search_condition_bunrui_list_wrapper_car").style.display = "none";
+		document.getElementById("search_condition_bunrui_list_wrapper").style.display = "inline";
 	}
 }
 
@@ -457,7 +543,7 @@ function sendRequest(url, parameters, type, callback, before_callback){
 
 			outLog("in error");
 
-			alert("Error:" + textStatus);
+			alert("Error occured:" + textStatus);
 			dumpObject(jqXHR, 0);
 		},
 		complete: function(){

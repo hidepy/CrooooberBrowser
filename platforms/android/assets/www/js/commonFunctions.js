@@ -10,6 +10,14 @@ function outLog(msg){
 	//document.getElementById("contents_wrapper").innerHTML += msg + "<br>";
 }
 
+function alert_ex(str){
+	if(navigator && navigator.notification){
+		navigator.notification.alert(str, function(){});
+	}
+	else{
+		alert(str);
+	}
+}
 
 /* オブジェクトの中身を画面に出力する */
 function dumpObject(obj, depth){

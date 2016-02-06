@@ -16,16 +16,84 @@
 */
 
 var StorageManager = function(){
-	this.cacheName = "item_detail_info_list";
-	this.favorName = "favorite_list";
+
+	console.log("StorageManager initialize start");
+
+	this.cacheName = "item_detail_info_list"; //キャッシュ情報
+	this.favorName = "favorite_list"; //お気に入り情報
+	this.searchTypeName = "search_type"; //バイク検索or車検索
+	this.searchConditionName = "search_condition"; //検索条件情報
+
+	this.searchType = this.getSearchType(); //バイク用品検索か, 車用品検索か　true->bike, false->car
 
 	this.detailItemHash = this.convStorage2Hash(); //詳細ページの情報を保持するハッシュ
 	this.favoriteItemHash = this.convStorage2FavoriteItemHash(); //お気に入りのロード
+	this.searchConditionHash = this.getSearchCondition(); //検索条件のロード
 
 	this.limit = 100; //商品詳細の最大保持件数
 	this.limitItems(); //保持件数に制限をかける
 
+	console.log("StorageManager initialize end");
+
 };
+
+/* 検索タイプ(バイクor車)の取得/保存 */
+StorageManager.prototype.getSearchType = function(){
+
+	var type;
+
+	try{
+		type = window.localStorage.getItem(this.searchTypeName);
+
+		if(type == null){
+			type = "bike";
+			this.setSearchType(type);
+		}
+	}
+	catch(e){
+		console.log("getSearchType failed...");
+
+		type = "bike";
+		this.setSearchType(type);
+	}
+
+	return type;
+}
+StorageManager.prototype.setSearchType = function(val){
+	
+	console.log("in setSearchType");
+	console.log(this.searchTypeName);
+
+	this.searchType = val;
+
+	window.localStorage.setItem(this.searchTypeName, val);
+
+}
+
+/* 検索条件の取得/保存 */
+StorageManager.prototype.getSearchCondition = function(){
+	console.log("in getSearchCondition");
+
+	var cond_hash = JSON.parse(window.localStorage.getItem(this.searchConditionName));
+
+	if(!cond_hash){
+		cond_hash = {};
+	}
+
+	return cond_hash;
+}
+StorageManager.prototype.setSearchCondition = function(param){
+	console.log("in setSearchCondition");
+
+	var key = param.word;
+
+	this.searchConditionHash[key] = param;
+
+	window.localStorage.setItem(this.searchConditionName, JSON.stringify(this.searchConditionHash));
+}
+StorageManager.prototype.getAllSearchConditionItemsAsArr = function(){
+	return convHash2Arr(this.searchConditionHash);
+}
 
 /* local storageからオブジェクトを生成 */
 StorageManager.prototype.convStorage2Hash = function(){
@@ -54,7 +122,9 @@ StorageManager.prototype.deleteItem = function(key){
 	delete　this.detailItemHash[key];
 
 	//ストレージにセット
-	window.localStorage.setItem(JSON.stringify(this.detailItemHash));
+	window.localStorage.setItem(this.cacheName, JSON.stringify(this.detailItemHash));
+
+	alert_ex("キャッシュを削除しました");
 }
 
 /* 商品情報1件をハッシュに保存 */
@@ -108,10 +178,16 @@ StorageManager.prototype.convStorage2FavoriteItemHash = function(){
 	var item_hash = {};
 	try{
 		item_hash = JSON.parse(window.localStorage.getItem(this.favorName));
+
+		if(item_hash == null){
+			item_hash = {};
+		}
+
+		console.log("load favorite item success!!");
 	}catch(e){
 		item_hash = {};
-		//window.localStorage.setItem(this.favorName, JSON.stringify({}));
 
+		console.log("load favorite item error...");
 	}
 
 	return item_hash;
@@ -127,9 +203,9 @@ StorageManager.prototype.getAllFavoriteItemsAsArr = function(){
 
 //ヘッダ一覧画面でお気に入りを押した場合
 // 後の修正が大変なので、フローは1本化するべきか？
-StorageManager.prototype.saveFavoriteItem2StorageWithUrl = function(detail_url){
+StorageManager.prototype.saveFavoriteItem2StorageWithUrl = function(header_data){
 	
-	var id = detail_url.split("/")[2];
+	var id = header_data.detail_url.split("/")[2];
 
 	// 既に登録済か確認
 	if(this.favoriteItemHash[id]){
@@ -138,12 +214,12 @@ StorageManager.prototype.saveFavoriteItem2StorageWithUrl = function(detail_url){
 
 	this.favoriteItemHash[id] = {
 		id: id,
-		url: "none...",
+		url: header_data.detail_url,
 		full_url: "none...",
-		title: "no title...",
-		price: "",
+		title: header_data.title,
+		price: header_data.price,
 		pictures: "",
-		picture: "",
+		picture: header_data.pic_url,
 		maker_name: "",
 		rank: "",
 		comment: "no comment...",
@@ -153,13 +229,23 @@ StorageManager.prototype.saveFavoriteItem2StorageWithUrl = function(detail_url){
 	}; //flgが立っている = 詳細情報を検索していない
 
 	window.localStorage.setItem(this.favorName, JSON.stringify(this.favoriteItemHash));
+
+	alert_ex("お気に入りに登録しました！");
+
+	console.log("set detailinfo to favorite(url)");
 }
 
 StorageManager.prototype.saveFavoriteItem2StorageWithDetailData = function(data){
 
+	console.log("in saveFavoriteItem2StorageWithDetailData");
+
 	this.favoriteItemHash[data.id] = data;
 
 	window.localStorage.setItem(this.favorName, JSON.stringify(this.favoriteItemHash));
+
+	alert_ex("お気に入りに登録しました！");
+
+	console.log("set detailinfo to favorite(detail)");
 }
 
 

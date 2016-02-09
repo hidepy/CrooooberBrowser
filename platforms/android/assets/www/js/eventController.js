@@ -94,6 +94,11 @@ function search_condition_bunrui_select(event, prefix){
 	$(el_target).addClass("bunrui_list_selected");
 }
 
+function back2main(){
+	myNavigator.popPage();
+}
+
+
 
 /*
  *

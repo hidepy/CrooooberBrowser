@@ -387,7 +387,7 @@ function getDetailInfo(event, callback){
 	if(createResultItemDetailFromCache(id)){
 			// 詳細ページに切り替え
 			//$('body').pagecontainer('change', '#page_item_detail',　{ transition: 'slide' } );
-			myNavigator.pushPage("detail_content.htm", {});
+			//myNavigator.pushPage("detail_content.htm", {});
 
 	}
 	else{
@@ -407,7 +407,7 @@ function getDetailInfo(event, callback){
 			
 			// 詳細ページに切り替え
 			//$('body').pagecontainer('change', '#page_item_detail',　{ transition: 'slide' } );
-			myNavigator.pushPage("detail_content.html", {});
+			//myNavigator.pushPage("detail_content.html", {});
 
 		});
 	}

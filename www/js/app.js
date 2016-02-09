@@ -4,7 +4,8 @@
 
     module.controller('MainController', function($scope) {
         $scope.items = [];
-        $scope.item = {};
+
+        $scope.id;
 
         $scope.processSearchButtonClick = function(){
 
@@ -18,10 +19,7 @@
             //ヘッダ情報を取得する
             getHeaderInfo(null, search_key, function(data, type, parameters){
                 console.log("first callback");
-                var something = createResultItemsHeader(data, type, parameters);
-                console.log("create finished");
-
-                $scope.items = something;
+                $scope.items = createResultItemsHeader(data, type, parameters);
 
                 $scope.$apply();
             });
@@ -35,8 +33,6 @@
 
             var target = (event.target.tagName.toLowerCase() == "li") ? event.target : event.target.parentNode;
 
-            console.log(target);
-
             //myNavigator.pushPage("detail_content.html");
 
             getDetailInfo(target, function(data, type, parameters){
@@ -44,18 +40,58 @@
                 console.log("get datail info callback");
                 console.log(data);
 
-                $scope.item = data;
+                //myNavigator.pushPage("detail_content.html", {data: data});
+                //myNavigator.pushPage("detail_content.html");
 
                 //myNavigator.pushPage("detail_content.html");
+
+                console.log("start moving to entry...");
+                //myNavigator.pushPage('entry_record.html', {});
+                myNavigator.pushPage("detail_content.html", {data: data});
             });
         };
 
 
     });
 
-    module.controller('DetailController', function($scope) {
-        $scope.item = {};
 
+    module.controller('ViewDetailController', function($scope) {
+
+        console.log("in view detail controller");
+
+        var _args = myNavigator.getCurrentPage().options;
+
+        console.log(_args);
+
+        $scope.detail = _args.data;
+        $scope.$apply();
+
+
+        //編集ボタン
+        $scope.moveToModifyScreen = function(){
+
+            console.log("in moveToModifyScreen");
+
+            myNavigator.pushPage('entry_record.html', {
+                call_as_mod_screen: true, 
+                item: $scope.sf
+            });
+
+        };
+
+        // リスト選択イベント受け取り
+        $scope.$on("listSelected", function(e, param){
+
+            //$scope.selected_bike = item.value;
+
+            switch(param.parent_option.title){
+                case "flavor_group":
+                    $scope.sf_selected_flavor_group = param.item.value;
+                    break;
+                default:
+                    console.log("return value missing...");
+            }
+        });
 
     });
 
@@ -471,61 +507,6 @@
         $scope.uncheckAll = function() {
             $scope.del.items = [];
         };
-
-    });
-
-
-
-    module.controller('ViewDetailController', function($scope) {
-
-        var _args = myNavigator.getCurrentPage().options;
-
-        var item = storage_manager.getItem(_args.selected_id);
-
-        {
-
-            $scope.sf = item;
-
-            /*
-            $scope.sf_id = item.id;
-            $scope.sf_title =  item.title;
-            $scope.sf_date = item.date;
-            $scope.sf_picture = "";
-            $scope.sf_selected_flavor_group = item.flavor_group;
-            $scope.sf_map_pos = item.map;
-            $scope.sf_rating = item.rating;
-            $scope.sf_rating_corn = item.rating_corn;
-            $scope.sf_price = item.price;
-            $scope.sf_comment = item.comment;
-            */
-        }
-
-
-        //編集ボタン
-        $scope.moveToModifyScreen = function(){
-
-            console.log("in moveToModifyScreen");
-
-            myNavigator.pushPage('entry_record.html', {
-                call_as_mod_screen: true, 
-                item: $scope.sf
-            });
-
-        };
-
-        // リスト選択イベント受け取り
-        $scope.$on("listSelected", function(e, param){
-
-            //$scope.selected_bike = item.value;
-
-            switch(param.parent_option.title){
-                case "flavor_group":
-                    $scope.sf_selected_flavor_group = param.item.value;
-                    break;
-                default:
-                    console.log("return value missing...");
-            }
-        });
 
     });
 

@@ -5,7 +5,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 
-    <title>そふこれっ！</title>
+    <title>croooober browser</title>
 
     <link rel="stylesheet" href="lib/onsen/css/onsenui.css">
     <link rel="stylesheet" href="lib/onsen/css/onsen-css-components-blue-basic-theme.css">
@@ -35,7 +35,7 @@
 
             storageManager = new StorageManager();
 
-            myNavigator.pushPage("main.html");
+            //myNavigator.pushPage("main.html");
 
         });
     </script>
@@ -61,7 +61,8 @@
 
 <!-- 各親ページのnavigatorを定義 -->
 
-<ons-navigator var="myNavigator" ></ons-navigator>
+<ons-navigator var="myNavigator" page="main.html"></ons-navigator>
+
 
 <!-- Home画面　index > home -->
 <ons-template id="main.html">
@@ -98,7 +99,7 @@
                 <span class="{{item.is_new}}">新品</span>
                 <span class="{{item.is_old}}">中古</span>
                 <span class="{{item.is_junk}}">ジャンク</span>
-                <button id="favorite_btn" onclick="addFavoriteItemFromHeader(event)" datailurl="{{item.detail_url}}" class="icon_btn ui-btn ui-corner-all ui-icon-star ui-btn-icon-notext ui-btn-inline">favorite</button>
+                <button id="favorite_btn" ng-click="addFavoriteItemFromHeader(event)" datailurl="{{item.detail_url}}" class="icon_btn ui-btn ui-corner-all ui-icon-star ui-btn-icon-notext ui-btn-inline">favorite</button>
                 <p class="h_price">{{item.price}}</p>   
             </li>
 
@@ -107,7 +108,7 @@
         <ons-button id="button_search_more">もっとさがす！</ons-button>
 
         <ons-button ng-click="myNavigator.pushPage('detail_content.html', {})">照会！</ons-button>
-        <ons-button ng-click="myNavigator.pushPage('main2.html', {})">！</ons-button>
+        <ons-button ng-click="myNavigator.pushPage('entry_record.html', {})">！</ons-button>
 
     </ons-page>
 </ons-template>
@@ -116,53 +117,64 @@
 
 <ons-template id="detail_content.html">
 
-    <ons-page ng-controller="MainController" id="detail_content_wrapper">
-            
-            <h2 id="d_title" detail_id="{{item.id}}">{{item.title}}</h2>
+    <ons-page ng-controller="ViewDetailController" id="detail_content_wrapper">
+
+            <h2 id="d_title" detail_id="{{detail.id}}">{{detail.title}}</h2>
 
             <div class="price_area">
                 商品価格:
                 <span id="d_price">
-                    {{item.price}}
+                    {{detail.price}}
                 </span>
             </div>
 
+            <!--<p><a href="#page_main" data-rel="back">戻る</a></p>-->
 
             <div id="d_pic">
-                <div id="item_img" style="background-image: url('{{item.picture}}')"></div>
+                <div id="item_img" style="background-image: url('{{detail.picture}}')"></div>
             </div>
 
             <div id="d_debug"></div>
 
-<!--
-            <ul id="d_pictures">
-            {{#each pictures}}
+            <ul id="d_pictures" ng-repeat="item in items">
                 <li class="d_picture">
-                    <img src="{{this}}" onClick="detail_thumbnail_clicked(this)" />
+                    <img src="{{item}}" ng-click="detail_thumbnail_clicked(this)" />
                 </li>
-            {{/each}}
             </ul>
 
             <div id="d_comment">
                 <h3>コメント</h3>
-                <div>{{{item.comment}}}</div>
+                <div>{{detail.comment}}</div>
             </div>
-        -->
 
             <div id="d_maker">
                 <h3>メーカー</h3>
-                <div>{{item.maker_name}}</div>
+                <div>{{detail.maker_name}}</div>
             </div>
 
             <div id="d_rank">
                 <h3>商品ランク</h3>
-                <div>{{item.rank}}</div>
+                <div>{{detail.rank}}</div>
             </div>
 
             <ons-button id="d_favorite_btn"  class="ui-btn ui-alt-icon ui-icon-star ui-btn-icon-left" onclick="addFavoriteItemFromDetail(this)">お気に入りに追加</ons-button>
-            <ons-button id="d_button2Croooober"  class="ui-btn ui-alt-icon ui-icon-action ui-btn-icon-left" onclick="window.open('{{item.full_url}}', '_system');" crooooberPageUrl="{{item.full_url}}">Crooooberで見る(購入する場合など)</ons-button>
+            <ons-button id="d_button2Croooober"  class="ui-btn ui-alt-icon ui-icon-action ui-btn-icon-left" ng-click="window.open('{{detail.full_url}}', '_system');" crooooberPageUrl="{{full_url}}">Crooooberで見る(購入する場合など)</ons-button>
             
-            <ons-button id="d_delete_cache" class="ui-btn" onclick="deleteCacheItem(this)">ページのキャッシュを削除</ons-button>
+            <ons-button id="d_delete_cache" class="ui-btn" ng-click="deleteCacheItem(this)">ページのキャッシュを削除</ons-button>
+
+        <ons-list modifier="inset">
+            <ons-list-item>
+                <ons-row>
+                    {{detail.id}}
+                </ons-row>
+                <ons-row>
+                    {{detail.ibd}}
+                </ons-row>
+                <ons-row>
+                    {{detail.id}}
+                </ons-row>
+
+        </ons-list>
 
             <ons-button ng-click="myNavigator.popPage()">もどる</ons-button>
 

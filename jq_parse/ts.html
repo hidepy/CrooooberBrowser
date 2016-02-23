@@ -1,0 +1,72 @@
+<html>
+
+<head>
+
+<script type="text/javascript"
+ src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+<script>
+window.onload = function(){
+
+	function regexp_test(file){
+
+		console.log("comes?");
+
+		var reader = new FileReader();
+
+		reader.addEventListener("load", function(e){
+
+			var res = reader.result.match(/<div\s+class="item_box">((?!<\/div>).|\s)*/gi);
+
+			console.log(res);
+
+			var dom = jQuery.parseHTML(reader.result);
+
+			var items = $(".item_box", dom);
+
+			//console.log(dom);
+
+			jQuery.each(items, function(i, val){
+				console.log(items[i]);
+				
+			});
+
+
+		}, true);
+
+		reader.readAsText(file, 'UTF-8');
+	}
+
+	function handleFileSelect(evt) {
+		var files = evt.target.files; // FileList object
+
+		// files is a FileList of File objects. List some properties.
+		var output = [];
+			for (var i = 0, f; f = files[i]; i++) {
+			  output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+		    	          f.size, ' bytes, last modified: ',
+		        	      f.lastModifiedDate.toLocaleDateString(), '</li>');
+
+		 	regexp_test(f);
+
+
+		}
+		document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+	}
+
+	console.log("event listener attach!!");
+	document.getElementById('files').addEventListener('change', handleFileSelect, false);
+}
+</script>
+
+</head>
+
+<body>
+
+<input type="file" id="files" name="files[]" multiple />
+<output id="list"></output>
+
+
+</body>
+
+</html>

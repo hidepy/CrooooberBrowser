@@ -155,7 +155,7 @@
         </ul>-->
         </ons-list>
 
-        <ons-button id="button_search_more" class="button button--large--cta">もっとさがす！</ons-button>
+        <ons-button id="button_search_more" class="button button--large--cta" should-spin={{is_searching_more}} ng-click="processSearchMoreButtonClick()">もっとさがす！</ons-button>
 
     </ons-page>
 </ons-template>
@@ -229,12 +229,12 @@
               <div class="action-label">戻る</div>
             </ons-col>
 
-            <ons-col class="action-col" id="d_delete_cache" ng-click="deleteCacheItem(this)">
+            <ons-col class="action-col" id="d_delete_cache" ng-click="deleteCacheItem()">
               <div class="action-icon"><ons-icon icon="ion-trash-a"></ons-icon></div>
               <div class="action-label">キャッシュを削除</div>
             </ons-col>
 
-            <ons-col class="action-col" id="d_button2Croooober" ng-click="window.open('{{detail.full_url}}', '_system');" crooooberPageUrl="{{full_url}}">
+            <ons-col class="action-col" id="d_button2Croooober" ng-click="openCrooooberPage()" crooooberPageUrl="{{full_url}}">
               <div class="action-icon"><ons-icon icon="ion-ios-world-outline"></ons-icon></div>
               <div class="action-label">Crooooberで見る</div>
             </ons-col>
@@ -296,7 +296,7 @@
 
 <!-- 詳細検索ページ -->
 <ons-template id="page_setting_search_condition.html">
-    <ons-page id="page_setting_search_condition">
+    <ons-page ng-controller="SearchDetailConditionController" id="page_setting_search_condition">
 
         <ons-toolbar>
             <div class="left"><ons-back-button></ons-back-button>croooober browser</div>
@@ -307,12 +307,14 @@
         </ons-toolbar>
 
         <ul class="list">
-          <li class="list__item list__item--chevron" ng-click='myNavigator.pushPage("")'><ons-icon icon="ion-bookmark"></ons-icon> 保存した条件から検索</li>
+          <li class="list__item list__item--chevron" ng-click='myNavigator.pushPage("")'><ons-icon icon="ion-bookmark"></ons-icon> 保存した条件から検索{{ts_msg}}</li>
         </ul>
 
         <div id="search_item">
             <input type="search" id="setting_search_condition_keyword" class="search-input" data-clear-btn type="text" placeholder="検索キーワード"/>
         </div>
+
+        
 
         <!--<div class="button-bar">
             <div class="button-bar__item">
@@ -749,7 +751,8 @@
         </ons-list>
 
         <div id="detail_search_action">
-            <ons-button id="detail_search_button" class="button--cta line_b_btn" id="detail_search_button"><ons-icon icon="ion-ios-search-strong"></ons-icon>　条件指定検索</ons-button>
+            <ons-button id="detail_search_button" class="button--cta line_b_btn" id="detail_search_button" ng-click="processDetailSearchButtonClick()"><ons-icon icon="ion-ios-search-strong"></ons-icon>条件指定検索</ons-button>
+
             <ons-row class="action">
                 <ons-col class="action-col" id="search_condition_clear">
                   <div class="action-icon"><ons-icon icon="ion-minus-circled"></ons-icon></div>

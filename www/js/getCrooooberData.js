@@ -38,7 +38,7 @@ $(document).ready(function(){
 */
 
 function createResultItemsHeader(data, type, parameters){ //type: 検索回数
-	console.log("in createResult");
+	console.log("in createResult.");
 	//outLog(data); //ここまで来てる
 
 	var dom_parser = new DOMParser();
@@ -323,7 +323,12 @@ function getHeaderInfo(detail_param, search_key, callback){
 }
 
 /* 追加で商品一覧を取得する */
-function getHeaderInfoMore(event){
+function getHeaderInfoMore(event, callback){
+
+	if(event == null){
+		event = document.getElementById("button_search_more");
+	}
+
 	var url = header_search_url;
 
 	//現在までのトライ回数を取得する
@@ -335,7 +340,8 @@ function getHeaderInfoMore(event){
 	if(parameters){
 		parameters.page = Number(try_num) + 1; //次に読み込むページ番号
 
-		sendRequest(url, parameters, Number(try_num) + 1, createResultItemsHeader);
+		//sendRequest(url, parameters, Number(try_num) + 1, createResultItemsHeader);
+		sendRequest(url, parameters, Number(try_num) + 1, callback);
 	}
 	else{
 		outLog("failure to get search condition...");
@@ -396,6 +402,7 @@ function getDetailInfo(selected_item, callback, callback_for_cache){
 }
 
 //詳細画面の削除ボタンを押下した場合
+/*
 function deleteCacheItem(e){
 
 	var el_detail_title = document.getElementById("d_title");
@@ -407,6 +414,7 @@ function deleteCacheItem(e){
 	}
 
 }
+*/
 
 //ヘッダ一覧画面からお気に入りボタンを押した場合
 function addFavoriteItemFromHeader(e){

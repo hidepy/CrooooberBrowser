@@ -1,16 +1,244 @@
+/*** common ***/
 body{
     font-family: 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, Osaka, 'MS PGothic', arial, helvetica, sans-serif;
     font-weight: normal;
     font-size: 14px;
 }
 
-.ui-header .ui-title{
-    font-size: 18px;
+/*** main.html ***/
+#search_item{
+    padding: 0 10px;
+    margin: 10px auto;
+    text-align: center;
 }
 
-#main_header.ui-header .ui-title{
-    margin: 0 10px;
-    text-align: left;
+.button-bar{
+    width: 80%;
+    text-align: center;
+    margin: 10px auto;
+}
+
+#search_key{
+    width: 80%;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+}
+
+.navigation-bar__left{
+    line-height: 44px;
+}
+
+.tag{
+    font-size: 8px;
+    background: #797979;
+    padding: 2px 7px;
+    border-radius: 2px;
+    color: #fff;
+    vertical-align: top;
+    margin: 2px 0px 5px;
+}
+
+.side-corner-tag {
+    position: relative;
+    color: #fff;
+    display: inline-block;
+    padding: 2px;
+    overflow: hidden;
+    height: 93px;
+} 
+ 
+.side-corner-tag p {
+    display: inline;    
+}
+
+.side-corner-tag p span {
+    font-size: 8px;
+    position: absolute;
+    display: inline-block;
+    left: -20px;
+    /*box-shadow: 0px 0px 10px rgba(0,0,0,0.2), inset 0px 5px 30px rgba(255,255,255,0.2);*/
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.2), inset 0px 5px 20px rgba(255,255,255,0.2);
+    text-align: center;
+    text-transform: uppercase;
+    top: 5px;
+    background: #d93131;
+    width: 50px;
+    padding: 3px 10px;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+}
+
+.side-corner-tag p:before {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: -2px;
+    left: 34px;
+    /* z-index: -1; */
+    border: 2px solid;
+    border-color: transparent transparent #662121 transparent;
+}
+ 
+.side-corner-tag p:after {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 34px;
+    /* z-index: 0; */
+    left: -2px;
+    border: 2px solid;
+    border-color: transparent #662121 transparent transparent;
+}
+
+.list-item-container {
+  line-height: 1;
+  padding: 10px;
+}
+
+.thumbnail {
+  width: 95px;
+  height: 95px;
+  border-radius: 4px;
+  -webkit-border-radius: 4px;
+  background-size: cover;
+  background-position: center center;
+}
+
+.title_box {
+    white-space: normal;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25em;
+    height: 50px;
+    margin-bottom: 8px;
+}
+
+.h_price{
+    font-size: 16px;
+    text-align: right;
+    margin: 0 30px 0 0;
+}
+
+#favorite_btn{
+    margin: 0 0 0 5px;
+    padding: 0;
+    min-height: auto;
+    color: #CECECE;
+    width: 32px;
+    text-align: center;
+    height: 32px;
+    line-height: 1;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+}
+
+#favorite_btn.marked{
+    color: #FFC800;
+}
+
+
+/*** detail_content ***/
+#item_img_carousel{
+    height: 240px;
+    background: #fff;
+}
+
+.item_img{
+    height: 240px;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#thumb_carousel{
+    height: 75px;
+}
+
+.thumb_carousel_item{
+    background-size: cover;
+    background-position: center center;
+    width: 90px;
+    height: 70px;
+    margin: 5px;
+    border-radius: 2px;
+}
+
+h2#d_title{
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.price_area{
+    text-align: right;
+    font-size: 12px;
+    margin: 5px 0;
+    color: #999;
+}
+
+.price_area span#d_price{
+    font-size: 20px;
+    color: #000;
+}
+
+.item_info{
+    font-size: 14px;
+}
+
+.item_info .list__header{
+    font-weight: 100;
+    font-size: 14px;
+    padding: 25px 10px 5px 10px;
+}
+
+.item_info .list__name{
+    font-size: 12px;
+    padding: 10px 10px 0 10px;
+    color: #999;
+}
+
+.item_info .list__item{
+    line-height: 1.6em;
+    padding: 5px 10px 10px 10px;
+    min-height: 10px;
+}
+
+.action .action-col{
+    background: #fff;
+    color: #666;
+    text-align: center;
+    padding: 5px;
+}
+
+.action .action-icon{
+    color: #2F619B;
+    margin-bottom: 5px;
+}
+
+.action .action-label{
+    font-size: 10px;
+}
+
+.line_b_btn{
+    display: block;
+    width: 240px;
+    text-align: center;
+    font-size: 14px;
+    border-bottom: 2px solid #2D588A;
+    margin: 20px auto;
+}
+
+.line_b_btn .ons-icon--ion{
+    vertical-align: -10%;
+}
+
+#d_favorite_btn{
 }
 
 a.square_btn.ui-btn{
@@ -35,22 +263,13 @@ a.square_btn.ui-btn{
     width: 100%;
 }
 */
-#search_item{
-    padding: 0 10px;
-    margin: 10px auto;
-    border: none;
-}
-
-
-#main ul.ui-listview{
-    margin-top: 5px;
-    margin-bottom: 0; 
-
-}
 
 #search_result_num{
     text-align: center;
 }
+
+
+
 .thumb_box img.h_picture{
     height: 100%;
     flex-shrink: 0;
@@ -94,86 +313,42 @@ a.square_btn.ui-btn{
     display: none;
 }
 
-/* 詳細検索リストのカテゴリ項目 */
-#search_condition_bunrui_list_wrapper > li{
-
-}
-#search_condition_bunrui_list_wrapper > .bunrui_list_selected{
-    background-color: #222222;
-    color: white;
-}
-#search_condition_bunrui_list_wrapper_car > li{
-
-}
-#search_condition_bunrui_list_wrapper_car > .bunrui_list_selected{
-    background-color: #222222;
-    color: white;
+/* 詳細検索リスト */
+#detail_search_action{
+    position: fixed;
+    bottom: 0;
 }
 
-.ui-listview>.ui-li-static.ui-li-has-thumb{
-    height: 100px;
-    padding-right: 7px;
-    padding-left: 110px;
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -o-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-}
-
-.title_box {
-    white-space: normal;
-    height: 55px;
-    font-size: 14px;
-    overflow: hidden; 
-    text-overflow: ellipsis;
-}
-
-.ui-listview>li p.h_price{
-    font-size: 18px;
-    font-weight: bolder;
-    margin: 5px 0;
-    text-align: right;
-}
 
 .icon_btn {
     margin: 0;
     border: none;
 }
-#favorite_btn{
-    float: right;
-    margin: 0 0 0 5px;
-    padding: 2px;
-    min-height: auto;
-}
-
-#favorite_btn.icon_btn.ui-btn-icon-notext:after {
-    background-color: #ddd;  
-}
-
-#favorite_btn.marked.icon_btn.ui-btn-icon-notext:after{
-    background-color: #FFC800;
-}
 
 .h_newArrival_show{
     display: inline;
+
 }
 .h_newArrival_hide{
     display: none !important;
 }
 .h_new_show{
-    display: inline;
+    display: inline-block;
+    background: #FFC800;
 }
 .h_new_hide{
     display: none !important;
 }
 .h_old_show{
-    display: inline;
+    display: inline-block;
+    background: #3BC502;
 }
 .h_old_hide{
     display: none !important;
 }
 .h_junk_show{
-    display: inline;
+    display: inline-block;
+    background: #9E9E9E;
 }
 .h_junk_hide{
     display: none !important;

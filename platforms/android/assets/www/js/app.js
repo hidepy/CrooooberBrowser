@@ -59,6 +59,11 @@
             $scope.$apply(function(){
                 $scope.detail = data;
             });
+
+            console.log("before refresh");
+            item_img_carousel.refresh();
+            thumb_img_carousel.refresh();
+
         }, function(detail_item){
             $scope.$apply(function(){
                 $scope.detail = detail_item;
@@ -66,9 +71,17 @@
         });
 
         //サムネイル押下時
-        $scope.detail_thumbnail_clicked = function(event){
-            $scope.detail.picture = event.item;//event.target.getAttribute("src");
+        $scope.detail_thumbnail_clicked = function(index, event){
+            console.log("サムネイルおしたよっ！");       
+            console.log(event.target);
+
+            var clicked_thumb = event.target.style.backgroundImage;
+            document.getElementById("item_img").style.backgroundImage = clicked_thumb;
+
+            $scope.detail.picture = event.target.style.backgroundImage.replace(/url\(([^\)]*)\)/, '"$1"');//event.item;
+            console.log("げっとした背景: " + event.target.style.backgroundImage.replace(/url\(([^\)]*)\)/, "$1"));
         }
+        
 
     });
 

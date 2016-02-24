@@ -11,7 +11,6 @@
 
     <link rel="stylesheet" href="lib/onsen/css/onsenui.css">
     <link rel="stylesheet" href="lib/onsen/css/onsen-css-components-blue-basic-theme.css">
-    <link rel="stylesheet" href="css/item.css" />
     <link rel="stylesheet" href="css/list.css" />
 
     <script src="lib/onsen/js/angular/angular.js"></script>
@@ -131,7 +130,7 @@
                     <div class="title_box"><span class="item_header_id">{{item.item_number}}</span>
                     <span class="h_title">{{item.title}} </span></div>
                     
-                    <ons-button modifier="quiet" id="favorite_btn" ng-click="addFavoriteItemFromHeader(event)　show('#favorite_btn')" datailurl="{{item.detail_url}}"><ons-icon icon="ion-android-star" size="28px"></ons-icon></ons-button>
+                    <ons-button modifier="quiet" id="favorite_btn" ng-click="addFavoriteItemFromHeader(event)" datailurl="{{item.detail_url}}"><ons-icon icon="ion-android-star" size="28px"></ons-icon></ons-button>
                     <p class="h_price">{{item.price}}</p>   
                 </ons-col>
               </ons-row>
@@ -158,14 +157,6 @@
         <ons-button id="button_search_more" class="button button--large--cta" should-spin={{is_searching_more}} ng-click="processSearchMoreButtonClick()">もっとさがす！</ons-button>
 
     </ons-page>
-</ons-template>
-
-<ons-template id="favorite_popover.html">
-    <ons-popover direction="up down" cancelable>
-        <div style="text-align: center; opacity: 0.5;">
-          <p>お気に入りに登録しました</p>
-        </div>
-      </ons-popover>
 </ons-template>
 
 
@@ -271,7 +262,7 @@
               <ons-row>
                 <ons-col width="105px">
                     <div class="side-corner-tag">
-                      <img src="{{item.pic_url}}" class="thumbnail">
+                      <img ng-src="{{item.pic_url}}" class="thumbnail">
                       <p class="{{item.is_newArrival}}"><span>新着</span></p>
                     </div>
                 </ons-col>
@@ -282,7 +273,7 @@
                     <div class="title_box"><span class="item_header_id">{{item.item_number}}</span>
                     <span class="h_title">{{item.title}} </span></div>
                     
-                    <ons-button modifier="quiet" id="favorite_btn" ng-click="addFavoriteItemFromHeader(event)　show('#favorite_btn')" datailurl="{{item.detail_url}}"><ons-icon icon="ion-android-star" size="28px"></ons-icon></ons-button>
+                    <ons-button modifier="quiet" id="favorite_btn" ng-click="addFavoriteItemFromHeader(event)" datailurl="{{item.detail_url}}"><ons-icon icon="ion-android-star" size="28px"></ons-icon></ons-button>
                     <span class="h_price">{{item.price}}</span>   
                 </ons-col>
               </ons-row>
@@ -306,8 +297,26 @@
             </div>
         </ons-toolbar>
 
+        <ons-bottom-toolbar id="detail_search_action">
+            <ons-row class="action">
+                <ons-col class="action-col" id="search_condition_clear" ng-click="search_condition_clear()">
+                  <div class="action-icon"><ons-icon icon="ion-ios-close"></ons-icon></div>
+                  <div class="action-label">入力クリア</div>
+                </ons-col>
+
+                <ons-col class="action-col" width="50%">
+                    <ons-button id="detail_search_button" class="button--cta" id="detail_search_button" ng-click="processDetailSearchButtonClick()"><ons-icon icon="ion-ios-search-strong"></ons-icon> 条件指定検索</ons-button>
+                </ons-col>
+
+                <ons-col class="action-col" id="search_condition_save">
+                  <div class="action-icon"><ons-icon icon="ion-bookmark"></ons-icon></div>
+                  <div class="action-label">条件を保存</div>
+                </ons-col>
+            </ons-row>
+        </ons-bottom-toolbar>
+
         <ul class="list">
-          <li class="list__item list__item--chevron" ng-click='myNavigator.pushPage("")'><ons-icon icon="ion-bookmark"></ons-icon> 保存した条件から検索{{ts_msg}}</li>
+          <li class="list__item list__item--chevron" ng-click=''><ons-icon icon="ion-ios-bookmarks-outline"></ons-icon> 保存した条件から検索</li>
         </ul>
 
         <div id="search_item">
@@ -344,11 +353,17 @@
         </div>
 
         設定金額
-        <div id="kakaku_option">
-                <input type="text" class="text-input" id="setting_search_condition_kakaku_low" placeholder="下限" />
+        <ons-row id="kakaku_option">
+            <ons-col>
+                <input type="tel" class="text-input" id="setting_search_condition_kakaku_low" placeholder="下限" />
+            </ons-col>
+            <ons-col width="30px">
                 ～
-                <input type="text" class="text-input" id="setting_search_condition_kakaku_high" placeholder="上限" />
-        </div>
+            </ons-col>
+            <ons-col>
+                <input type="tel" class="text-input" id="setting_search_condition_kakaku_high" placeholder="上限" />
+            </ons-col>
+        </ons-row>
 
         <!-- バイク用品用 -->
         <ons-list id="search_condition_bunrui_list_wrapper">
@@ -750,11 +765,12 @@
             </ons-list-item>
         </ons-list>
 
-        <div id="detail_search_action">
+
+       <!-- <div id="detail_search_action">
             <ons-button id="detail_search_button" class="button--cta line_b_btn" id="detail_search_button" ng-click="processDetailSearchButtonClick()"><ons-icon icon="ion-ios-search-strong"></ons-icon>条件指定検索</ons-button>
 
             <ons-row class="action">
-                <ons-col class="action-col" id="search_condition_clear">
+                <ons-col class="action-col" id="search_condition_clear" ng-click="search_condition_clear()">
                   <div class="action-icon"><ons-icon icon="ion-minus-circled"></ons-icon></div>
                   <div class="action-label">検索条件をクリア</div>
                 </ons-col>
@@ -764,7 +780,7 @@
                   <div class="action-label">検索条件を保存</div>
                 </ons-col>
             </ons-row>
-        </div>
+        </div>-->
 
         <!--<ons-button id="search_condition_clear" class="button line_b_btn"><ons-icon icon="ion-minus-circled"></ons-icon> 検索条件をクリア</ons-button>-->
             

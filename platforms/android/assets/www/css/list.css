@@ -315,10 +315,20 @@ a.square_btn.ui-btn{
 
 /* 詳細検索リスト */
 #detail_search_action{
-    position: fixed;
+    /*position: fixed;
     bottom: 0;
+    left: 0
+    width: 100%;
+    */
 }
 
+#kakaku_option .col{
+    padding: 0 20px;
+}
+
+#kakaku_option input{
+    width: 100%;
+}
 
 .icon_btn {
     margin: 0;

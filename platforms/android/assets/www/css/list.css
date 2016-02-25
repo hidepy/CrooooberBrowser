@@ -218,7 +218,7 @@ h2#d_title{
 
 .action .action-icon{
     color: #2F619B;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
 }
 
 .action .action-label{
@@ -315,11 +315,16 @@ a.square_btn.ui-btn{
 
 /* 詳細検索リスト */
 #detail_search_action{
-    /*position: fixed;
-    bottom: 0;
-    left: 0
+    height: auto;
+}
+
+#detail_search_action .action .action-col{
+    padding: 5px 5px 2px;
+}
+
+#detail_search_button{
+    font-size: 14px;
     width: 100%;
-    */
 }
 
 #kakaku_option .col{
@@ -330,10 +335,7 @@ a.square_btn.ui-btn{
     width: 100%;
 }
 
-.icon_btn {
-    margin: 0;
-    border: none;
-}
+
 
 .h_newArrival_show{
     display: inline;

@@ -193,6 +193,11 @@ StorageManager.prototype.convStorage2FavoriteItemHash = function(){
 	return item_hash;
 }
 
+//単一のお気に入り情報を取得する
+StorageManager.prototype.getFavoriteItem = function(key){
+	return this.favoriteItemHash[key];
+}
+
 StorageManager.prototype.getAllFavoriteItems = function(){
 	return this.favoriteItemHash;
 }

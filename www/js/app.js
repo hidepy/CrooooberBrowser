@@ -1,6 +1,7 @@
 (function(){
     'use strict';
     var module = angular.module('app', ['onsen','checklist-model']);
+    //var module = angular.module('app', ['onsen','checklist-model','ngAnimate']);
 
     //ヘッダ一覧画面のコントローラ
     module.controller('MainController', function($scope) {
@@ -100,6 +101,14 @@
             item_img_carousel.refresh();
             thumb_img_carousel.refresh();
 
+            //ヘッダから登録されたお気に入り情報の場合は、フラグを折って情報を新たに格納する
+            if(_args.is_from_favorite){
+                //未だ詳細情報を持っていないお気に入り情報の場合
+                if(_args.selected_item && _args.selected_item.flg_dont_have_detail){
+                    storageManager.saveFavoriteItem2StorageWithDetailData(data); //取得した詳細情報でデータを上書き
+                }
+            }
+
         }, function(detail_item){
             $scope.$apply(function(){
                 $scope.detail = detail_item;
@@ -196,6 +205,74 @@
             //先にページに戻る
             myNavigator.resetToPage("main.html", {animation: "slide", is_from_detail_search: true, detail_search_cond: detail_param});
         };
+    });
+
+    //お気に入りのコントローラ
+    module.controller('ViewFavoriteController', function($scope) {
+
+        console.log("in view favorite controller");
+
+        //お気に入り情報のロード
+        $scope.items = storageManager.getAllFavoriteItemsAsArr();
+
+        //お気に入り一覧データの選択処理
+        $scope.processItemSelect = function(index, event){
+
+            console.log("in processItemSelect");
+            console.log("url is: " + $scope.items[index].url);
+
+            var item = {
+                detail_url : $scope.items[index].url,
+                id : $scope.items[index].id,
+                flg_dont_have_detail: $scope.items[index].flg_dont_have_detail //まだ詳細情報を持っていない場合のみtrue
+            };
+
+            //詳細ページに遷移する
+            myNavigator.pushPage("detail_content.html", {selected_item: item, is_from_favorite: true});
+
+        };
+
+        // 削除チェックボックスの表示切り替え
+        $scope.delete_switching = false;
+        $scope.checkBoxToggle = function(){
+
+            console.log($scope.delete_switching + "checkBoxToggle in!!!!!!!!!!!!!!");
+            $scope.delete_switching = !$scope.delete_switching;
+            console.log($scope.delete_switching + "checkBoxToggle in!!!!!!!!!!!!!!");
+
+        };
+
+        //削除するデータリスト
+        $scope.del = {
+            items: []
+        };
+
+        //削除ボタン
+        $scope.deleteRecord = function(){
+
+            //console.log($scope.del.items);
+            storage_manager.deleteItems($scope.del.items);
+            $scope.del.items = [];
+
+        };
+
+        $scope.checkAll = function() {
+            $scope.del.items = [];
+
+            for(var i in $scope.items){
+                //console.log($scope.items[i].id);
+                $scope.del.items.push($scope.items[i].id);  
+            }
+        };
+        
+        $scope.uncheckAll = function() {
+            $scope.del.items = [];
+        };
+
+
+
+        
+
     });
 
 })();

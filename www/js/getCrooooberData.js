@@ -6,7 +6,7 @@ var template_favorite;
 var template_search_condition;
 
 var header_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
-//var header_search_url = "http://www.croooober.com/bparts/search?";
+//var header_search_url = "http://www.croooober.com/bparts/search?"; //※※
 var detail_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContentDetail.php?";
 
 var croooober_url = "http://www.croooober.com";
@@ -125,15 +125,17 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 
 			//続いて検索の場合、前回検索までの値を連結する
 			if(type > 1){
-				console.log("sarching with " + type + "times, concatting previous array");
+				console.log("searching with " + type + "times, concatting previous array");
 				display_data = current_header_items.concat(item_header_data);
 			}
 			else{
 				display_data = item_header_data;
 			}
 
+			console.log("current data length: " + display_data.length);
+
 			//前回までの値に結果を格納しておく
-			//current_header_items = display_data;
+			current_header_items = display_data;
 		}
 
 		//次を読み込むボタンの作成
@@ -276,8 +278,9 @@ function getHeaderInfo(detail_param, search_key, callback){
 		var parameters = {};
 		{
 			
-			parameters.word = encodeURIComponent(search_key);
+			parameters.word = encodeURIComponent(search_key); //※※
 			//parameters.q = encodeURIComponent(search_key);
+			//parameters.per_page = 50;
 			parameters.length = 50;
 			if(storageManager.getSearchType() == "car"){
 				parameters.is_car_search = true; //carが選択されている場合は車用品検索
@@ -367,6 +370,7 @@ function getDetailInfo(selected_item, callback, callback_for_cache){
 	console.log(parameters.detail_path);
 
 	var detail_cache = storageManager.getDetailItem(id);
+	var detail_cache_of_favorite = storageManager.getFavoriteItem(id);
 
 	if(detail_cache){
 			// 詳細ページに切り替え
@@ -376,6 +380,9 @@ function getDetailInfo(selected_item, callback, callback_for_cache){
 			//キャッシュ向けのコールバック
 			callback_for_cache(detail_cache);
 
+	}
+	else if(detail_cache_of_favorite && !detail_cache_of_favorite.flg_dont_have_detail){ //お気に入り情報にデータが存在する場合(ヘッダ情報だけなら破棄)
+			callback_for_cache(detail_cache_of_favorite);
 	}
 	else{
 		sendRequest(url, parameters, null, callback, function(){

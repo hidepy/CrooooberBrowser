@@ -5,7 +5,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 
+<!--
     <meta http-equiv="Content-Security-Policy" content="default-src *; img-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+-->
 
     <title>croooober browser</title>
 
@@ -261,31 +263,25 @@
         </ons-toolbar>
 
         <ons-list id="item_header_search_result" ng-repeat="item in items" ng-click="processItemSelect($index, $event)">
-            <ons-list-item modifier="tappable" class="item list-item-container" datailurl="{{item.detail_url}}">
+            <ons-list-item modifier="tappable" class="item list-item-container">
               <ons-row>
-                <ons-col width="30px" ng-show="delete_switching" ng-click="$event.stopPropagation();">
+
+                <ons-col width="30px" ng-show="delete_switching" ng-hide="delete_switching_reverse">
                     <div class="checkbox" class="checkbox_col">
                         <input type="checkbox" checklist-model="del.items" checklist-value="item.id">
                         <div class="checkbox__checkmark"></div>
                     </div>
                 </ons-col>
-  
+
                 <ons-col width="105px">
                     <div class="side-corner-tag">
-                      <img ng-src="{{item.pic_url}}" class="thumbnail">
-                      <p class="{{item.is_newArrival}}"><span>新着</span></p>
+                      <img ng-src="{{item.picture}}" class="thumbnail">
                     </div>
                 </ons-col>
                 <ons-col>
-                    <span class="tag {{item.is_new}}">新品</span>
-                    <span class="tag {{item.is_old}}">中古</span>
-                    <span class="tag {{item.is_junk}}">ジャンク</span>
-                    <div class="title_box"><span class="item_header_id">{{item.item_number}}</span>
-                    <span class="h_title">{{item.title}} </span></div>
-                    
-                    <ons-button modifier="quiet" id="favorite_btn" ng-click="addFavoriteItemFromHeader(event)" datailurl="{{item.detail_url}}"><ons-icon icon="ion-android-star" size="28px"></ons-icon></ons-button>
-
-                    <span class="h_price">{{item.price}}</span>   
+                    <div class="title_box">
+                        <span class="h_title">{{item.title}} </span>
+                    </div> 
                 </ons-col>
               </ons-row>
             </ons-list-item>

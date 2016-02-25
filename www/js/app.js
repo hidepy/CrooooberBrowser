@@ -215,11 +215,22 @@
         //お気に入り情報のロード
         $scope.items = storageManager.getAllFavoriteItemsAsArr();
 
+        console.log($scope.items[0]);
+
+        //削除するデータリスト
+        $scope.del = {
+            items: []
+        };
+
+        // 削除チェックボックスの表示切り替え
+        $scope.delete_switching = false;
+
+        $scope.delete_switching_reverse = true;
+
         //お気に入り一覧データの選択処理
         $scope.processItemSelect = function(index, event){
 
             console.log("in processItemSelect");
-            console.log("url is: " + $scope.items[index].url);
 
             var item = {
                 detail_url : $scope.items[index].url,
@@ -232,19 +243,16 @@
 
         };
 
-        // 削除チェックボックスの表示切り替え
-        $scope.delete_switching = false;
         $scope.checkBoxToggle = function(){
 
-            console.log($scope.delete_switching + "checkBoxToggle in!!!!!!!!!!!!!!");
+            console.log("" + $scope.delete_switching + ", checkBoxToggle in!!!!!!!!!!!!!!");
+
             $scope.delete_switching = !$scope.delete_switching;
-            console.log($scope.delete_switching + "checkBoxToggle in!!!!!!!!!!!!!!");
+            $scope.delete_switching_reverse = !$scope.delete_switching_reverse;
 
-        };
+            console.log("" + $scope.delete_switching + ", checkBoxToggle in!!!!!!!!!!!!!!");
 
-        //削除するデータリスト
-        $scope.del = {
-            items: []
+
         };
 
         //削除ボタン

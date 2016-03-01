@@ -3,13 +3,11 @@ module.exports = [
     {
         "file": "plugins/cordova-plugin-whitelist/whitelist.js",
         "id": "cordova-plugin-whitelist.whitelist",
-        "pluginId": "cordova-plugin-whitelist",
         "runs": true
     },
     {
         "file": "plugins/org.apache.cordova.inappbrowser/www/inappbrowser.js",
         "id": "org.apache.cordova.inappbrowser.inappbrowser",
-        "pluginId": "org.apache.cordova.inappbrowser",
         "clobbers": [
             "window.open"
         ]

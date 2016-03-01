@@ -62,7 +62,6 @@ StorageManager.prototype.getSearchType = function(){
 StorageManager.prototype.setSearchType = function(val){
 	
 	console.log("in setSearchType");
-	console.log(this.searchTypeName);
 
 	this.searchType = val;
 
@@ -90,10 +89,27 @@ StorageManager.prototype.setSearchCondition = function(param){
 	this.searchConditionHash[key] = param;
 
 	window.localStorage.setItem(this.searchConditionName, JSON.stringify(this.searchConditionHash));
+
+	alert_ex("現在の検索条件を保存しました");
 }
 StorageManager.prototype.getAllSearchConditionItemsAsArr = function(){
 	return convHash2Arr(this.searchConditionHash);
 }
+//複数削除機能
+//	id_arrは配列の想定
+StorageManager.prototype.deleteSearchConditionItems = function(id_arr){
+
+	for(var i = 0; i < id_arr.length; i++){
+		delete　this.searchConditionHash[id_arr[i]];
+	}
+
+	//ストレージにセット
+	window.localStorage.setItem(this.searchConditionName, JSON.stringify(this.searchConditionHash));
+
+	alert_ex("検索条件を削除しました");
+
+}
+
 
 /* local storageからオブジェクトを生成 */
 StorageManager.prototype.convStorage2Hash = function(){
@@ -253,6 +269,31 @@ StorageManager.prototype.saveFavoriteItem2StorageWithDetailData = function(data)
 	console.log("set detailinfo to favorite(detail)");
 }
 
+//複数削除機能
+//	id_arrは配列の想定
+StorageManager.prototype.deleteItems = function(id_arr){
+
+	for(var i = 0; i < id_arr.length; i++){
+		delete　this.favoriteItemHash[id_arr[i]];
+	}
+
+	//ストレージにセット
+	window.localStorage.setItem(this.favorName, JSON.stringify(this.favoriteItemHash));
+
+	alert_ex("お気に入りを削除しました");
+
+}
+//単一削除機能
+StorageManager.prototype.deleteItem = function(key){
+
+	//現在のお気に入りから削除
+	delete　this.favoriteItemHash[key];
+
+	//ストレージにセット
+	window.localStorage.setItem(this.favorName, JSON.stringify(this.favoriteItemHash));
+
+	alert_ex("お気に入りを削除しました");
+}
 
 /*
 		var data = {

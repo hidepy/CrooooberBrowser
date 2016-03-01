@@ -471,7 +471,7 @@ function addFavoriteItemFromDetail(el_target){
 			if(detail_info){
 				storageManager.saveFavoriteItem2StorageWithDetailData(detail_info);
 
-				$("#favorite_content_wrapper").html(template_favorite(storageManager.getAllFavoriteItemsAsArr()));
+				//$("#favorite_content_wrapper").html(template_favorite(storageManager.getAllFavoriteItemsAsArr()));
 			}
 			else{
 				console.log("お気に入り登録に失敗しました(詳細情報取得失敗)")

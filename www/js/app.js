@@ -34,7 +34,6 @@
                 $scope.$apply(function(){
                     $scope.items = createResultItemsHeader(data, type, parameters); 
                 });
-                
             });
         }
 
@@ -71,11 +70,8 @@
 
                     $scope.items = createResultItemsHeader(data, type, parameters); 
                 });
-
             });
-
         };
-
     });
 
     //詳細ページのコントローラ
@@ -87,17 +83,19 @@
 
         var _args = myNavigator.getCurrentPage().options;
 
+        if(_args.selected_item){
+            $scope.detail.title = _args.selected_item.title;
+            $scope.detail.price = _args.selected_item.price;
+        }
+
         getDetailInfo(_args.selected_item, function(data, type, parameters){
             var data = createResultItemDetail(data, type, parameters);
             console.log("get datail info callback");
-
-            //myNavigator.pushPage("detail_content.html", {data: data});
 
             $scope.$apply(function(){
                 $scope.detail = data;
             });
 
-            console.log("before refresh");
             item_img_carousel.refresh();
             thumb_img_carousel.refresh();
 
@@ -127,7 +125,6 @@
 
                 storageManager.deleteItem(id);
             }
-
         };
 
         //crooooberで見る押下時
@@ -137,8 +134,6 @@
 
             window.open($scope.detail.full_url, '_system');
         };
-        
-
     });
 
     //詳細条件指定検索ページのコントローラ
@@ -146,7 +141,21 @@
 
         console.log("in SearchDetailConditionController");
 
-        $scope.ts_msg = "messaggggggggggee!!";
+        //車検索の場合にtrueとなる
+        $scope.is_car_serach = false;
+
+        //バイク/車検索チェック切り替え時発生のイベント
+        $scope.bikeAndCarCheckChange = function(){
+            $scope.is_car_serach = ($('input[name=select_bike_or_car]:checked').val() == "car");
+        };
+
+        //現在の検索条件を保存
+        $scope.processSaveSearchCondition = function(){
+            console.log("in processSaveSearchCondition");
+
+            //検索条件を組み立て＆保存
+            storageManager.setSearchCondition(create_search_condition_params());
+        };
 
         //検索条件クリア
         function search_condition_clear(){
@@ -171,7 +180,9 @@
 
                 var query = is_car ? "_car" : "";
 
-                var el_selected_bunrui = document.querySelector("#search_condition_bunrui_list_wrapper" + query + " > .bunrui_list_selected");
+                //var el_selected_bunrui = document.querySelector("#search_condition_bunrui_list_wrapper" + query + " > .bunrui_list_selected");
+                var selected_jq_input = $("input[name=bunrui]:checked");
+                var el_selected_bunrui = selected_jq_input && selected_jq_input[0] ? selected_jq_input[0].parentNode.parentNode : null;
 
                 var res = ((el_selected_bunrui) ? el_selected_bunrui.id : "").replace("licat", "");
 
@@ -180,7 +191,6 @@
                 }
 
                 return "";
-
             })();   
 
             var detail_param = {
@@ -205,6 +215,11 @@
             //先にページに戻る
             myNavigator.resetToPage("main.html", {animation: "slide", is_from_detail_search: true, detail_search_cond: detail_param});
         };
+
+        //保存された検索条件画面へ遷移
+        $scope.movetoSavedSearchCondition = function(){
+            myNavigator.pushPage("saved_search_condition.html");
+        }
     });
 
     //お気に入りのコントローラ
@@ -215,8 +230,6 @@
         //お気に入り情報のロード
         $scope.items = storageManager.getAllFavoriteItemsAsArr();
 
-        console.log($scope.items[0]);
-
         //削除するデータリスト
         $scope.del = {
             items: []
@@ -225,43 +238,53 @@
         // 削除チェックボックスの表示切り替え
         $scope.delete_switching = false;
 
-        $scope.delete_switching_reverse = true;
-
         //お気に入り一覧データの選択処理
         $scope.processItemSelect = function(index, event){
 
-            console.log("in processItemSelect");
+            if($scope.delete_switching == false){ //削除ボタン表示中でなければ
 
-            var item = {
-                detail_url : $scope.items[index].url,
-                id : $scope.items[index].id,
-                flg_dont_have_detail: $scope.items[index].flg_dont_have_detail //まだ詳細情報を持っていない場合のみtrue
-            };
+                console.log("in processItemSelect");
 
-            //詳細ページに遷移する
-            myNavigator.pushPage("detail_content.html", {selected_item: item, is_from_favorite: true});
+                var item = {
+                    detail_url : $scope.items[index].url,
+                    id : $scope.items[index].id,
+                    flg_dont_have_detail: $scope.items[index].flg_dont_have_detail //まだ詳細情報を持っていない場合のみtrue
+                };
 
+                //詳細ページに遷移する
+                myNavigator.pushPage("detail_content.html", {selected_item: item, is_from_favorite: true});
+            }
+            else{
+                //削除　ボタン表示中なら
+
+                var target_idx = $scope.del.items.indexOf($scope.items[index].id);
+
+                //既に登録されているか
+                if(target_idx != -1){
+                    //登録されている
+                    $scope.del.items.splice(target_idx, 1); //削除
+                }
+                else{
+                    $scope.del.items.push($scope.items[index].id);
+                }                
+            }
         };
 
         $scope.checkBoxToggle = function(){
-
-            console.log("" + $scope.delete_switching + ", checkBoxToggle in!!!!!!!!!!!!!!");
-
             $scope.delete_switching = !$scope.delete_switching;
-            $scope.delete_switching_reverse = !$scope.delete_switching_reverse;
-
-            console.log("" + $scope.delete_switching + ", checkBoxToggle in!!!!!!!!!!!!!!");
-
-
         };
 
         //削除ボタン
         $scope.deleteRecord = function(){
 
-            //console.log($scope.del.items);
-            storage_manager.deleteItems($scope.del.items);
-            $scope.del.items = [];
+            console.log("in deleteRecord");
 
+            storageManager.deleteItems($scope.del.items);
+
+            $scope.del.items = [];
+            $scope.delete_switching = false;
+
+            $scope.items = storageManager.getAllFavoriteItemsAsArr();
         };
 
         $scope.checkAll = function() {
@@ -276,11 +299,82 @@
         $scope.uncheckAll = function() {
             $scope.del.items = [];
         };
+    });
 
 
+    //保存した検索条件のコントローラ
+    module.controller('ViewSavedSearchConditionController', function($scope) {
 
+        console.log("in ViewSavedSearchConditionController");
+
+        //保存した検索条件情報のロード
+        $scope.items = storageManager.getAllSearchConditionItemsAsArr();
+
+        //削除するデータリスト
+        $scope.del = {
+            items: []
+        };
+
+        // 削除チェックボックスの表示切り替え
+        $scope.delete_switching = false;
+
+        //お気に入り一覧データの選択処理
+        $scope.processItemSelect = function(index, event){
+
+            if($scope.delete_switching == false){ //削除ボタン表示中でなければ
+
+                console.log("in processItemSelect");
+
+                var detail_param = $scope.items[index];
+
+                //検索条件をロードして、メイン画面へ戻って検索処理
+                myNavigator.resetToPage("main.html", {animation: "slide", is_from_detail_search: true, detail_search_cond: detail_param});
+            }
+            else{
+                //削除　ボタン表示中なら
+
+                var target_idx = $scope.del.items.indexOf($scope.items[index].word);
+
+                //既に登録されているか
+                if(target_idx != -1){
+                    //登録されている
+                    $scope.del.items.splice(target_idx, 1); //削除
+                }
+                else{
+                    $scope.del.items.push($scope.items[index].word);
+                }                
+            }
+        };
+
+        $scope.checkBoxToggle = function(){
+            $scope.delete_switching = !$scope.delete_switching;
+        };
+
+        //削除ボタン
+        $scope.deleteRecord = function(){
+
+            console.log("in deleteRecord");
+
+            storageManager.deleteSearchConditionItems($scope.del.items);
+
+            $scope.del.items = [];
+            $scope.delete_switching = false;
+
+            $scope.items = storageManager.getAllSearchConditionItemsAsArr();
+        };
+
+        $scope.checkAll = function() {
+            $scope.del.items = [];
+
+            for(var i in $scope.items){
+                //console.log($scope.items[i].id);
+                $scope.del.items.push($scope.items[i].id);  
+            }
+        };
         
-
+        $scope.uncheckAll = function() {
+            $scope.del.items = [];
+        };
     });
 
 })();

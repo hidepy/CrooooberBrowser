@@ -62,7 +62,6 @@ StorageManager.prototype.getSearchType = function(){
 StorageManager.prototype.setSearchType = function(val){
 	
 	console.log("in setSearchType");
-	console.log(this.searchTypeName);
 
 	this.searchType = val;
 
@@ -253,6 +252,31 @@ StorageManager.prototype.saveFavoriteItem2StorageWithDetailData = function(data)
 	console.log("set detailinfo to favorite(detail)");
 }
 
+//複数削除機能
+//	id_arrは配列の想定
+StorageManager.prototype.deleteItems = function(id_arr){
+
+	for(var i = 0; i < id_arr.length; i++){
+		delete　this.favoriteItemHash[id_arr[i]];
+	}
+
+	//ストレージにセット
+	window.localStorage.setItem(this.favorName, JSON.stringify(this.favoriteItemHash));
+
+	alert_ex("お気に入りを削除しました");
+
+}
+//単一削除機能
+StorageManager.prototype.deleteItem = function(key){
+
+	//現在のお気に入りから削除
+	delete　this.favoriteItemHash[key];
+
+	//ストレージにセット
+	window.localStorage.setItem(this.favorName, JSON.stringify(this.favoriteItemHash));
+
+	alert_ex("お気に入りを削除しました");
+}
 
 /*
 		var data = {

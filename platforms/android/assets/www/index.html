@@ -266,7 +266,7 @@
             <ons-list-item modifier="tappable" class="item list-item-container">
               <ons-row>
 
-                <ons-col width="30px" ng-show="delete_switching" ng-hide="delete_switching_reverse">
+                <ons-col width="30px" ng-show="delete_switching">
                     <div class="checkbox" class="checkbox_col">
                         <input type="checkbox" checklist-model="del.items" checklist-value="item.id">
                         <div class="checkbox__checkmark"></div>
@@ -346,22 +346,19 @@
         </ul>
 
         <div id="search_item">
+            <div class="button-bar" ng-click="bikeAndCarCheckChange()">
+                <div class="button-bar__item">
+                    <input type="radio" name="select_bike_or_car" value="bike" checked>
+                    <div class="button-bar__button">バイク検索</div>
+                </div>
+                <div class="button-bar__item">
+                    <input type="radio" name="select_bike_or_car" value="car">
+                    <div class="button-bar__button">車検索</div>
+                </div>
+            </div>
+            
             <input type="search" id="setting_search_condition_keyword" class="search-input" data-clear-btn type="text" placeholder="検索キーワード"/>
         </div>
-
-        
-
-        <!--<div class="button-bar">
-            <div class="button-bar__item">
-                <input type="radio" name="select_bike_or_car" value="bike" checked>
-                <div class="button-bar__button">バイク検索</div>
-            </div>
-            <div class="button-bar__item">
-                <input type="radio" name="select_bike_or_car" value="car">
-                <div class="button-bar__button">車検索</div>
-            </div>
-        </div>
-    -->
 
         <div class="button-bar">
             <div class="button-bar__item">
@@ -392,7 +389,7 @@
         </ons-row>
 
         <!-- バイク用品用 -->
-        <ons-list id="search_condition_bunrui_list_wrapper">
+        <ons-list id="search_condition_bunrui_list_wrapper" ng-hide="is_car_serach">
             <ons-list-header>バイクカテゴリ</ons-list-header>
 
             <ons-list-item modifier="tappable" id="licat">
@@ -549,7 +546,15 @@
 
 
         <!-- 車用品用 -->
-        <ons-list id="search_condition_bunrui_list_wrapper_car">
+        <ons-list id="search_condition_bunrui_list_wrapper_car" ng-show="is_car_serach">
+
+            <ons-list-item modifier="tappable" id="licat">
+              <label class="radio-button radio-button--list-item">
+                <input type="radio" name="bunrui" checked="checked"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
+                (指定なし)
+              </label>
+            </ons-list-item>
+        
             <ons-list-header>タイヤ・ホイール</ons-list-header>
 
             <ons-list-item modifier="tappable" id="licat1001">

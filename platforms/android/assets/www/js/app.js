@@ -1,6 +1,7 @@
 (function(){
     'use strict';
     var module = angular.module('app', ['onsen','checklist-model']);
+    //var module = angular.module('app', ['onsen','checklist-model','ngAnimate']);
 
     //ヘッダ一覧画面のコントローラ
     module.controller('MainController', function($scope) {
@@ -214,11 +215,22 @@
         //お気に入り情報のロード
         $scope.items = storageManager.getAllFavoriteItemsAsArr();
 
+        console.log($scope.items[0]);
+
+        //削除するデータリスト
+        $scope.del = {
+            items: []
+        };
+
+        // 削除チェックボックスの表示切り替え
+        $scope.delete_switching = false;
+
+        $scope.delete_switching_reverse = true;
+
         //お気に入り一覧データの選択処理
         $scope.processItemSelect = function(index, event){
 
             console.log("in processItemSelect");
-            console.log("url is: " + $scope.items[index].url);
 
             var item = {
                 detail_url : $scope.items[index].url,
@@ -230,6 +242,41 @@
             myNavigator.pushPage("detail_content.html", {selected_item: item, is_from_favorite: true});
 
         };
+
+        $scope.checkBoxToggle = function(){
+
+            console.log("" + $scope.delete_switching + ", checkBoxToggle in!!!!!!!!!!!!!!");
+
+            $scope.delete_switching = !$scope.delete_switching;
+            $scope.delete_switching_reverse = !$scope.delete_switching_reverse;
+
+            console.log("" + $scope.delete_switching + ", checkBoxToggle in!!!!!!!!!!!!!!");
+
+
+        };
+
+        //削除ボタン
+        $scope.deleteRecord = function(){
+
+            //console.log($scope.del.items);
+            storage_manager.deleteItems($scope.del.items);
+            $scope.del.items = [];
+
+        };
+
+        $scope.checkAll = function() {
+            $scope.del.items = [];
+
+            for(var i in $scope.items){
+                //console.log($scope.items[i].id);
+                $scope.del.items.push($scope.items[i].id);  
+            }
+        };
+        
+        $scope.uncheckAll = function() {
+            $scope.del.items = [];
+        };
+
 
 
         

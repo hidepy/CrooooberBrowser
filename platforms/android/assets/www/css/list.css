@@ -100,6 +100,10 @@ body{
   padding: 10px;
 }
 
+.list-item-container .col{
+    overflow: hidden;
+}
+
 .thumbnail {
   width: 95px;
   height: 95px;
@@ -115,8 +119,8 @@ body{
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.25em;
-    height: 50px;
-    margin-bottom: 8px;
+    height: 3.5em;
+    margin-bottom: 1.48em;
 }
 
 .h_price{
@@ -143,6 +147,31 @@ body{
     color: #FFC800;
 }
 
+
+/* 表示・非表示切替時のアニメーション */
+.checkbox_col.ng-hide-add,
+.checkbox_col.ng-hide-remove{
+
+    /* 全ての要素を、一定の速度で、1秒間表現する */
+    -webkit-transition:all linear 1s;
+
+    /* アニメーション実行前に非表示にされるのを回避 */
+    display:block!important;
+}
+
+/* checkbox_col 非表示 */
+/* ng-hide が追加されたときに適用される */
+.checkbox_col.ng-hide-add.ng-hide-add-active,
+.checkbox_col.ng-hide-remove {
+    opacity:0;
+}
+
+/* checkbox_col 表示 */
+/* ng-hide が削除されたときに適用される */
+.checkbox_col.ng-hide-remove.ng-hide-remove-active,
+.checkbox_col.ng-hide-add {
+    opacity:1;
+}
 
 /*** detail_content ***/
 #item_img_carousel{
@@ -314,15 +343,15 @@ a.square_btn.ui-btn{
 }
 
 /* 詳細検索リスト */
-#detail_search_action{
+.fixed_action_bar{
     height: auto;
 }
 
-#detail_search_action .action .action-col{
+.fixed_action_bar .action .action-col{
     padding: 5px 5px 2px;
 }
 
-#detail_search_button{
+.fixed_action_bar .button{
     font-size: 14px;
     width: 100%;
 }
@@ -364,4 +393,8 @@ a.square_btn.ui-btn{
 }
 .h_junk_hide{
     display: none !important;
+}
+
+.bg_red{
+    background: #DA3A3A;
 }

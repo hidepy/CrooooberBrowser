@@ -88,6 +88,8 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 		else{
 			var dom = jQuery.parseHTML(data);
 			el_item_box = $(".item_box", dom);
+
+			console.log("in jQuery parse root. got item_box elements length is: " + el_item_box.length);
 		}
 
 		
@@ -106,24 +108,34 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 		//var item_header_data = {};
 		var item_header_data = [];
 
-		for(var i = 0; i < el_item_box.length; i++){
-			var el = el_item_box[i];
-			var el_feature = el.querySelector(".box_in > ul");
+		try{
 
-			var data = {
-				item_number: (i + 1) + previous_length,
-				title: el.querySelector("h3 > a").innerHTML,
-				detail_url: el.querySelector("h3 > a").getAttribute("href"),
-				feature: el_feature,
-				price: el.querySelector(".price span").innerHTML,
-				pic_url: el.querySelector("img").getAttribute("src").replace("//", "http://"),
-				is_newArrival: (el_feature.querySelector(".i_li01")) ? "h_newArrival_show" : "h_newArrival_hide",
-				is_new: (el_feature.querySelector(".i_li02")) ? "h_new_show" : "h_new_hide",
-				is_old: (el_feature.querySelector(".i_li03")) ? "h_old_show" : "h_old_hide",
-				is_junk: (el_feature.querySelector(".i_li04")) ? "h_junk_show" : "h_junk_hide"
-			};
+			for(var i = 0; i < el_item_box.length; i++){
+				var el = el_item_box[i];
+				var el_feature = el.querySelector(".box_in > ul");
 
-			item_header_data[i] = data;
+				var data = {
+					item_number: (i + 1) + previous_length,
+					title: el.querySelector("h3 > a").innerHTML,
+					detail_url: el.querySelector("h3 > a").getAttribute("href"),
+					feature: el_feature,
+					price: el.querySelector(".price span").innerHTML,
+					pic_url: el.querySelector("img").getAttribute("src").replace("//", "http://"),
+					is_newArrival: (el_feature.querySelector(".i_li01")) ? "h_newArrival_show" : "h_newArrival_hide",
+					is_new: (el_feature.querySelector(".i_li02")) ? "h_new_show" : "h_new_hide",
+					is_old: (el_feature.querySelector(".i_li03")) ? "h_old_show" : "h_old_hide",
+					is_junk: (el_feature.querySelector(".i_li04")) ? "h_junk_show" : "h_junk_hide"
+				};
+
+				item_header_data[i] = data;
+			}
+
+		}
+		catch(e){
+			console.log("error occured on searching data from item_box. error message is following:");
+			console.log(e.message);
+
+			return []; //空を返却
 		}
 
 		//検索結果の商品一覧にデータをはめ込む

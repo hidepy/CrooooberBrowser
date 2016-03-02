@@ -6,7 +6,7 @@ var template_favorite;
 var template_search_condition;
 
 var header_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
-//var header_search_url = "http://www.croooober.com/bparts/search?"; //※※
+var header_search_url_direct = "http://www.croooober.com/bparts/search?"; //※※
 var detail_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContentDetail.php?";
 
 var croooober_url = "http://www.croooober.com";
@@ -19,10 +19,14 @@ var current_header_items = [];
 //現在の検索条件c
 var current_search_condition = {};
 
+//検索トップのタイプ(0->通常, 1->jqでparse, 2->直croooober&jqでparse)
+var _debugging_type = "0";
+
 if(is_debug){
 	header_search_url = "http://localhost/CrooooberBrowser/debug_html.txt";
 	detail_search_url = "http://localhost/CrooooberBrowser/debug_html_detail.txt";
 }
+
 
 /*
 $(document).ready(function(){
@@ -45,36 +49,48 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 	var got_html_document = null;
 
 	try{
-		got_html_document = dom_parser.parseFromString(data, "text/html");
 
-		if(got_html_document == null){
-			outLog("got_html_document is null...");
+		var el_item_box = null;
 
-			return false;
+		if((_debugging_type != "1") && (_debugging_type != "2")){ //デフォルトルートの場合
+
+			got_html_document = dom_parser.parseFromString(data, "text/html");
+
+			if(got_html_document == null){
+				outLog("got_html_document is null...");
+
+				return false;
+			}
+			
+			//parseに失敗した場合...
+			if(got_html_document.getElementsByTagName("parsererror").length > 0){
+				got_html_document = null;
+			}
+
+			//検索結果の件数取得
+			var search_result_num = got_html_document.querySelector(".search_result_num");
+			var search_result_max_num = "-";
+			if(search_result_num){
+
+				//最大件数の取得
+				search_result_max_num = search_result_num.querySelector("span").innerHTML;
+
+				search_result_max_num = (search_result_max_num != null) ? search_result_max_num.replace(",", "") : "";
+
+				//いったんけす
+				//document.getElementById("search_result_num").innerHTML = "ヒット件数：　" + search_result_max_num;//search_result_num.innerHTML;
+			}
+
+			//console.log(JSON.stringify(got_html_document));
+
+			el_item_box = got_html_document.querySelectorAll(".item_box");
 		}
+		else{
+			var dom = jQuery.parseHTML(data);
+			el_item_box = $(".item_box", dom);
+		}
+
 		
-		//parseに失敗した場合...
-		if(got_html_document.getElementsByTagName("parsererror").length > 0){
-			got_html_document = null;
-		}
-
-		//検索結果の件数取得
-		var search_result_num = got_html_document.querySelector(".search_result_num");
-		var search_result_max_num = "-";
-		if(search_result_num){
-
-			//最大件数の取得
-			search_result_max_num = search_result_num.querySelector("span").innerHTML;
-
-			search_result_max_num = (search_result_max_num != null) ? search_result_max_num.replace(",", "") : "";
-
-			//いったんけす
-			//document.getElementById("search_result_num").innerHTML = "ヒット件数：　" + search_result_max_num;//search_result_num.innerHTML;
-		}
-
-		//console.log(JSON.stringify(got_html_document));
-
-		var el_item_box = got_html_document.querySelectorAll(".item_box");
 
 
 		//前回取得したアイテム数
@@ -263,6 +279,17 @@ function getHeaderInfo(detail_param, search_key, callback){
 
 	//var search_key = document.getElementById("search_key").value;
 
+
+    // ※※ debug用。後で削除すること
+    _debugging_type = $('input[name=select_searching_type_debug]:checked').val();
+    console.log("デバッグ用タイプ: " + _debugging_type);
+
+    if(_debugging_type == "2"){
+    	url = header_search_url_direct;
+    }
+
+
+
 	//バイク検索又は車検索ボタンの値を保存
 	//いったんけす
 	storageManager.setSearchType( $('input[name=select_bike_or_car]:checked').val() );
@@ -277,35 +304,66 @@ function getHeaderInfo(detail_param, search_key, callback){
 
 		var parameters = {};
 		{
-			
-			parameters.word = encodeURIComponent(search_key); //※※
-			//parameters.q = encodeURIComponent(search_key);
-			//parameters.per_page = 50;
-			parameters.length = 50;
-			if(storageManager.getSearchType() == "car"){
-				parameters.is_car_search = true; //carが選択されている場合は車用品検索
+			// 既存通りの動きの場合
+			if(_debugging_type != "2"){
+				parameters.word = encodeURIComponent(search_key); //※※
+				parameters.length = 50;
+				if(storageManager.getSearchType() == "car"){
+					parameters.is_car_search = true; //carが選択されている場合は車用品検索
+				}
 			}
-
+			else{
+				parameters.q = encodeURIComponent(search_key);
+				parameters.per_page = 50;
+			}
 		}
 
 		if(detail_param){ //詳細検索時のパラメータ
-			parameters.word = detail_param.word;
-			//parameters.q = detail_param.word;
+			if(_debugging_type != "2"){ //既存通りの場合
+				parameters.word = detail_param.word;
+				parameters.length = 50;
 
-			if(detail_param.connector){
-				parameters.connector = detail_param.connector;
+				if(detail_param.connector){
+					parameters.connector = detail_param.connector;
+				}
+				if(detail_param.bunrui){
+					parameters.bunrui = detail_param.bunrui;
+				}
+				if(detail_param.kakaku_low){
+					parameters.kakaku_low = detail_param.kakaku_low;
+				}
+				if(detail_param.kakaku_high){
+					parameters.kakaku_high = detail_param.kakaku_high;
+				}
+				if(detail_param.sort){
+					parameters.sort_type = detail_param.sort;
+				}
 			}
-			if(detail_param.bunrui){
-				parameters.bunrui = detail_param.bunrui;
-			}
-			if(detail_param.kakaku_low){
-				parameters.kakaku_low = detail_param.kakaku_low;
-			}
-			if(detail_param.kakaku_high){
-				parameters.kakaku_high = detail_param.kakaku_high;
-			}
-			if(detail_param.sort){
-				parameters.sort_type = detail_param.sort;
+			else{
+				//直crooooberの場合
+				parameters.q = detail_param.word; //encodeURIするべき？
+				parameters.per_page = 50;
+
+				if(detail_param.connector){
+					parameters.connector = detail_param.connector;
+				}
+				if(detail_param.bunrui){
+					parameters.c_bunrui_cd = detail_param.bunrui;
+				}
+				if(detail_param.kakaku_low){
+					parameters.kakaku_low = detail_param.kakaku_low;
+				}
+				if(detail_param.kakaku_high){
+					parameters.kakaku_high = detail_param.kakaku_high;
+				}
+				/*
+				if(detail_param.sort){
+					var sort = detail_param.sort;
+					parameters.sort_type = ((sort == "1") ? "&arrival_date=desc" : ((sort == "2") ? "&kakaku=asc" : "&kakaku=desc") ) : "&arrival_date=desc";
+				}
+				*/
+
+//"q=".$target_word."&per_page=".$length."&page=".$page."&c_bunrui_cd=".$bunrui."&connector=".$connector."&kakaku_low=".$price_low."&kakaku_high=".$price_upper.$sort;
 			}
 		}
 
@@ -556,7 +614,7 @@ function sendRequest(url, parameters, type, callback, before_callback){
 			outLog("in error");
 
 			alert("Error occured:" + textStatus);
-			dumpObject(jqXHR, 0);
+			//dumpObject(jqXHR, 0);
 		},
 		complete: function(){
 

@@ -93,6 +93,24 @@
         </ons-toolbar>
     
         <div class="content_wrap">
+    <!-- 2016/03/02 hide add start -->
+        <!-- 検索方式を指定できる(これデバッグ用！！) -->
+            <div class="button-bar">
+                <div class="button-bar__item">
+                    <input type="radio" name="select_searching_type_debug" value="0" checked>
+                    <div class="button-bar__button">いつも通り</div>
+                </div>
+                <div class="button-bar__item">
+                    <input type="radio" name="select_searching_type_debug" value="1">
+                    <div class="button-bar__button">parseだけjQuery</div>
+                </div>
+                <div class="button-bar__item">
+                    <input type="radio" name="select_searching_type_debug" value="2">
+                    <div class="button-bar__button">直読み(スマホのみ動く)</div>
+                </div>
+            </div>
+    <!-- 2016/03/02 hide add end -->
+
             <div class="button-bar">
                 <div class="button-bar__item">
                     <input type="radio" name="select_bike_or_car" value="bike" checked>
@@ -102,7 +120,7 @@
                     <input type="radio" name="select_bike_or_car" value="car">
                     <div class="button-bar__button">車検索</div>
                 </div>
-            </div>
+            </div>  
 
             <div class="search_item_form">
                 <input type="search" id="search_key" class="search_key search-input" data-clear-btn placeholder="検索したい商品を入力"/><ons-button id="button_search" class="button search_button" ng-click="processSearchButtonClick()" should-spin={{is_searching}}>検索</ons-button>   

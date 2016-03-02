@@ -1,3 +1,20 @@
+/* htmlをパースして作成した要素を返却する */
+function parseHtml(data, type){
+
+	if((type == "1") || (type == "2")){
+		//jqueryのparseを使用する
+		var dom = jQuery.parseHTML(data);
+		console.log(dom);
+		return dom;
+	}
+
+	var dom_parser = new DOMParser();
+	return dom_parser.parseFromString(data, "text/html");
+
+
+}
+
+
 /* ログを出力する */
 function outLog(msg){
 	if((typeof msg) == "object"){

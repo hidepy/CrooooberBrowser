@@ -83,6 +83,11 @@
 
         var _args = myNavigator.getCurrentPage().options;
 
+        if(_args.selected_item){
+            $scope.detail.title = _args.selected_item.title;
+            $scope.detail.price = _args.selected_item.price;
+        }
+
         getDetailInfo(_args.selected_item, function(data, type, parameters){
             var data = createResultItemDetail(data, type, parameters);
             console.log("get datail info callback");
@@ -136,11 +141,21 @@
 
         console.log("in SearchDetailConditionController");
 
+        //車検索の場合にtrueとなる
         $scope.is_car_serach = false;
 
+        //バイク/車検索チェック切り替え時発生のイベント
         $scope.bikeAndCarCheckChange = function(){
             $scope.is_car_serach = ($('input[name=select_bike_or_car]:checked').val() == "car");
-        }
+        };
+
+        //現在の検索条件を保存
+        $scope.processSaveSearchCondition = function(){
+            console.log("in processSaveSearchCondition");
+
+            //検索条件を組み立て＆保存
+            storageManager.setSearchCondition(create_search_condition_params());
+        };
 
         //検索条件クリア
         function search_condition_clear(){
@@ -200,6 +215,11 @@
             //先にページに戻る
             myNavigator.resetToPage("main.html", {animation: "slide", is_from_detail_search: true, detail_search_cond: detail_param});
         };
+
+        //保存された検索条件画面へ遷移
+        $scope.movetoSavedSearchCondition = function(){
+            myNavigator.pushPage("saved_search_condition.html");
+        }
     });
 
     //お気に入りのコントローラ
@@ -279,11 +299,82 @@
         $scope.uncheckAll = function() {
             $scope.del.items = [];
         };
+    });
 
 
+    //保存した検索条件のコントローラ
+    module.controller('ViewSavedSearchConditionController', function($scope) {
 
+        console.log("in ViewSavedSearchConditionController");
+
+        //保存した検索条件情報のロード
+        $scope.items = storageManager.getAllSearchConditionItemsAsArr();
+
+        //削除するデータリスト
+        $scope.del = {
+            items: []
+        };
+
+        // 削除チェックボックスの表示切り替え
+        $scope.delete_switching = false;
+
+        //お気に入り一覧データの選択処理
+        $scope.processItemSelect = function(index, event){
+
+            if($scope.delete_switching == false){ //削除ボタン表示中でなければ
+
+                console.log("in processItemSelect");
+
+                var detail_param = $scope.items[index];
+
+                //検索条件をロードして、メイン画面へ戻って検索処理
+                myNavigator.resetToPage("main.html", {animation: "slide", is_from_detail_search: true, detail_search_cond: detail_param});
+            }
+            else{
+                //削除　ボタン表示中なら
+
+                var target_idx = $scope.del.items.indexOf($scope.items[index].word);
+
+                //既に登録されているか
+                if(target_idx != -1){
+                    //登録されている
+                    $scope.del.items.splice(target_idx, 1); //削除
+                }
+                else{
+                    $scope.del.items.push($scope.items[index].word);
+                }                
+            }
+        };
+
+        $scope.checkBoxToggle = function(){
+            $scope.delete_switching = !$scope.delete_switching;
+        };
+
+        //削除ボタン
+        $scope.deleteRecord = function(){
+
+            console.log("in deleteRecord");
+
+            storageManager.deleteSearchConditionItems($scope.del.items);
+
+            $scope.del.items = [];
+            $scope.delete_switching = false;
+
+            $scope.items = storageManager.getAllSearchConditionItemsAsArr();
+        };
+
+        $scope.checkAll = function() {
+            $scope.del.items = [];
+
+            for(var i in $scope.items){
+                //console.log($scope.items[i].id);
+                $scope.del.items.push($scope.items[i].id);  
+            }
+        };
         
-
+        $scope.uncheckAll = function() {
+            $scope.del.items = [];
+        };
     });
 
 })();

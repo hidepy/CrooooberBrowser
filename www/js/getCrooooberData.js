@@ -153,7 +153,7 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 			el_search_more_button.setAttribute("current_display_item_length",  previous_length + el_item_box.length);
 
 			//最大件数に、今回検索数が達していない場合、表示状態にする
-			el_search_more_button.style.display = ((previous_length + el_item_box.length) < Number(search_result_max_num)) ? "inline" : "none";
+			el_search_more_button.style.display = ((previous_length + el_item_box.length) < Number(search_result_max_num)) ? "block" : "none";
 
 		}
 

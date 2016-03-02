@@ -5,26 +5,38 @@ body{
     font-size: 14px;
 }
 
-/*** main.html ***/
-#search_item{
+.content_wrap{
     padding: 0 10px;
+}
+
+.search_item_form{
     margin: 10px auto;
     text-align: center;
 }
 
-.button-bar{
-    width: 80%;
-    text-align: center;
-    margin: 10px auto;
-}
-
-#search_key{
-    width: 80%;
+.search_item_form .search_key{
+    width: 76%;
+    margin-right: 1%;
+    padding: 10px;
     display: inline-block;
     height: 40px;
     line-height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
 }
 
+.search_item_form .search_button{
+    width: 23%;
+}
+
+.button-bar{
+    width: 100%;
+    text-align: center;
+    margin: 10px auto;
+}
+
+/*** main.html ***/
 .navigation-bar__left{
     line-height: 44px;
 }

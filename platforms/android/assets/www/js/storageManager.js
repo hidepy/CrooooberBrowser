@@ -89,10 +89,27 @@ StorageManager.prototype.setSearchCondition = function(param){
 	this.searchConditionHash[key] = param;
 
 	window.localStorage.setItem(this.searchConditionName, JSON.stringify(this.searchConditionHash));
+
+	alert_ex("現在の検索条件を保存しました");
 }
 StorageManager.prototype.getAllSearchConditionItemsAsArr = function(){
 	return convHash2Arr(this.searchConditionHash);
 }
+//複数削除機能
+//	id_arrは配列の想定
+StorageManager.prototype.deleteSearchConditionItems = function(id_arr){
+
+	for(var i = 0; i < id_arr.length; i++){
+		delete　this.searchConditionHash[id_arr[i]];
+	}
+
+	//ストレージにセット
+	window.localStorage.setItem(this.searchConditionName, JSON.stringify(this.searchConditionHash));
+
+	alert_ex("検索条件を削除しました");
+
+}
+
 
 /* local storageからオブジェクトを生成 */
 StorageManager.prototype.convStorage2Hash = function(){

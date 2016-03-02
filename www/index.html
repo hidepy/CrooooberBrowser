@@ -80,38 +80,33 @@
 </ons-template>
 -->
 
-<!-- main画面　index > main -->
+<!-- main画面　index -->
 <ons-template id="main.html">
     <ons-page ng-controller="MainController" id="main">
 
         <ons-toolbar>
-            <div class="left"><ons-back-button style="visibility:hidden"></ons-back-button>croooober browser</div>
+            <div class="left"><ons-back-button></ons-back-button>　croooober browser</div>
             <div class="right">
                 <ons-toolbar-button ng-click='myNavigator.pushPage("favorite.html")'><ons-icon icon="ion-android-star"></ons-icon></ons-toolbar-button>
                 <ons-toolbar-button ng-click='myNavigator.pushPage("page_setting_search_condition.html")'><ons-icon icon="ion-ios-search-strong"></ons-icon></ons-toolbar-button>
             </div>
         </ons-toolbar>
     
-        <div class="button-bar">
-            <div class="button-bar__item">
-                <input type="radio" name="select_bike_or_car" value="bike" checked>
-                <div class="button-bar__button">バイク検索</div>
+        <div class="content_wrap">
+            <div class="button-bar">
+                <div class="button-bar__item">
+                    <input type="radio" name="select_bike_or_car" value="bike" checked>
+                    <div class="button-bar__button">バイク検索</div>
+                </div>
+                <div class="button-bar__item">
+                    <input type="radio" name="select_bike_or_car" value="car">
+                    <div class="button-bar__button">車検索</div>
+                </div>
             </div>
-            <div class="button-bar__item">
-                <input type="radio" name="select_bike_or_car" value="car">
-                <div class="button-bar__button">車検索</div>
+
+            <div class="search_item_form">
+                <input type="search" id="search_key" class="search_key search-input" data-clear-btn placeholder="検索したい商品を入力"/><ons-button id="button_search" class="button search_button" ng-click="processSearchButtonClick()" should-spin={{is_searching}}>検索</ons-button>   
             </div>
-        </div>
-
-        <div id="search_item">
-            <input type="search" id="search_key" class="search-input" data-clear-btn type="text" placeholder="検索したい商品を入力"/>
-            
-            <ons-button class="button" id="button_search" ng-click="processSearchButtonClick()" should-spin={{is_searching}}>検索</ons-button>
-
-            <!--<div>
-                <input type="radio" name="select_bike_or_car" value="bike">バイク部品/用品検索</input>
-                <input type="radio" name="select_bike_or_car" value="car">車部品/用品検索</input>
-            </div>-->        
         </div>
 
         <!--<div class="search_result_num"></div>-->
@@ -159,7 +154,9 @@
         </ul>-->
         </ons-list>
 
-        <ons-button id="button_search_more" class="button button--large--cta" should-spin={{is_searching_more}} ng-click="processSearchMoreButtonClick()">もっとさがす！</ons-button>
+        <div class="content_wrap">
+            <ons-button id="button_search_more" class="button button--large--cta" should-spin={{is_searching_more}} ng-click="processSearchMoreButtonClick()"><ons-icon icon="ion-ios-search-strong"></ons-icon> もっとさがす！</ons-button>
+        </div>
 
     </ons-page>
 </ons-template>
@@ -267,9 +264,8 @@
               <ons-row>
 
                 <ons-col width="30px" ng-show="delete_switching">
-                    <div class="checkbox" class="checkbox_col">
-                        <input type="checkbox" checklist-model="del.items" checklist-value="item.id">
-                        <div class="checkbox__checkmark"></div>
+                    <div class="checkbox checkbox_col">
+                        <input type="checkbox" checklist-model="del.items" checklist-value="item.id"><div class="checkbox__checkmark"></div>
                     </div>
                 </ons-col>
 

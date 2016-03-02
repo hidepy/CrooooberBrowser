@@ -5,26 +5,42 @@ body{
     font-size: 14px;
 }
 
-/*** main.html ***/
-#search_item{
+.content_wrap{
     padding: 0 10px;
+}
+
+.search_item_form{
     margin: 10px auto;
     text-align: center;
 }
 
-.button-bar{
-    width: 80%;
-    text-align: center;
-    margin: 10px auto;
-}
-
-#search_key{
-    width: 80%;
+.search_item_form .search_key{
+    width: 76%;
+    margin-right: 1%;
     display: inline-block;
     height: 40px;
     line-height: 40px;
 }
 
+.search_item_form .search_button{
+    width: 23%;
+}
+
+.button-bar{
+    width: 100%;
+    text-align: center;
+    margin: 10px auto;
+}
+
+.button{
+    font-size: 14px;
+}
+
+.checkbox_col{
+    margin: 35px auto;
+}
+
+/*** main.html ***/
 .navigation-bar__left{
     line-height: 44px;
 }
@@ -147,30 +163,9 @@ body{
     color: #FFC800;
 }
 
-
-/* 表示・非表示切替時のアニメーション */
-.checkbox_col.ng-hide-add,
-.checkbox_col.ng-hide-remove{
-
-    /* 全ての要素を、一定の速度で、1秒間表現する */
-    -webkit-transition:all linear 1s;
-
-    /* アニメーション実行前に非表示にされるのを回避 */
-    display:block!important;
-}
-
-/* checkbox_col 非表示 */
-/* ng-hide が追加されたときに適用される */
-.checkbox_col.ng-hide-add.ng-hide-add-active,
-.checkbox_col.ng-hide-remove {
-    opacity:0;
-}
-
-/* checkbox_col 表示 */
-/* ng-hide が削除されたときに適用される */
-.checkbox_col.ng-hide-remove.ng-hide-remove-active,
-.checkbox_col.ng-hide-add {
-    opacity:1;
+#button_search_more{
+    display: none;
+    margin: 20px auto;
 }
 
 /*** detail_content ***/
@@ -258,30 +253,12 @@ h2#d_title{
     display: block;
     width: 240px;
     text-align: center;
-    font-size: 14px;
     border-bottom: 2px solid #2D588A;
     margin: 20px auto;
 }
 
 .line_b_btn .ons-icon--ion{
     vertical-align: -10%;
-}
-
-#d_favorite_btn{
-}
-
-a.square_btn.ui-btn{
-    font-size: 10px;
-    font-weight: normal;
-    line-height: 10px;
-    width: 45px;
-    padding: 25px 0 10px;
-    background: transparent;
-    border: none;
-}
-
-.square_btn.ui-btn-icon-top:after{
-    top: .37em;
 }
 
 /*
@@ -337,9 +314,6 @@ a.square_btn.ui-btn{
     width: 100%;
     max-width: 640px;
     max-height: 480px;
-}
-#button_search_more{
-    display: none;
 }
 
 /* 詳細検索リスト */

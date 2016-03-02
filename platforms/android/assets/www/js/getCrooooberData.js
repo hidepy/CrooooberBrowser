@@ -6,8 +6,9 @@ var template_favorite;
 var template_search_condition;
 
 var header_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
-//var header_search_url = "http://www.croooober.com/bparts/search?"; //※※
+var header_search_url_direct = "http://www.croooober.com/bparts/search?"; //※※
 var detail_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContentDetail.php?";
+var detail_search_url_direct = "http://www.croooober.com";
 
 var croooober_url = "http://www.croooober.com";
 
@@ -19,10 +20,14 @@ var current_header_items = [];
 //現在の検索条件c
 var current_search_condition = {};
 
+//検索トップのタイプ(0->通常, 1->jqでparse, 2->直croooober&jqでparse)
+var _debugging_type = "0";
+
 if(is_debug){
 	header_search_url = "http://localhost/CrooooberBrowser/debug_html.txt";
 	detail_search_url = "http://localhost/CrooooberBrowser/debug_html_detail.txt";
 }
+
 
 /*
 $(document).ready(function(){
@@ -45,36 +50,53 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 	var got_html_document = null;
 
 	try{
-		got_html_document = dom_parser.parseFromString(data, "text/html");
 
-		if(got_html_document == null){
-			outLog("got_html_document is null...");
-
-			return false;
-		}
-		
-		//parseに失敗した場合...
-		if(got_html_document.getElementsByTagName("parsererror").length > 0){
-			got_html_document = null;
-		}
-
-		//検索結果の件数取得
-		var search_result_num = got_html_document.querySelector(".search_result_num");
+		var el_item_box = null;
+		var search_result_num = null;
 		var search_result_max_num = "-";
-		if(search_result_num){
 
-			//最大件数の取得
-			search_result_max_num = search_result_num.querySelector("span").innerHTML;
+		if((_debugging_type != "1") && (_debugging_type != "2")){ //デフォルトルートの場合
 
-			search_result_max_num = (search_result_max_num != null) ? search_result_max_num.replace(",", "") : "";
+			got_html_document = dom_parser.parseFromString(data, "text/html");
 
-			//いったんけす
-			//document.getElementById("search_result_num").innerHTML = "ヒット件数：　" + search_result_max_num;//search_result_num.innerHTML;
+			if(got_html_document == null){
+				outLog("got_html_document is null...");
+
+				return false;
+			}
+			
+			//parseに失敗した場合...
+			if(got_html_document.getElementsByTagName("parsererror").length > 0){
+				got_html_document = null;
+			}
+
+			//検索結果の件数取得
+			search_result_num = got_html_document.querySelector(".search_result_num");
+			search_result_max_num = "-";
+			
+			if(search_result_num){
+
+				//最大件数の取得
+				search_result_max_num = search_result_num.querySelector("span").innerHTML;
+				search_result_max_num = (search_result_max_num != null) ? search_result_max_num.replace(",", "") : "";
+			}
+
+			el_item_box = got_html_document.querySelectorAll(".item_box");
+		}
+		else{
+			var dom = jQuery.parseHTML(data);
+
+			el_item_box = $( ((_debugging_type == "2") ? ".crbr-search-result " : "") + ".item_box", dom); //firefoxデバッグ用の回避策
+
+			console.log("in jQuery parse root. got item_box elements length is: " + el_item_box.length);
+
+			var el_max_num_area = $(".crbr-sort > p > b", dom);
+			search_result_max_num = (el_max_num_area && el_max_num_area.length && (el_max_num_area.length > 0)) ? el_max_num_area[0].innerHTML.replace(",", "") : "";
+			//search_result_max_num = (search_result_max_num != "") ? search_result_max_num.replace(",", "") : "";
 		}
 
-		//console.log(JSON.stringify(got_html_document));
-
-		var el_item_box = got_html_document.querySelectorAll(".item_box");
+		//取得した最大件数を保存
+		document.getElementById("search_result_num").innerHTML = "ヒット件数：　" + search_result_max_num;//search_result_num.innerHTML;
 
 
 		//前回取得したアイテム数
@@ -90,24 +112,43 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 		//var item_header_data = {};
 		var item_header_data = [];
 
-		for(var i = 0; i < el_item_box.length; i++){
-			var el = el_item_box[i];
-			var el_feature = el.querySelector(".box_in > ul");
+		try{
 
-			var data = {
-				item_number: (i + 1) + previous_length,
-				title: el.querySelector("h3 > a").innerHTML,
-				detail_url: el.querySelector("h3 > a").getAttribute("href"),
-				feature: el_feature,
-				price: el.querySelector(".price span").innerHTML,
-				pic_url: el.querySelector("img").getAttribute("src").replace("//", "http://"),
-				is_newArrival: (el_feature.querySelector(".i_li01")) ? "h_newArrival_show" : "h_newArrival_hide",
-				is_new: (el_feature.querySelector(".i_li02")) ? "h_new_show" : "h_new_hide",
-				is_old: (el_feature.querySelector(".i_li03")) ? "h_old_show" : "h_old_hide",
-				is_junk: (el_feature.querySelector(".i_li04")) ? "h_junk_show" : "h_junk_hide"
-			};
+			for(var i = 0; i < el_item_box.length; i++){
+				var el = el_item_box[i];
 
-			item_header_data[i] = data;
+				var el_feature = el.querySelector(".box_in > ul") ? el.querySelector(".box_in > ul") : el.querySelector(".item_cat");
+
+				var title = el.querySelector("h3 > a") ? el.querySelector("h3 > a").innerHTML : el.querySelector("h4").innerHTML;
+				var detail_url = el.querySelector("h3 > a") ? el.querySelector("h3 > a").getAttribute("href") : el.querySelector("a").getAttribute("href");
+				var price = el.querySelector(".price span") ? el.querySelector(".price span").innerHTML : el.querySelector(".price_box > p").innerHTML;
+				var is_newArrival = (el_feature && el_feature.querySelector(".i_li01,.cat01")) ? "h_newArrival_show" : "h_newArrival_hide";
+				var is_new = (el_feature && el_feature.querySelector(".i_li02,.cat02")) ? "h_new_show" : "h_new_hide";
+				var is_old = (el_feature && el_feature.querySelector(".i_li03,.cat03")) ? "h_old_show" : "h_old_hide";
+				var is_junk = (el_feature && el_feature.querySelector(".i_li04,.cat04")) ? "h_junk_show" : "h_junk_hide";
+
+				var data = {
+					item_number: (i + 1) + previous_length,
+					title: title,
+					detail_url: detail_url,
+					feature: el_feature,
+					price: price,
+					pic_url: el.querySelector("img").getAttribute("src").replace("//", "http://"),
+					is_newArrival: is_newArrival,
+					is_new: is_new,
+					is_old: is_old,
+					is_junk: is_junk
+				};
+
+				item_header_data[i] = data;
+			}
+
+		}
+		catch(e){
+			console.log("error occured on searching data from item_box. error message is following:");
+			console.log(e.message);
+
+			return []; //空を返却
 		}
 
 		//検索結果の商品一覧にデータをはめ込む
@@ -153,7 +194,7 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 			el_search_more_button.setAttribute("current_display_item_length",  previous_length + el_item_box.length);
 
 			//最大件数に、今回検索数が達していない場合、表示状態にする
-			el_search_more_button.style.display = ((previous_length + el_item_box.length) < Number(search_result_max_num)) ? "inline" : "none";
+			el_search_more_button.style.display = ((previous_length + el_item_box.length) < Number(search_result_max_num)) ? "block" : "none";
 
 		}
 
@@ -167,36 +208,50 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 }
 
 
-function createResultItemDetail(data, type, parameters){
+function createResultItemDetail(data, type, parameters, optional_parameter){
 	console.log("in createResultItemDetail!!");
 
 	var dom_parser = new DOMParser();
 	var got_html_document = null;
 
 	try{
-		got_html_document = dom_parser.parseFromString(data, "text/html");
 
-		if(got_html_document == null){
-			outLog("got_html_document is null...");
+		if((_debugging_type != "1") && (_debugging_type != "2")){ //デフォルトルートの場合
+			got_html_document = dom_parser.parseFromString(data, "text/html");
 
-			return false;
+			if(got_html_document == null){
+				outLog("got_html_document is null...");
+
+				return false;
+			}
+			
+			//parseに失敗した場合...
+			if(got_html_document.getElementsByTagName("parsererror").length > 0){
+				got_html_document = null;
+			}
 		}
-		
-		//parseに失敗した場合...
-		if(got_html_document.getElementsByTagName("parsererror").length > 0){
-			got_html_document = null;
+		else{
+			//jqパースの場合
+			got_html_document = jQuery.parseHTML(data);
+			//el_item_box = $(".crbr-search-result .item_box", dom);
 		}
 
 		var el = got_html_document;
+		var id = parameters.__detail_url.split("/")[2];
+		var url = parameters.__detail_url;
+		var is_mobile = (_debugging_type == "2"); //2が通るということはスマホからしかあり得ないので
 
-		var el_tbody = el.querySelectorAll(".riq01 .ta01 > tbody > tr");
+		console.log("is mobile page parsing?: " + is_mobile);
 
-		var id = parameters.detail_path.split("/")[2];
-		var url = parameters.detail_path;
+
+		var el_tbody = (!is_mobile) ? el.querySelectorAll(".riq01 .ta01 > tbody > tr") : jQuery(".detail_cont > .ta01 > tbody > tr", got_html_document);
+
+		console.log("el_tbody length: " + el_tbody.length);
+
 		var pictures = (function(el){
 			var arr = [];
 
-			var el_imges = el.querySelectorAll("#slideshow_thumb img");
+			var el_imges = (!is_mobile) ? el.querySelectorAll("#slideshow_thumb img") : jQuery("#thumb_cont img", got_html_document);
 
 			for(var i = 0; i < el_imges.length; i++){
 				arr[i] = el_imges[i].getAttribute("src").replace("//", "http://");
@@ -205,20 +260,36 @@ function createResultItemDetail(data, type, parameters){
 			return arr;
 		})(el);
 
+console.log("star_box length: " + jQuery(".star_box", el_tbody).length);
+
+		var title = (!is_mobile) ? el.querySelector("#title > .item_title").innerHTML : getJqInner(jQuery("#cont h2", got_html_document));
+		var price = (!is_mobile) ? el.querySelector(".price_box > .price_in > .price").innerHTML : getJqInner(jQuery(".price > h5", got_html_document));
+		var picture = pictures[0];
+		var maker_name = (!is_mobile) ? el_tbody[0].querySelector("td > a").innerHTML : getJqInner(jQuery("td > a", el_tbody));
+		var rank = "";
+		try{
+			rank = (!is_mobile) ? el_tbody[1].querySelector(".star_box").innerHTML : jQuery(".star_box", el_tbody)[0].getAttribute("class").replace(/star_box star0(.)/, "$1");
+		}
+		catch(e){
+			console.log("failed to get rank...");
+			console.log(e.message);
+		}
+		var comment = (!is_mobile) ? el.querySelector(".riq01 .riq01_in > p > span").innerHTML : getJqInner(jQuery(".desc_cont > p", got_html_document));
+
 		//必要箇所を抽出
 		var data = {
 			id: id,
 			url: url,
 			full_url: (croooober_url + url),
-			title: el.querySelector("#title > .item_title").innerHTML,
-			price: el.querySelector(".price_box > .price_in > .price").innerHTML,
+			title: title,
+			price: price,
 			pictures: pictures,
-			picture: el.querySelector("#slideshow_thumb img").getAttribute("src").replace("//", "http://"),
-			maker_name: el_tbody[0].querySelector("td > a").innerHTML,
-			rank: el_tbody[1].querySelector(".star_box").innerHTML,
+			picture: picture,
+			maker_name: maker_name,
+			rank: rank,
 			//comment: el.querySelector(".riq01 .riq01_in > p").innerHTML,
-			comment: el.querySelector(".riq01 .riq01_in > p > span").innerHTML,
-			tbody: el.querySelector(".riq01 .ta01 > tbody").innerHTML,
+			comment: comment,
+			//tbody: el.querySelector(".riq01 .ta01 > tbody").innerHTML,
 			ref_date_time: formatDate(new Date())
 		};
 
@@ -236,7 +307,7 @@ function createResultItemDetail(data, type, parameters){
 
 	}
 	catch(e){
-		console.log(e);
+		console.log(e.message);
 	}
 
 }
@@ -263,6 +334,17 @@ function getHeaderInfo(detail_param, search_key, callback){
 
 	//var search_key = document.getElementById("search_key").value;
 
+
+    // ※※ debug用。後で削除すること
+    _debugging_type = $('input[name=select_searching_type_debug]:checked').val();
+    console.log("デバッグ用タイプ: " + _debugging_type);
+
+    if(_debugging_type == "2"){
+    	url = header_search_url_direct;
+    }
+
+
+
 	//バイク検索又は車検索ボタンの値を保存
 	//いったんけす
 	storageManager.setSearchType( $('input[name=select_bike_or_car]:checked').val() );
@@ -277,35 +359,66 @@ function getHeaderInfo(detail_param, search_key, callback){
 
 		var parameters = {};
 		{
-			
-			parameters.word = encodeURIComponent(search_key); //※※
-			//parameters.q = encodeURIComponent(search_key);
-			//parameters.per_page = 50;
-			parameters.length = 50;
-			if(storageManager.getSearchType() == "car"){
-				parameters.is_car_search = true; //carが選択されている場合は車用品検索
+			// 既存通りの動きの場合
+			if(_debugging_type != "2"){
+				parameters.word = encodeURIComponent(search_key); //※※
+				parameters.length = 50;
+				if(storageManager.getSearchType() == "car"){
+					parameters.is_car_search = true; //carが選択されている場合は車用品検索
+				}
 			}
-
+			else{
+				parameters.q = encodeURIComponent(search_key);
+				parameters.per_page = 50;
+			}
 		}
 
 		if(detail_param){ //詳細検索時のパラメータ
-			parameters.word = detail_param.word;
-			//parameters.q = detail_param.word;
+			if(_debugging_type != "2"){ //既存通りの場合
+				parameters.word = detail_param.word;
+				parameters.length = 50;
 
-			if(detail_param.connector){
-				parameters.connector = detail_param.connector;
+				if(detail_param.connector){
+					parameters.connector = detail_param.connector;
+				}
+				if(detail_param.bunrui){
+					parameters.bunrui = detail_param.bunrui;
+				}
+				if(detail_param.kakaku_low){
+					parameters.kakaku_low = detail_param.kakaku_low;
+				}
+				if(detail_param.kakaku_high){
+					parameters.kakaku_high = detail_param.kakaku_high;
+				}
+				if(detail_param.sort){
+					parameters.sort_type = detail_param.sort;
+				}
 			}
-			if(detail_param.bunrui){
-				parameters.bunrui = detail_param.bunrui;
-			}
-			if(detail_param.kakaku_low){
-				parameters.kakaku_low = detail_param.kakaku_low;
-			}
-			if(detail_param.kakaku_high){
-				parameters.kakaku_high = detail_param.kakaku_high;
-			}
-			if(detail_param.sort){
-				parameters.sort_type = detail_param.sort;
+			else{
+				//直crooooberの場合
+				parameters.q = detail_param.word; //encodeURIするべき？
+				parameters.per_page = 50;
+
+				if(detail_param.connector){
+					parameters.connector = detail_param.connector;
+				}
+				if(detail_param.bunrui){
+					parameters.c_bunrui_cd = detail_param.bunrui;
+				}
+				if(detail_param.kakaku_low){
+					parameters.kakaku_low = detail_param.kakaku_low;
+				}
+				if(detail_param.kakaku_high){
+					parameters.kakaku_high = detail_param.kakaku_high;
+				}
+				/*
+				if(detail_param.sort){
+					var sort = detail_param.sort;
+					parameters.sort_type = ((sort == "1") ? "&arrival_date=desc" : ((sort == "2") ? "&kakaku=asc" : "&kakaku=desc") ) : "&arrival_date=desc";
+				}
+				*/
+
+//"q=".$target_word."&per_page=".$length."&page=".$page."&c_bunrui_cd=".$bunrui."&connector=".$connector."&kakaku_low=".$price_low."&kakaku_high=".$price_upper.$sort;
 			}
 		}
 
@@ -334,6 +447,14 @@ function getHeaderInfoMore(event, callback){
 
 	var url = header_search_url;
 
+    // ※※ debug用。後で削除すること
+    _debugging_type = $('input[name=select_searching_type_debug]:checked').val();
+    console.log("デバッグ用タイプ: " + _debugging_type);
+
+    if(_debugging_type == "2"){
+    	url = header_search_url_direct;
+    }
+
 	//現在までのトライ回数を取得する
 	var try_num = event.getAttribute("try_num");
 
@@ -360,14 +481,22 @@ function getDetailInfo(selected_item, callback, callback_for_cache){
 	var url = detail_search_url;
 
 	var parameters = {
-		//detail_path: event.getAttribute("datailurl")
-		detail_path: selected_item.detail_url
-	};
+		__detail_url: selected_item.detail_url
+	}; //のちの処理で使用するので_付きでセット
 
-	var id = parameters.detail_path.split("/")[2];
+    // ※※ debug用。後で削除すること
+    _debugging_type = $('input[name=select_searching_type_debug]:checked').val();
+    console.log("デバッグ用タイプ: " + _debugging_type);
 
-	console.log("id is: " + id);
-	console.log(parameters.detail_path);
+    if(_debugging_type == "2"){
+    	//直接読み込みの場合
+    	url = detail_search_url_direct + selected_item.detail_url; //urlに商品idを付与するだけ
+    }
+    else{
+		parameters["detail_path"] = selected_item.detail_url; //通常時の場合、パラメータを設定する
+    }
+
+	var id = selected_item.detail_url.split("/")[2];
 
 	var detail_cache = storageManager.getDetailItem(id);
 	var detail_cache_of_favorite = storageManager.getFavoriteItem(id);
@@ -385,43 +514,12 @@ function getDetailInfo(selected_item, callback, callback_for_cache){
 			callback_for_cache(detail_cache_of_favorite);
 	}
 	else{
-		sendRequest(url, parameters, null, callback, function(){
-			
-			//前回表示が出るとまずい...
-			//$("#detail_content_wrapper").empty();
-			//とりあえず、持っている情報を出力しておく
-			/*
-			$("#detail_content_wrapper").html(template_item_detail({
-				title: event.querySelector(".h_title").innerHTML,
-				price: event.querySelector(".h_price").innerHTML
-			}));
-*/
-
-			//ほんとはここでセットする！タイトルと価格！
-			
-			// 詳細ページに切り替え
-			//$('body').pagecontainer('change', '#page_item_detail',　{ transition: 'slide' } );
-			//myNavigator.pushPage("detail_content.html", {});
-
-		});
+		console.log("there is no cache data... send request to url");
+		sendRequest(url, parameters, null, callback); //第5引数がコールバックへの任意パラメータ
 	}
 
 }
 
-//詳細画面の削除ボタンを押下した場合
-/*
-function deleteCacheItem(e){
-
-	var el_detail_title = document.getElementById("d_title");
-
-	if(el_detail_title){
-		var id = el_detail_title.getAttribute("detail_id");
-
-		storageManager.deleteItem(id);
-	}
-
-}
-*/
 
 //ヘッダ一覧画面からお気に入りボタンを押した場合
 function addFavoriteItemFromHeader(e){
@@ -513,7 +611,7 @@ function controlBunruiList(current_target){
 }
 
 //ajaxでリクエストを飛ばす
-function sendRequest(url, parameters, type, callback, before_callback){
+function sendRequest(url, parameters, type, callback){
 	//$.support.cors = true;
 	//$.mobile.allowCrossDomainPages = true;
 
@@ -530,22 +628,16 @@ function sendRequest(url, parameters, type, callback, before_callback){
 	$.ajax({
 		//url: url + parameters,
 		url: url + str_parameters,
+		async: true,
 		beforeSend: function(jqXHR){
-			outLog("in beforeSend");
-			
-			if(before_callback){
-				before_callback();
-			}
 
-			//$.mobile.loading('show');
-
-			//dumpObject(jqXHR, 0);
+			console.log("in beforeSend");
 		},
 		success: function(data) {
 			//outLog("in success. data is below:");
 			//outLog(data);
 
-			outLog("ajax success!!");
+			console.log("ajax success!!");
 			
 			callback(data, type, parameters);
 			//createResult(data, type, parameters);
@@ -556,7 +648,7 @@ function sendRequest(url, parameters, type, callback, before_callback){
 			outLog("in error");
 
 			alert("Error occured:" + textStatus);
-			dumpObject(jqXHR, 0);
+			//dumpObject(jqXHR, 0);
 		},
 		complete: function(){
 

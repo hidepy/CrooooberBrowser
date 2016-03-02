@@ -132,7 +132,7 @@ StorageManager.prototype.getDetailItem = function(key){
 }
 
 /* ハッシュに格納されている商品情報を削除する */
-StorageManager.prototype.deleteItem = function(key){
+StorageManager.prototype.deleteCacheItem = function(key){
 
 	//ハッシュから削除
 	delete　this.detailItemHash[key];

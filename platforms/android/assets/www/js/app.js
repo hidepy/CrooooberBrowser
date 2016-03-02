@@ -123,7 +123,7 @@
             if(el_detail_title){
                 var id = el_detail_title.getAttribute("detail_id");
 
-                storageManager.deleteItem(id);
+                storageManager.deleteCacheItem(id);
             }
         };
 

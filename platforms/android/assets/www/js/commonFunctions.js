@@ -1,3 +1,20 @@
+/* htmlをパースして作成した要素を返却する */
+function parseHtml(data, type){
+
+	if((type == "1") || (type == "2")){
+		//jqueryのparseを使用する
+		var dom = jQuery.parseHTML(data);
+		console.log(dom);
+		return dom;
+	}
+
+	var dom_parser = new DOMParser();
+	return dom_parser.parseFromString(data, "text/html");
+
+
+}
+
+
 /* ログを出力する */
 function outLog(msg){
 	if((typeof msg) == "object"){
@@ -49,7 +66,9 @@ function convJSON2QueryString(data){
 	var result = "";
 
 	for(var prop in data){
-		result += "" + prop + "=" + data[prop] + "&";
+		if(!prop.match(/^__.*/)){
+			result += "" + prop + "=" + data[prop] + "&";
+		}
 	}
 
 	console.log("in convJSON2QueryString, result is: " + result);
@@ -85,5 +104,24 @@ function convArr2Hash(list, key){
 
 	return hash;
 
+}
+
+/* jQueryで取得したDOMのinnerHTMLを安全に取り出す */
+function getJqInner(jqObj){
+	console.log("in getJqInner")
+	if(jqObj){
+		console.log("jqObj exists");
+		if(jqObj.length){
+			console.log("has length");
+			return jqObj[0] ? jqObj[0].innerHTML : "";
+		}
+		console.log("has no length...");
+for(var p in jqObj){
+//console.log(p);
+}
+	}
+	else{
+		return "";
+	}
 }
 

@@ -66,7 +66,9 @@ function convJSON2QueryString(data){
 	var result = "";
 
 	for(var prop in data){
-		result += "" + prop + "=" + data[prop] + "&";
+		if(!prop.match(/^__.*/)){
+			result += "" + prop + "=" + data[prop] + "&";
+		}
 	}
 
 	console.log("in convJSON2QueryString, result is: " + result);
@@ -102,5 +104,24 @@ function convArr2Hash(list, key){
 
 	return hash;
 
+}
+
+/* jQueryで取得したDOMのinnerHTMLを安全に取り出す */
+function getJqInner(jqObj){
+	console.log("in getJqInner")
+	if(jqObj){
+		console.log("jqObj exists");
+		if(jqObj.length){
+			console.log("has length");
+			return jqObj[0] ? jqObj[0].innerHTML : "";
+		}
+		console.log("has no length...");
+for(var p in jqObj){
+//console.log(p);
+}
+	}
+	else{
+		return "";
+	}
 }
 

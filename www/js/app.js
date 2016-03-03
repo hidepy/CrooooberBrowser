@@ -377,4 +377,231 @@
         };
     });
 
+    /* カテゴリマスタ */
+    module.factory("CategoryMaster", function(){
+        var data = {};
+
+        data.b_categories_hash = {  //直前にヘッダを持っている場合、ヘッダ情報を吐く
+            //licat9010:{value: "licat9010", name: "ts", header: ""},
+            none: {value: "", name"(指定なし)"},
+            licat9010:{value: "licat9010", name: "マフラー", header: "<ons-list-header>バイクパーツ</ons-list-header>"},
+            licat9015:{value: "licat9015", name: "外装"},
+            licat9020:{value: "licat9020", name: "ハンドル・ハンドル廻り"},
+            licat9025:{value: "licat9025", name: "メーター"},
+            licat9030:{value: "licat9030", name: "ステップ・スタンド"},
+            licat9035:{value: "licat9035", name: "足廻り"},
+            licat9040:{value: "licat9040", name: "駆動系"},
+            licat9045:{value: "licat9045", name: "ホイール・タイヤ"},
+            licat9050:{value: "licat9050", name: "ブレーキ"},
+            licat9055:{value: "licat9055", name: "電装系"},
+            licat9060:{value: "licat9060", name: "冷却系"},
+            licat9065:{value: "licat9065", name: "吸気・燃料系"},
+            licat9070:{value: "licat9070", name: "エンジン・フレーム"},
+            licat9075:{value: "licat9075", name: "その他（バイクパーツ）"},
+            licat9210:{value: "licat9210", name: "ヘルメット", header: "<ons-list-header>バイク用品</ons-list-header>"},
+            licat9220:{value: "licat9220", name: "ウエア"},
+            licat9230:{value: "licat9230", name: "ブーツ・シューズ"},
+            licat9240:{value: "licat9240", name: "グローブ・ゴーグル"},
+            licat9250:{value: "licat9250", name: "プロテクター"},
+            licat9260:{value: "licat9260", name: "ツーリング用品"},
+            licat9270:{value: "licat9270", name: "メンテナンス"},
+            licat9280:{value: "licat9280", name: "ケミカル・オイル"},
+            licat9299:{value: "licat9299", name: "その他（バイク用品）"}
+        };
+        data.c_categories_hash = {
+            none: {value: "", name"(指定なし)"},
+            licat1001:{value: "licat1001", name: "タイヤ", header: "<ons-list-header>タイヤ・ホイール</ons-list-header>"},
+            licat1005:{value: "licat1005", name: "スタッドレスタイヤ"},
+            licat2001:{value: "licat2001", name: "アルミホイール"},
+            licat2002:{value: "licat2002", name: "スチールホイール"},
+            licat2501:{value: "licat2501", name: "タイヤホイールセット"},
+            licat2503:{value: "licat2503", name: "スタッドレスタイヤホイール"},
+            licat2605:{value: "licat2605", name: "タイヤホイール関連"},
+            licat3001:{value: "licat3001", name: "ヘッドユニット", header: "<ons-list-header>カーAV</ons-list-header>"},
+            licat3002:{value: "licat3002", name: "スピーカー"},
+            licat3003:{value: "licat3003", name: "アンプ"},
+            licat4001:{value: "licat4001", name: "カーナビ(地デジ）"},
+            licat4005:{value: "licat4005", name: "カーナビ(非地デジ）"},
+            licat4010:{value: "licat4010", name: "オンダッシュモニター"},
+            licat4015:{value: "licat4015", name: "インダッシュモニター"},
+            licat4020:{value: "licat4020", name: "モニター・地デジ"},
+            licat4025:{value: "licat4025", name: "DVDプレーヤー"},
+            licat4030:{value: "licat4030", name: "カーAVアクセサリー"},
+            licat4035:{value: "licat4035", name: "カーナビ(単体・その他)"},
+            licat4040:{value: "licat4040", name: "ETC"},
+            licat5001:{value: "licat5001", name: "足まわり". header: "<ons-list-header>カスタム・チューニング</ons-list-header>"},
+            licat5010:{value: "licat5010", name: "吸気・排気系"},
+            licat5015:{value: "licat5015", name: "電装系"},
+            licat5020:{value: "licat5020", name: "バルブ・HID"},
+            licat5025:{value: "licat5025", name: "補強パーツ"},
+            licat5030:{value: "licat5030", name: "メーター系"},
+            licat5035:{value: "licat5035", name: "過給機系"},
+            licat5040:{value: "licat5040", name: "駆動系"},
+            licat5045:{value: "licat5045", name: "冷却系"},
+            licat5050:{value: "licat5050", name: "ブレーキ系"},
+            licat5055:{value: "licat5055", name: "ボディパーツ"},
+            licat5060:{value: "licat5060", name: "インテリア"},
+            licat5065:{value: "licat5065", name: "シート"},
+            licat5070:{value: "licat5070", name: "キャリア"},
+            licat5099:{value: "licat5099", name: "その他(カスタム・チューニング)"},
+            licat7001:{value: "licat7001", name: "ケミカル用品", header: "<ons-list-header>カー用品</ons-list-header>"},
+            licat7010:{value: "licat7010", name: "メンテナンス"},
+            licat7020:{value: "licat7020", name: "アクセサリー"},
+            licat7099:{value: "licat7099", name: "その他(カー用品)"}
+        };
+
+        return data;
+    });
+
+
+
+
+
+
+
+
+
+
+/*
+抜き出したやつ bparts
+ <ons-list-header>バイクパーツ
+licat9010 マフラー
+licat9015 外装
+licat9020 ハンドル・ハンドル廻り
+licat9025 メーター
+licat9030 ステップ・スタンド
+licat9035 足廻り
+licat9040 駆動系
+licat9045 ホイール・タイヤ
+licat9050 ブレーキ
+licat9055 電装系
+licat9060 冷却系
+licat9065 吸気・燃料系
+licat9070 エンジン・フレーム
+licat9075 その他（バイクパーツ）
+
+ <ons-list-header>バイク用品
+licat9210 ヘルメット
+licat9220 ウエア
+licat9230 ブーツ・シューズ
+licat9240 グローブ・ゴーグル
+licat9250 プロテクター
+licat9260 ツーリング用品
+licat9270 メンテナンス
+licat9280 ケミカル・オイル
+licat9299 その他（バイク用品）
+ 
+
+
+
+抜き出したやつ cparts
+<ons-list-header>タイヤ・ホイール</ons-list-header>
+licat1001 タイヤ
+licat1005 スタッドレスタイヤ
+licat2001 アルミホイール
+licat2002 スチールホイール
+licat2501 タイヤホイールセット
+licat2503 スタッドレスタイヤホイール
+licat2605 タイヤホイール関連
+  <ons-list-header>カーAV</ons-list-header>
+licat3001 ヘッドユニット
+licat3002 スピーカー
+licat3003 アンプ
+licat4001 カーナビ(地デジ）
+licat4005 カーナビ(非地デジ）
+licat4010 オンダッシュモニター
+licat4015 インダッシュモニター
+licat4020 モニター・地デジ
+licat4025 DVDプレーヤー
+licat4030 カーAVアクセサリー
+licat4035 カーナビ(単体・その他)
+licat4040 ETC
+  <ons-list-header>カスタム・チューニング</ons-list-header>
+licat5001 足まわり
+licat5010 吸気・排気系
+licat5015 電装系
+licat5020 バルブ・HID
+licat5025 補強パーツ
+licat5030 メーター系
+licat5035 過給機系
+licat5040 駆動系
+licat5045 冷却系
+licat5050 ブレーキ系
+licat5055 ボディパーツ
+licat5060 インテリア
+licat5065 シート
+licat5070 キャリア
+licat5099 その他(カスタム・チューニング)
+  <ons-list-header>カー用品</ons-list-header>
+licat7001 ケミカル用品
+licat7010 メンテナンス
+licat7020 アクセサリー
+licat7099 その他(カー用品)
+
+*/
+
+
+/*
+http://qiita.com/M-ISO/items/102c6daf192187d5a161
+//ex1 //値返す書き方
+var myApp = angular.module('MyApp',[]);
+myApp.factory('myUrlFactory',function myUrlFunc(){
+ return 'https://github.com/kenjimorita/'; 
+})
+
+//ex2 //関数を返す書き方
+var myApp = angular.module('MyApp',[]);
+myApp.factory('myFunc',function($window){
+ return{
+   get : function(text){
+     $window.text;
+     alert($window.text);
+   }
+ }
+})
+
+//ex3 //インスタンスに登録していき最後返却する書き方
+var myApp = angular.module('MyApp',[]);
+myApp.factory('factoryService',function(){
+ var moritaService = {}; //moritaServiceインスタンスを生成
+ moritaService.message = "This is kenjiService";//プロパティ登録
+ moritaService.value = {//オブジェクト登録
+  value  : 111,
+  value2 : 222 
+ };
+ moritaService.add = function(a,b){//メソッド登録
+  retunr a + b;
+ }
+ return moritaService; //ホストオブジェクトを返却//このserviceを利用する側はmoritaServiceをそのまま利用する
+})
+
+//ex4 //DIできるfactory。他のサービスを利用しながら定義
+var myApp = angular.module('MyApp',[]); 
+myApp.value('myURL','https://github.com/kenjimorita/');//アプリケーション全体の定数管理（サーバーサイドのURLなど）今回使わない
+myApp.constant('apiUrl','/api/products.json');
+myApp.constant('apiKey','faea13vata42gae5kk6eeeg75645nkiji');
+//$resourceをラップしたサービスを定義
+myApp.factory('myApiFactory',[$resource,apiUrl,apiKey,
+function($resurce,apiUrl,apiKey){//配列で最後定義
+ return $resource(apiUrl).query({api_key : apiKey});
+}]);
+//↓myApiFactoryを利用する側
+angular.module('myApp').controller('moritaController',
+['$scope','myApiFactory',
+ function($scope,myApiFactory){
+  $scope.apiFactory = myApiFactory;
+ }]
+)
+
+//ex5 既にどこかで用意されているHogeClass
+.factory('MyService',function(){
+ return new HogeClass();
+})
+
+//ex6 サービスオブジェクトを返す
+.factory('MyService',function(){
+ return FooClass.GetInstance(data);
+})
+*/
+
 })();

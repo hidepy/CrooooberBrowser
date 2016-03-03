@@ -1,29 +1,32 @@
 /*** common ***/
-body{
+.page{
     font-family: 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', Meiryo, メイリオ, Osaka, 'MS PGothic', arial, helvetica, sans-serif;
-    font-weight: normal;
-    font-size: 14px;
+    font-size: 15px;
+}
+
+.list__item{
+    font-size: 15px;
+}
+
+.search-input, .text-input {
+    border-color: #bbb;
+    background-color: #fff;
+    height: 35px;
+    line-height: 35px;
 }
 
 .content_wrap{
     padding: 0 10px;
 }
 
-.search_item_form{
-    margin: 10px auto;
-    text-align: center;
+.content_wrap .item_name{
+    font-size: 12px;
+    padding: 15px 10px 2px 0px;
+    color: #999;
 }
 
-.search_item_form .search_key{
-    width: 76%;
-    margin-right: 1%;
-    display: inline-block;
-    height: 40px;
-    line-height: 40px;
-}
-
-.search_item_form .search_button{
-    width: 23%;
+.item_name + .button-bar{
+    margin: 0;
 }
 
 .button-bar{
@@ -43,6 +46,23 @@ body{
 /*** main.html ***/
 .navigation-bar__left{
     line-height: 44px;
+}
+
+.search_item_form{
+    margin: 10px auto;
+    text-align: center;
+}
+
+.search_item_form .search_key{
+    width: 76%;
+    margin-right: 1%;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+}
+
+.search_item_form .search_button{
+    width: 23%;
 }
 
 .tag{
@@ -142,7 +162,8 @@ body{
 .h_price{
     font-size: 16px;
     text-align: right;
-    margin: 0 30px 0 0;
+    /*margin: 0 30px 0 0; お気に入りボタンある場合 */
+    margin: 0;
 }
 
 #favorite_btn{
@@ -219,6 +240,7 @@ h2#d_title{
     font-weight: 100;
     font-size: 14px;
     padding: 25px 10px 5px 10px;
+    background-color: #eeeeee;
 }
 
 .item_info .list__name{
@@ -331,7 +353,10 @@ h2#d_title{
 }
 
 #kakaku_option .col{
-    padding: 0 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    line-height: 35px;
 }
 
 #kakaku_option input{

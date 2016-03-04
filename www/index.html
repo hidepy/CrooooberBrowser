@@ -32,17 +32,12 @@
     <script src="cordova.js"></script>
     <script src="js/app.js"></script>
     <script>
+    /*
         ons.ready(function() {
             // onsen ready 
-            //storage_manager = new StorageManager("SOFTCREAM_COLLECTION_LIST");
-
-            //console.log("platform: " + window.device.platform);
-
             storageManager = new StorageManager();
-
-
-
         });
+    */
     </script>
 
     <style>
@@ -72,6 +67,7 @@
         <div class="content_wrap">
     <!-- 2016/03/02 hide add start -->
         <!-- 検索方式を指定できる(これデバッグ用！！) -->
+        <!--
             <div class="button-bar">
                 <div class="button-bar__item">
                     <input type="radio" name="select_searching_type_debug" value="0" checked>
@@ -86,6 +82,7 @@
                     <div class="button-bar__button">直読み(スマホのみ動く)</div>
                 </div>
             </div>
+        -->
     <!-- 2016/03/02 hide add end -->
 
             <div class="button-bar">
@@ -130,23 +127,6 @@
                 </ons-col>
               </ons-row>
             </ons-list-item>
-
-
-        <!--<ul id="item_header_search_result" class="item list-item-container" ng-repeat="item in items" ng-click="processItemSelect($index, $event)">
-
-            <li class="item_header_wrapper ui-li-static ui-body-inherit ui-li-has-thumb" datailurl="{{item.detail_url}}">
-                <div class="thumb_box"><img src="{{item.pic_url}}" class="h_picture"></div>
-                <div class="title_box"><span class="item_header_id">{{item.item_number}}</span>
-                <span class="h_title">{{item.title}}</span></div>
-                <span class="{{item.is_newArrival}}">新着</span>
-                <span class="{{item.is_new}}">新品</span>
-                <span class="{{item.is_old}}">中古</span>
-                <span class="{{item.is_junk}}">ジャンク</span>
-                <button id="favorite_btn" ng-click="addFavoriteItemFromHeader(event)" datailurl="{{item.detail_url}}" class="icon_btn ui-btn ui-corner-all ui-icon-star ui-btn-icon-notext ui-btn-inline">favorite</button>
-                <p class="h_price">{{item.price}}</p>   
-            </li>
-
-        </ul>-->
         </ons-list>
 
         <div class="content_wrap">
@@ -156,9 +136,7 @@
     </ons-page>
 </ons-template>
 
-
 <ons-template id="detail_content.html">
-
     <ons-page ng-controller="ViewDetailController" id="detail_content_wrapper">
         <ons-toolbar style="background-color: #fff;">
             <div class="left"><ons-back-button></ons-back-button>croooober browser</div>
@@ -169,7 +147,6 @@
         </ons-toolbar>
 
         <div id="d_pic">
-            <!--<div id="item_img" ng-style="{'background-image': 'url({{detail.picture}})'}"></div>-->
             <ons-carousel id="item_img_carousel" var="item_img_carousel" swipeable overscrollable auto-scroll>
                 <ons-carousel-item ng-repeat="item in detail.pictures">
                     <div class="item_img" ng-if="item" ng-style="{'background-image': 'url({{item}})'}"></div>
@@ -180,17 +157,11 @@
         <div id="d_debug"></div>
 
         <ons-carousel id="thumb_carousel" var="thumb_img_carousel" swipeable overscrollable auto-scroll item-width="95px">
-            <!--<ons-carousel-item ng-repeat="item in detail.pictures" ng-click="detail_thumbnail_clicked($index, $event)" >-->
             <ons-carousel-item ng-repeat="item in detail.pictures" ng-click="item_img_carousel.setActiveCarouselItemIndex($index);" >
                 <div class="thumb_carousel_item" ng-if="item" ng-style="{'background-image': 'url({{item}})'}"></div>
             </ons-carousel-item>
         </ons-carousel>
 
-        <!--<ul id="d_pictures" ng-repeat="item in detail.pictures">
-            <li class="d_picture">
-                <img ng-src="{{item}}" ng-click="detail_thumbnail_clicked(this)" />
-            </li>
-        </ul>-->
         <ul class="list item_info">
             <li class="list__item">
                 <h2 id="d_title" detail_id="{{detail.id}}">{{detail.title}}</h2>
@@ -211,30 +182,19 @@
         <ons-button id="d_favorite_btn" class="button line_b_btn" onclick="addFavoriteItemFromDetail(this)"><ons-icon icon="ion-android-star"></ons-icon> お気に入りに追加</ons-button>
 
         <ons-row class="action">
-
             <ons-col class="action-col" width="30%" ng-click="myNavigator.popPage()">
               <div class="action-icon"><ons-icon icon="ion-arrow-left-c"></ons-icon></div>
               <div class="action-label">戻る</div>
             </ons-col>
-
             <ons-col class="action-col" id="d_button2Croooober" ng-click="openCrooooberPage()" crooooberPageUrl="{{full_url}}">
               <div class="action-icon"><ons-icon icon="ion-ios-world-outline"></ons-icon></div>
               <div class="action-label">Crooooberで見る</div>
             </ons-col>
-
             <ons-col class="action-col" width="30%" id="d_delete_cache" ng-click="deleteCacheItem()">
               <div class="action-icon"><ons-icon icon="ion-trash-a"></ons-icon></div>
               <div class="action-label">キャッシュを削除</div>
             </ons-col>            
-
         </ons-row>
-
-        <!--
-        <ons-button id="d_button2Croooober" ng-click="window.open('{{detail.full_url}}', '_system');" crooooberPageUrl="{{full_url}}">Crooooberで見る(購入する場合など)</ons-button>     
-        <ons-button id="d_delete_cache" ng-click="deleteCacheItem(this)">ページのキャッシュを削除</ons-button>
-        <ons-button ng-click="myNavigator.popPage()">もどる</ons-button>
-        -->
-
     </ons-page>
 </ons-template>
 
@@ -252,13 +212,11 @@
         <ons-list id="item_header_search_result" ng-repeat="item in items" ng-click="processItemSelect($index, $event)">
             <ons-list-item modifier="tappable" class="item list-item-container">
               <ons-row>
-
                 <ons-col width="30px" ng-show="delete_switching">
                     <div class="checkbox checkbox_col">
                         <input type="checkbox" checklist-model="del.items" checklist-value="item.id"><div class="checkbox__checkmark"></div>
                     </div>
                 </ons-col>
-
                 <ons-col width="105px">
                     <div class="side-corner-tag">
                         <div ng-style="{'background-image': 'url({{item.picture}})'}" class="thumbnail"></div>
@@ -292,7 +250,6 @@
         </ons-bottom-toolbar>
     </ons-page>
 </ons-template>
-
 
 <!-- 保存した検索条件一覧ページ -->
 <ons-template id="saved_search_condition.html">
@@ -339,10 +296,8 @@
                 </ons-col>
             </ons-row>
         </ons-bottom-toolbar>
-
     </ons-page>
 </ons-template>
-
 
 <!-- 詳細検索ページ -->
 <ons-template id="page_setting_search_condition.html">
@@ -375,7 +330,6 @@
         </ul>
 
         <div class="content_wrap">
-        
             <div class="item_name">検索対象</div>
             <div class="button-bar" ng-click="bikeAndCarCheckChange()">
                 <div class="button-bar__item">
@@ -448,7 +402,6 @@
             </ons-list-item>
         </ons-list>
 
-
         <!-- 車用品用 -->
         <ons-list id="search_condition_bunrui_list_wrapper_car" ng-show="is_car_serach" ng-repeat="item in c_categories">
 
@@ -460,7 +413,6 @@
               </label>
             </ons-list-item>
         </ons-list>
-
 </ons-page>
 </ons-template>
 

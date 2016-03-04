@@ -161,18 +161,6 @@
             storageManager.setSearchCondition(create_search_condition_params());
         };
 
-        //検索条件クリア
-        function search_condition_clear(){
-            console.log("search condition clear");
-
-            $("#setting_search_condition_keyword").val("");
-            $("input[name=search_condition_sort]").val(["1"]);
-            $("#search_condition_bunrui_list_wrapper > li").removeClass("bunrui_list_selected");
-            $("#search_condition_bunrui_list_wrapper_car > li").removeClass("bunrui_list_selected");
-            $("#setting_search_condition_kakaku_low").val("");
-            $("#setting_search_condition_kakaku_high").val("");
-        }
-
         //詳細検索条件作成
         function create_search_condition_params(){
 
@@ -208,7 +196,8 @@
                 bunrui: bunrui_cd,
                 kakaku_low: $("#setting_search_condition_kakaku_low").val(),
                 kakaku_high: $("#setting_search_condition_kakaku_high").val(),
-                sort: sort_kbn || "1"
+                sort: sort_kbn || "1",
+                search_type: $('input[name=select_bike_or_car]:checked').val() || "bike"
             };
 
             return detail_param;
@@ -310,28 +299,27 @@
         };
     });
 
-
     //保存した検索条件のコントローラ
     module.controller('ViewSavedSearchConditionController', function($scope, CategoryMaster) {
 
         console.log("in ViewSavedSearchConditionController");
 
         //保存した検索条件情報のロード
-        $scope.items = storageManager.getAllSearchConditionItemsAsArr();
-        /*
+        //$scope.items = storageManager.getAllSearchConditionItemsAsArr();
+
         $scope.items = (function(){
             var saved_cond = storageManager.getSearchCondition();
 
             for(var key in saved_cond){
-                var bundui_name = save_cond
+                var bunrui_cd = save_cond[key].bunrui; //保存した検索条件 の bundui
+                var master_type = save_cond[key].search_type; //bk or cr
 
-                saved_cond[key] = 
+                //マスタから名称をひいてくる
+                saved_cond[key].bunrui_name = (master_type == "bike") ? CategoryMaster.b_categories_hash[bunrui_cd] : CategoryMaster.c_categories_hash[bunrui_cd];
             }
 
             return saved_cond;
-
         })();
-*/
 
         //削除するデータリスト
         $scope.del = {
@@ -355,7 +343,6 @@
             }
             else{
                 //削除　ボタン表示中なら
-
                 var target_idx = $scope.del.items.indexOf($scope.items[index].word);
 
                 //既に登録されているか
@@ -475,156 +462,5 @@
 
         return data;
     });
-
-
-
-
-
-
-
-
-
-
-/*
-抜き出したやつ bparts
- <ons-list-header>バイクパーツ
-licat9010 マフラー
-licat9015 外装
-licat9020 ハンドル・ハンドル廻り
-licat9025 メーター
-licat9030 ステップ・スタンド
-licat9035 足廻り
-licat9040 駆動系
-licat9045 ホイール・タイヤ
-licat9050 ブレーキ
-licat9055 電装系
-licat9060 冷却系
-licat9065 吸気・燃料系
-licat9070 エンジン・フレーム
-licat9075 その他（バイクパーツ）
-
- <ons-list-header>バイク用品
-licat9210 ヘルメット
-licat9220 ウエア
-licat9230 ブーツ・シューズ
-licat9240 グローブ・ゴーグル
-licat9250 プロテクター
-licat9260 ツーリング用品
-licat9270 メンテナンス
-licat9280 ケミカル・オイル
-licat9299 その他（バイク用品）
- 
-
-
-
-抜き出したやつ cparts
-<ons-list-header>タイヤ・ホイール</ons-list-header>
-licat1001 タイヤ
-licat1005 スタッドレスタイヤ
-licat2001 アルミホイール
-licat2002 スチールホイール
-licat2501 タイヤホイールセット
-licat2503 スタッドレスタイヤホイール
-licat2605 タイヤホイール関連
-  <ons-list-header>カーAV</ons-list-header>
-licat3001 ヘッドユニット
-licat3002 スピーカー
-licat3003 アンプ
-licat4001 カーナビ(地デジ）
-licat4005 カーナビ(非地デジ）
-licat4010 オンダッシュモニター
-licat4015 インダッシュモニター
-licat4020 モニター・地デジ
-licat4025 DVDプレーヤー
-licat4030 カーAVアクセサリー
-licat4035 カーナビ(単体・その他)
-licat4040 ETC
-  <ons-list-header>カスタム・チューニング</ons-list-header>
-licat5001 足まわり
-licat5010 吸気・排気系
-licat5015 電装系
-licat5020 バルブ・HID
-licat5025 補強パーツ
-licat5030 メーター系
-licat5035 過給機系
-licat5040 駆動系
-licat5045 冷却系
-licat5050 ブレーキ系
-licat5055 ボディパーツ
-licat5060 インテリア
-licat5065 シート
-licat5070 キャリア
-licat5099 その他(カスタム・チューニング)
-  <ons-list-header>カー用品</ons-list-header>
-licat7001 ケミカル用品
-licat7010 メンテナンス
-licat7020 アクセサリー
-licat7099 その他(カー用品)
-
-*/
-
-
-/*
-http://qiita.com/M-ISO/items/102c6daf192187d5a161
-//ex1 //値返す書き方
-var myApp = angular.module('MyApp',[]);
-myApp.factory('myUrlFactory',function myUrlFunc(){
- return 'https://github.com/kenjimorita/'; 
-})
-
-//ex2 //関数を返す書き方
-var myApp = angular.module('MyApp',[]);
-myApp.factory('myFunc',function($window){
- return{
-   get : function(text){
-     $window.text;
-     alert($window.text);
-   }
- }
-})
-
-//ex3 //インスタンスに登録していき最後返却する書き方
-var myApp = angular.module('MyApp',[]);
-myApp.factory('factoryService',function(){
- var moritaService = {}; //moritaServiceインスタンスを生成
- moritaService.message = "This is kenjiService";//プロパティ登録
- moritaService.value = {//オブジェクト登録
-  value  : 111,
-  value2 : 222 
- };
- moritaService.add = function(a,b){//メソッド登録
-  retunr a + b;
- }
- return moritaService; //ホストオブジェクトを返却//このserviceを利用する側はmoritaServiceをそのまま利用する
-})
-
-//ex4 //DIできるfactory。他のサービスを利用しながら定義
-var myApp = angular.module('MyApp',[]); 
-myApp.value('myURL','https://github.com/kenjimorita/');//アプリケーション全体の定数管理（サーバーサイドのURLなど）今回使わない
-myApp.constant('apiUrl','/api/products.json');
-myApp.constant('apiKey','faea13vata42gae5kk6eeeg75645nkiji');
-//$resourceをラップしたサービスを定義
-myApp.factory('myApiFactory',[$resource,apiUrl,apiKey,
-function($resurce,apiUrl,apiKey){//配列で最後定義
- return $resource(apiUrl).query({api_key : apiKey});
-}]);
-//↓myApiFactoryを利用する側
-angular.module('myApp').controller('moritaController',
-['$scope','myApiFactory',
- function($scope,myApiFactory){
-  $scope.apiFactory = myApiFactory;
- }]
-)
-
-//ex5 既にどこかで用意されているHogeClass
-.factory('MyService',function(){
- return new HogeClass();
-})
-
-//ex6 サービスオブジェクトを返す
-.factory('MyService',function(){
- return FooClass.GetInstance(data);
-})
-*/
 
 })();

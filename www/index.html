@@ -9,6 +9,8 @@
     <meta http-equiv="Content-Security-Policy" content="default-src *; img-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
 -->
 
+    <meta http-equiv="Content-Security-Policy" content="default-src *; img-src *;">
+
     <title>croooober browser</title>
 
     <link rel="stylesheet" href="lib/onsen/css/onsenui.css">
@@ -53,32 +55,7 @@
 
 <body>
 
-    <ons-navigator var="myNavigator" page="main.html"></ons-navigator>
-
-<!-- スライドメニュー
-<ons-sliding-menu var="menu" main-page="index.html" menu-page="menu.html" side="left" close-on-tap></ons-sliding-menu>
-
-<ons-template id="index.html">
-    <ons-navigator var="myNavigator" page="main.html"></ons-navigator>
-</ons-template>
-
-<ons-template id="menu.html">
-  <ons-page>
-    <h3>menu</h3>
-    <ons-list>
-        <ons-list-item modifier="chevron" onclick="menu.setMainPage('index.html', {closeMenu: true})">
-          <i class="ion-ios-home"></i> ホーム
-        </ons-list-item>
-        <ons-list-item modifier="chevron" onclick="menu.setMainPage('favorite.html', {closeMenu: true})">
-          <i class="ion-android-star"></i> お気に入り
-        </ons-list-item>
-        <ons-list-item modifier="chevron" onclick="menu.setMainPage('favorite.html', {closeMenu: true})">
-          <i class="ion-ios-search-strong"></i> 保存した検索条件
-        </ons-list-item>
-      </ons-list>
-  </ons-page>
-</ons-template>
--->
+<ons-navigator var="myNavigator" page="main.html"></ons-navigator>
 
 <!-- main画面　index -->
 <ons-template id="main.html">
@@ -426,6 +403,19 @@
             <div class="item_name">検索キーワード</div>
             <input type="search" id="setting_search_condition_keyword" class="search-input" placeholder="検索キーワード"/>
 
+            <!-- コネクタ -->
+            <div class="item_name">検索方式(and検索, or検索)</div>
+            <div class="button-bar">
+                <div class="button-bar__item">
+                    <input type="radio" name="select_and_or" value="and" checked>
+                    <div class="button-bar__button">and</div>
+                </div>
+                <div class="button-bar__item">
+                    <input type="radio" name="select_and_or" value="or">
+                    <div class="button-bar__button">or</div>
+                </div>
+            </div>
+
             <div class="item_name">ソート</div>
             <div class="button-bar">
                 <div class="button-bar__item">
@@ -459,7 +449,16 @@
         </div><!-- /.content_wrap -->
 
         <!-- バイク用品用 -->
-        <ons-list id="search_condition_bunrui_list_wrapper" ng-hide="is_car_serach">
+        <ons-list id="search_condition_bunrui_list_wrapper" ng-hide="is_car_serach" ng-repeat="item in b_categories">
+
+            <!--とりあえずヘッダは付与しないでいくよ-->
+            <ons-list-item modifier="tappable" id="{{item.value}}">
+              <label class="radio-button radio-button--list-item">
+                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
+                {{item.name}}
+              </label>
+            </ons-list-item>
+        <!--
             <ons-list-header>バイクカテゴリ</ons-list-header>
 
             <ons-list-item modifier="tappable" id="licat">
@@ -612,11 +611,23 @@
                 その他（バイク用品）
               </label>
             </ons-list-item>
+        -->
         </ons-list>
 
 
         <!-- 車用品用 -->
-        <ons-list id="search_condition_bunrui_list_wrapper_car" ng-show="is_car_serach">
+        <ons-list id="search_condition_bunrui_list_wrapper_car" ng-show="is_car_serach" ng-repeat="item in c_categories">
+
+            <!--とりあえずヘッダは付与しないでいくよ-->
+            <ons-list-item modifier="tappable" id="{{item.value}}">
+              <label class="radio-button radio-button--list-item">
+                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
+                {{item.name}}
+              </label>
+            </ons-list-item>
+
+        <!--
+
             <ons-list-header>車カテゴリ</ons-list-header>
 
             <ons-list-item modifier="tappable" id="licat">
@@ -865,6 +876,7 @@
                 その他(カー用品)
               </label>
             </ons-list-item>
+        -->
         </ons-list>
 
 

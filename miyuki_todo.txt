@@ -1,0 +1,5 @@
+phonegap remote build android
+
+を、コマンドプロンプトで実行する。
+
+いつも使っているphonegap serveと同じような感じね

@@ -137,12 +137,16 @@
     });
 
     //詳細条件指定検索ページのコントローラ
-    module.controller('SearchDetailConditionController', function($scope) {
+    module.controller('SearchDetailConditionController', function($scope, CategoryMaster) {
 
         console.log("in SearchDetailConditionController");
 
         //車検索の場合にtrueとなる
         $scope.is_car_serach = false;
+        //カテゴリ情報をコピー
+        //1要素は, key=licatxxxx, value:{value: licatxxxx, name: カテゴリ名称, header: あるときは}
+        $scope.b_categories = CategoryMaster.b_categories_hash;
+        $scope.c_categories = CategoryMaster.c_categories_hash;
 
         //バイク/車検索チェック切り替え時発生のイベント
         $scope.bikeAndCarCheckChange = function(){
@@ -193,9 +197,14 @@
                 return "";
             })();   
 
+            var connector = $('input[name=select_and_or]:checked').val();
+            if((connector != "and") && (connector != "or")){ //andでもorでもないならデフォルト値をセット
+                connector = "and";
+            }
+
             var detail_param = {
                 word: $("#setting_search_condition_keyword").val(),
-                connector: "and",
+                connector: connector,
                 bunrui: bunrui_cd,
                 kakaku_low: $("#setting_search_condition_kakaku_low").val(),
                 kakaku_high: $("#setting_search_condition_kakaku_high").val(),
@@ -383,7 +392,7 @@
 
         data.b_categories_hash = {  //直前にヘッダを持っている場合、ヘッダ情報を吐く
             //licat9010:{value: "licat9010", name: "ts", header: ""},
-            none: {value: "", name"(指定なし)"},
+            none: {value: "", name:"(指定なし)"},
             licat9010:{value: "licat9010", name: "マフラー", header: "<ons-list-header>バイクパーツ</ons-list-header>"},
             licat9015:{value: "licat9015", name: "外装"},
             licat9020:{value: "licat9020", name: "ハンドル・ハンドル廻り"},
@@ -409,7 +418,7 @@
             licat9299:{value: "licat9299", name: "その他（バイク用品）"}
         };
         data.c_categories_hash = {
-            none: {value: "", name"(指定なし)"},
+            none: {value: "", name:"(指定なし)"},
             licat1001:{value: "licat1001", name: "タイヤ", header: "<ons-list-header>タイヤ・ホイール</ons-list-header>"},
             licat1005:{value: "licat1005", name: "スタッドレスタイヤ"},
             licat2001:{value: "licat2001", name: "アルミホイール"},
@@ -429,7 +438,7 @@
             licat4030:{value: "licat4030", name: "カーAVアクセサリー"},
             licat4035:{value: "licat4035", name: "カーナビ(単体・その他)"},
             licat4040:{value: "licat4040", name: "ETC"},
-            licat5001:{value: "licat5001", name: "足まわり". header: "<ons-list-header>カスタム・チューニング</ons-list-header>"},
+            licat5001:{value: "licat5001", name: "足まわり", header: "<ons-list-header>カスタム・チューニング</ons-list-header>"},
             licat5010:{value: "licat5010", name: "吸気・排気系"},
             licat5015:{value: "licat5015", name: "電装系"},
             licat5020:{value: "licat5020", name: "バルブ・HID"},

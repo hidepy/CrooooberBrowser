@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="app">
+<html lang="en" ng-app="CrooooberBrowserApp">
 <head>
     <meta charset="utf-8">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -277,7 +277,6 @@
 
         <ons-bottom-toolbar id="favorite_action" ng-show="delete_switching" class="fixed_action_bar">
             <ons-row class="action">
-                
                 <ons-col class="action-col" id="search_condition_save" ng-click="uncheckAll()">
                   <div class="action-icon"><ons-icon icon="ion-ios-circle-outline"></ons-icon></div>
                   <div class="action-label">全解除</div>
@@ -289,10 +288,8 @@
                   <div class="action-icon"><ons-icon icon="ion-ios-checkmark-outline"></ons-icon></div>
                   <div class="action-label">全選択</div>
                 </ons-col>
-                
             </ons-row>
         </ons-bottom-toolbar>
-
     </ons-page>
 </ons-template>
 
@@ -329,7 +326,6 @@
 
         <ons-bottom-toolbar id="favorite_action" ng-show="delete_switching" class="fixed_action_bar">
             <ons-row class="action">
-                
                 <ons-col class="action-col" id="search_condition_save" ng-click="uncheckAll()">
                   <div class="action-icon"><ons-icon icon="ion-ios-circle-outline"></ons-icon></div>
                   <div class="action-label">全解除</div>
@@ -341,7 +337,6 @@
                   <div class="action-icon"><ons-icon icon="ion-ios-checkmark-outline"></ons-icon></div>
                   <div class="action-label">全選択</div>
                 </ons-col>
-                
             </ons-row>
         </ons-bottom-toolbar>
 
@@ -364,13 +359,6 @@
 
         <ons-bottom-toolbar class="fixed_action_bar">
             <ons-row class="action">
-                <!--
-                いらんら....?
-                <ons-col class="action-col" id="search_condition_clear" ng-click="processSearchConditionClear()">
-                  <div class="action-icon"><ons-icon icon="ion-ios-close"></ons-icon></div>
-                  <div class="action-label">入力クリア</div>
-                </ons-col>
-            -->
                 <ons-col class="action-col" width="70%">
                     <ons-button id="detail_search_button" class="button--cta button" ng-click="processDetailSearchButtonClick()"><ons-icon icon="ion-ios-search-strong"></ons-icon> 条件指定検索</ons-button>
                 </ons-col>
@@ -458,160 +446,6 @@
                 {{item.name}}
               </label>
             </ons-list-item>
-        <!--
-            <ons-list-header>バイクカテゴリ</ons-list-header>
-
-            <ons-list-item modifier="tappable" id="licat">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui" checked="checked"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                (指定なし)
-              </label>
-            </ons-list-item>
-
-            <ons-list-header>バイクパーツ</ons-list-header>
-
-            <ons-list-item modifier="tappable" id="licat9010">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                マフラー
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9015">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                外装
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9020">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ハンドル・ハンドル廻り
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9025">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                メーター
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9030">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ステップ・スタンド
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9035">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                足廻り
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9040">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                駆動系
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9045">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ホイール・タイヤ
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9050">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ブレーキ
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9055">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                電装系
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9060">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                冷却系
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9065">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                吸気・燃料系
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9070">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                エンジン・フレーム
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9075">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                その他（バイクパーツ）
-              </label>
-            </ons-list-item>
-
-            <ons-list-header>バイク用品</ons-list-header>
-
-            <ons-list-item modifier="tappable" id="licat9210">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ヘルメット
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9220">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ウエア
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9230">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ブーツ・シューズ
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9240">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                グローブ・ゴーグル
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9250">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                プロテクター
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9260">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ツーリング用品
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9270">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                メンテナンス
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9280">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ケミカル・オイル
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat9299">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                その他（バイク用品）
-              </label>
-            </ons-list-item>
-        -->
         </ons-list>
 
 
@@ -625,396 +459,16 @@
                 {{item.name}}
               </label>
             </ons-list-item>
-
-        <!--
-
-            <ons-list-header>車カテゴリ</ons-list-header>
-
-            <ons-list-item modifier="tappable" id="licat">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui" checked="checked"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                (指定なし)
-              </label>
-            </ons-list-item>
-
-            <ons-list-header>タイヤ・ホイール</ons-list-header>
-
-            <ons-list-item modifier="tappable" id="licat1001">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                タイヤ
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat1005">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                スタッドレスタイヤ
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat2001">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                アルミホイール
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat2002">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                スチールホイール
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat2501">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                タイヤホイールセット
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat2503">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                スタッドレスタイヤホイール
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat2605">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                タイヤホイール関連
-              </label>
-            </ons-list-item>
-
-            <ons-list-header>カーAV</ons-list-header>
-
-            <ons-list-item modifier="tappable" id="licat3001">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ヘッドユニット
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat3002">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                スピーカー
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat3003">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                アンプ
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat4001">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                カーナビ(地デジ）
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat4005">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                カーナビ(非地デジ）
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat4010">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                オンダッシュモニター
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat4015">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                インダッシュモニター
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat4020">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                モニター・地デジ
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat4025">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                DVDプレーヤー
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat4030">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                カーAVアクセサリー
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat4035">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                カーナビ(単体・その他)
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat4040">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ETC
-              </label>
-            </ons-list-item>
-
-            <ons-list-header>カスタム・チューニング</ons-list-header>
-
-            <ons-list-item modifier="tappable" id="licat5001">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                足まわり
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5010">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                吸気・排気系
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5015">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                電装系
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5020">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                バルブ・HID
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5025">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                補強パーツ
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5030">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                メーター系
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5035">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                過給機系
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5040">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                駆動系
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5045">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                冷却系
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5050">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ブレーキ系
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5055">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ボディパーツ
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5060">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                インテリア
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5065">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                シート
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5070">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                キャリア
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat5099">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                その他(カスタム・チューニング)
-              </label>
-            </ons-list-item>
-
-            <ons-list-header>カー用品</ons-list-header>
-
-            <ons-list-item modifier="tappable" id="licat7001">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                ケミカル用品
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat7010">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                メンテナンス
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat7020">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                アクセサリー
-              </label>
-            </ons-list-item>
-            <ons-list-item modifier="tappable" id="licat7099">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                その他(カー用品)
-              </label>
-            </ons-list-item>
-        -->
         </ons-list>
 
-
-       <!-- <div id="detail_search_action">
-            <ons-button id="detail_search_button" class="button--cta line_b_btn" id="detail_search_button" ng-click="processDetailSearchButtonClick()"><ons-icon icon="ion-ios-search-strong"></ons-icon>条件指定検索</ons-button>
-
-            <ons-row class="action">
-                <ons-col class="action-col" id="search_condition_clear" ng-click="search_condition_clear()">
-                  <div class="action-icon"><ons-icon icon="ion-minus-circled"></ons-icon></div>
-                  <div class="action-label">検索条件をクリア</div>
-                </ons-col>
-
-                <ons-col class="action-col" id="search_condition_save">
-                  <div class="action-icon"><ons-icon icon="ion-bookmark"></ons-icon></div>
-                  <div class="action-label">検索条件を保存</div>
-                </ons-col>
-            </ons-row>
-        </div>-->
-
-        <!--<ons-button id="search_condition_clear" class="button line_b_btn"><ons-icon icon="ion-minus-circled"></ons-icon> 検索条件をクリア</ons-button>-->
-            
-<!--　元ソース
-    <div id="search_condition_wrapper">
-
-            <div data-role="fieldcontain">
-                <label for="setting_search_condition_keyword">検索キー</label>
-                <input type="text" id="setting_search_condition_keyword" />
-            </div>
-
-            <div class="ui-field-contain">
-                <fieldset data-role="controlgroup">
-                  <legend>ソート</legend>
-                  <input id="search_condition_sort_newer" name="search_condition_sort" type="radio" value="1" />
-                  <label for="search_condition_sort_newer">新着順</label>
-                  <input id="search_condition_sort_kakakuLower" name="search_condition_sort" type="radio" value="2" />
-                  <label for="search_condition_sort_kakakuLower">価格が安い順</label>
-                  <input id="search_condition_sort_kakakuHigher" name="search_condition_sort" type="radio" value="3" />
-                  <label for="search_condition_sort_kakakuHigher">価格が高い順</label>
-                </fieldset>
-            </div>
-
-            <div data-role="fieldcontain">
-
-                 バイク用品用 
-                <ul data-role="listview" id="search_condition_bunrui_list_wrapper">
-                    <li id="licat">(指定なし)</li>
-                    <li data-role="list-divider">バイクパーツ</li>
-                    <li id="licat9010">マフラー</li>
-                    <li id="licat9015">外装</li>
-                    <li id="licat9020">ハンドル・ハンドル廻り</li>
-                    <li id="licat9025">メーター</li>
-                    <li id="licat9030">ステップ・スタンド</li>
-                    <li id="licat9035">足まわり</li>
-                    <li id="licat9040">駆動系</li>
-                    <li id="licat9045">ホイール・タイヤ</li>
-                    <li id="licat9050">ブレーキ</li>
-                    <li id="licat9055">電装品</li>
-                    <li id="licat9060">冷却系</li>
-                    <li id="licat9065">吸気・燃料系</li>
-                    <li id="licat9070">エンジン・フレーム</li>
-                    <li id="licat9075">その他(バイクパーツ)</li>
-                    <li data-role="list-divider">バイク用品</li>
-                    <li id="licat9210">ヘルメット</li>
-                    <li id="licat9220">ウエア</li>
-                    <li id="licat9230">ブーツ・シューズ</li>
-                    <li id="licat9240">グローブ・ゴーグル</li>
-                    <li id="licat9250">プロテクター</li>
-                    <li id="licat9260">ツーリング用品</li>
-                    <li id="licat9270">メンテナンス</li>
-                    <li id="licat9280">ケミカル・オイル</li>
-                    <li id="licat9299">その他(バイク用品)</li>
-                </ul>
-
-                 車用品用 
-                <ul data-role="listview" id="search_condition_bunrui_list_wrapper_car">
-                    <li data-role="list-divider">タイヤ・ホイール</li>
-                    <li id="licat1001">タイヤ</li>
-                    <li id="licat1005">スタッドレスタイヤ</li>
-                    <li id="licat2001">アルミホイール</li>
-                    <li id="licat2002">スチールホイール</li>
-                    <li id="licat2501">タイヤホイールセット</li>
-                    <li id="licat2503">スタッドレスタイヤホイール</li>
-                    <li id="licat2605">タイヤホイール関連</li>
-                    <li data-role="list-divider">カーAV</li>
-                    <li id="licat3001">ヘッドユニット</li>
-                    <li id="licat3002">スピーカー</li>
-                    <li id="licat3003">アンプ</li>
-                    <li id="licat4001">カーナビ(地デジ）</li>
-                    <li id="licat4005">カーナビ(非地デジ）</li>
-                    <li id="licat4010">オンダッシュモニター</li>
-                    <li id="licat4015">インダッシュモニター</li>
-                    <li id="licat4020">モニター・地デジ</li>
-                    <li id="licat4025">DVDプレーヤー</li>
-                    <li id="licat4030">カーAVアクセサリー</li>
-                    <li id="licat4035">カーナビ(単体・その他)</li>
-                    <li id="licat4040">ETC</li>
-                    <li data-role="list-divider">カスタム・チューニング</li>
-                    <li id="licat5001">足まわり</li>
-                    <li id="licat5010">吸気・排気系</li>
-                    <li id="licat5015">電装系</li>
-                    <li id="licat5020">バルブ・HID</li>
-                    <li id="licat5025">補強パーツ</li>
-                    <li id="licat5030">メーター系</li>
-                    <li id="licat5035">過給機系</li>
-                    <li id="licat5040">駆動系</li>
-                    <li id="licat5045">冷却系</li>
-                    <li id="licat5050">ブレーキ系</li>
-                    <li id="licat5055">ボディパーツ</li>
-                    <li id="licat5060">インテリア</li>
-                    <li id="licat5065">シート</li>
-                    <li id="licat5070">キャリア</li>
-                    <li id="licat5099">その他(カスタム・チューニング)</li>
-                    <li data-role="list-divider">カー用品</li>
-                    <li id="licat7001">ケミカル用品</li>
-                    <li id="licat7010">メンテナンス</li>
-                    <li id="licat7020">アクセサリー</li>
-                    <li id="licat7099">その他(カー用品)</li>
-                </ul>
-            </div>
-
-            <div data-role="fieldcontain">
-                <label for="setting_search_condition_kakaku_low">下限</label>
-                <input type="text" id="setting_search_condition_kakaku_low" />
-
-                <label for="setting_search_condition_kakaku_high">上限</label>
-                <input type="text" id="setting_search_condition_kakaku_high" />
-            </div>
-
-            <button class="ui-btn" id="detail_search_button">条件指定検索</button>
-
-        <p><a href="#page_main" data-rel="back">戻る</a></p>
-        
-    </div>
-
-    <a class="square_btn ui-btn ui-nodisc-icon ui-alt-icon ui-icon-back ui-btn-icon-top" onclick="back2main()">BACK</a>
--->
 </ons-page>
 </ons-template>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript">
+    app.initialize();
+</script>
 
 </body>
 </html>

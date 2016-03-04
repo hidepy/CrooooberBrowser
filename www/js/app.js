@@ -1,6 +1,6 @@
 (function(){
     'use strict';
-    var module = angular.module('app', ['onsen','checklist-model']);
+    var module = angular.module('CrooooberBrowserApp', ['onsen','checklist-model']);
     //var module = angular.module('app', ['onsen','checklist-model','ngAnimate']);
 
     //ヘッダ一覧画面のコントローラ
@@ -312,12 +312,26 @@
 
 
     //保存した検索条件のコントローラ
-    module.controller('ViewSavedSearchConditionController', function($scope) {
+    module.controller('ViewSavedSearchConditionController', function($scope, CategoryMaster) {
 
         console.log("in ViewSavedSearchConditionController");
 
         //保存した検索条件情報のロード
         $scope.items = storageManager.getAllSearchConditionItemsAsArr();
+        /*
+        $scope.items = (function(){
+            var saved_cond = storageManager.getSearchCondition();
+
+            for(var key in saved_cond){
+                var bundui_name = save_cond
+
+                saved_cond[key] = 
+            }
+
+            return saved_cond;
+
+        })();
+*/
 
         //削除するデータリスト
         $scope.del = {

@@ -1,47 +1,42 @@
-var is_debug = false;
-
-var template_item_headers;
-var template_item_detail;
-var template_favorite;
-var template_search_condition;
-
 var header_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContents.php?";
-var header_search_url_direct = "http://www.croooober.com/bparts/search?"; //※※
+var header_search_url_direct = "http://www.croooober.com/bparts/search?";
 var detail_search_url = "http://www51.atpages.jp/hidork0222/croooober_client/getCrooooberContentDetail.php?";
 var detail_search_url_direct = "http://www.croooober.com";
-
 var croooober_url = "http://www.croooober.com";
 
+// 各種データ保存/取得用オブジェクト
 var storageManager;
 
 //現在表示されている商品リストを保持しておく
 var current_header_items = [];
 
-//現在の検索条件c
+//現在の検索条件保持用
 var current_search_condition = {};
 
-//検索トップのタイプ(0->通常, 1->jqでparse, 2->直croooober&jqでparse)
-var _debugging_type = "0";
+//検索トップのタイプ(0->通常, 1->jqでparse, 2->直croooober&jqでparse)    1は廃止...
+var _debugging_type = "2";
 
-if(is_debug){
-	header_search_url = "http://localhost/CrooooberBrowser/debug_html.txt";
-	detail_search_url = "http://localhost/CrooooberBrowser/debug_html_detail.txt";
-}
+/* onsenのロード完了！ */
+ons.ready(function() {
+    // onsen ready 
+    storageManager = new StorageManager();
 
+    //pc実行か実機実行かで判定
+    _debugging_type = (window.device) ? "2" : "0";
 
-/*
-$(document).ready(function(){
-
-	// ストレージからキャッシュ済の商品詳細を取得
-	storageManager = new StorageManager();
-
-	// バイク用品検索か車用品検索か決定
+    /*
+    //この段階で、デフォルト検索区分をセットしておく
 	$("input[name=select_bike_or_car]").val([storageManager.searchType]);
-	// 検索区分によって、詳細検索内のリスト可視性を変更する
-	controlBunruiList(storageManager.searchType);
+	*/
 });
-*/
 
+/* 本来なら、ここでは
+1. documentをget
+2. parse
+3. 各種値get
+4. 値返却
+まで。 ビューを変更するのはナンセンスすぎてわろし
+*/
 function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 	console.log("in createResult.");
 	//outLog(data); //ここまで来てる
@@ -50,7 +45,6 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 	var got_html_document = null;
 
 	try{
-
 		var el_item_box = null;
 		var search_result_num = null;
 		var search_result_max_num = "-";
@@ -98,7 +92,6 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 		//取得した最大件数を保存
 		document.getElementById("search_result_num").innerHTML = "ヒット件数：　" + search_result_max_num;//search_result_num.innerHTML;
 
-
 		//前回取得したアイテム数
 		var el_search_more_button = document.getElementById("button_search_more"); //さらに検索 ボタン
 		var previous_length_str = el_search_more_button.getAttribute("current_display_item_length");
@@ -142,7 +135,6 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 
 				item_header_data[i] = data;
 			}
-
 		}
 		catch(e){
 			console.log("error occured on searching data from item_box. error message is following:");
@@ -152,17 +144,13 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 		}
 
 		//検索結果の商品一覧にデータをはめ込む
+		var display_data;
 		{
-			if(type == 1){ 
-				//初回検索の場合、現在のビューをリセット
-				//$("#contents_wrapper").empty();
-				
+			if(type == 1){ 				
 				//直前まで保存していた商品リストを破棄
 				current_header_items = [];
 
 			}
-
-			var display_data;
 
 			//続いて検索の場合、前回検索までの値を連結する
 			if(type > 1){
@@ -180,6 +168,7 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 		}
 
 		//次を読み込むボタンの作成
+		//  ※これ、ホントはビューロジックなんでここに書いちゃいけないんだけどね...
 		{
 			//検索条件を保存
 			el_search_more_button.setAttribute("search_condition", JSON.stringify(parameters));
@@ -195,7 +184,6 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 
 			//最大件数に、今回検索数が達していない場合、表示状態にする
 			el_search_more_button.style.display = ((previous_length + el_item_box.length) < Number(search_result_max_num)) ? "block" : "none";
-
 		}
 
 		//作成したデータを返却する
@@ -207,7 +195,7 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 	}
 }
 
-
+//こっちは、取得データの返却なのでロジック的にok
 function createResultItemDetail(data, type, parameters, optional_parameter){
 	console.log("in createResultItemDetail!!");
 
@@ -242,7 +230,6 @@ function createResultItemDetail(data, type, parameters, optional_parameter){
 		var is_mobile = (_debugging_type == "2"); //2が通るということはスマホからしかあり得ないので
 
 		console.log("is mobile page parsing?: " + is_mobile);
-
 
 		var el_tbody = (!is_mobile) ? el.querySelectorAll(".riq01 .ta01 > tbody > tr") : jQuery(".detail_cont > .ta01 > tbody > tr", got_html_document);
 
@@ -293,18 +280,10 @@ console.log("star_box length: " + jQuery(".star_box", el_tbody).length);
 			ref_date_time: formatDate(new Date())
 		};
 
-		//取得したデータを、Handlebars.jsで当てはめていく
-		//console.log(data);
-		
 		//今回取得した情報をlocalstorageに格納
 		storageManager.saveDetailItem2Storage(data);
 
-		console.log("before set detail item to html");
-
 		return data; //詳細情報を返却する
-
-		//$("#detail_content_wrapper").html(template_item_detail(data));
-
 	}
 	catch(e){
 		console.log(e.message);
@@ -319,41 +298,36 @@ console.log("star_box length: " + jQuery(".star_box", el_tbody).length);
 	今は選択されているラジオボタンチェックの方で検索しちゃう
 
 *******************************/
-
 function getHeaderInfoFromStoredCondition(key){
 	var param = storageManager.searchConditionHash[key];
+
+	//保存した検索条件から の場合はフラグtrue
+	param.is_from_stored_condition = true;
 
 	getHeaderInfo(param);
 }
 
-var msg_no_searchKey = "検索キーが入力されていません";
-
 function getHeaderInfo(detail_param, search_key, callback){
 
 	var url = header_search_url; //ヘッダ検索用のURL
+	var search_type = "bike"; //とりあえずデフォルトをセット 検索タイプ
 
 	//var search_key = document.getElementById("search_key").value;
-
-
-    // ※※ debug用。後で削除すること
-    _debugging_type = $('input[name=select_searching_type_debug]:checked').val();
-    console.log("デバッグ用タイプ: " + _debugging_type);
 
     if(_debugging_type == "2"){
     	url = header_search_url_direct;
     }
 
-
-
-	//バイク検索又は車検索ボタンの値を保存
-	//いったんけす
-	storageManager.setSearchType( $('input[name=select_bike_or_car]:checked').val() );
-
-/*
-	storageManager = {};
-	storageManager.getSearchType = function(){
-		return "bike";
-	}*/
+    //保存した検索条件/純粋検索で分岐
+	if(detail_param && detail_param.is_from_stored_condition){
+		//保存済の検索区分をセット
+		search_type = detail_param.search_type;
+	}
+	else{
+		//画面の検索区分をセット
+		search_type = $('input[name=select_bike_or_car]:checked').val() || "bike"; //
+		storageManager.setSearchType(search_type);
+	}
 
 	if(detail_param || ( (search_key != null) && (search_key != ""))){ //詳細検索条件が存在するか、又は、キーワードが存在する
 
@@ -368,6 +342,7 @@ function getHeaderInfo(detail_param, search_key, callback){
 				}
 			}
 			else{
+				//直サーバの場合
 				parameters.q = encodeURIComponent(search_key);
 				parameters.per_page = 50;
 			}
@@ -395,7 +370,8 @@ function getHeaderInfo(detail_param, search_key, callback){
 				}
 			}
 			else{
-				//直crooooberの場合
+				//直サーバの場合
+
 				parameters.q = detail_param.word; //encodeURIするべき？
 				parameters.per_page = 50;
 
@@ -422,7 +398,12 @@ function getHeaderInfo(detail_param, search_key, callback){
 			}
 		}
 
-		//sendRequest(url, parameters, 1, createResultItemsHeader);
+		//検索対象のurlを検索タイプによって切り替える
+		if(search_type != "bike"){
+			url = url.replace("bparts", "cparts");
+		}
+
+		//ajaxリクエストを発行
 		sendRequest(url, parameters, 1, callback);
 
 		//現在の検索条件を保存する
@@ -434,7 +415,7 @@ function getHeaderInfo(detail_param, search_key, callback){
 
 	}
 	else{
-		outLog("no search key...");
+		alert_ex("検索キーがありません");
 	}
 }
 
@@ -446,10 +427,6 @@ function getHeaderInfoMore(event, callback){
 	}
 
 	var url = header_search_url;
-
-    // ※※ debug用。後で削除すること
-    _debugging_type = $('input[name=select_searching_type_debug]:checked').val();
-    console.log("デバッグ用タイプ: " + _debugging_type);
 
     if(_debugging_type == "2"){
     	url = header_search_url_direct;
@@ -483,10 +460,6 @@ function getDetailInfo(selected_item, callback, callback_for_cache){
 	var parameters = {
 		__detail_url: selected_item.detail_url
 	}; //のちの処理で使用するので_付きでセット
-
-    // ※※ debug用。後で削除すること
-    _debugging_type = $('input[name=select_searching_type_debug]:checked').val();
-    console.log("デバッグ用タイプ: " + _debugging_type);
 
     if(_debugging_type == "2"){
     	//直接読み込みの場合
@@ -548,8 +521,6 @@ function addFavoriteItemFromHeader(e){
 
 		storageManager.saveFavoriteItem2StorageWithUrl(target_header_data); //ヘッダ一覧からお気に入り保存用のメソッドコール
 
-		$("#favorite_content_wrapper").html(template_favorite(storageManager.getAllFavoriteItemsAsArr()));
-
 	}catch(e){
 		console.log("error occured in addFavoriteItemFromHeader");
 	}
@@ -568,8 +539,6 @@ function addFavoriteItemFromDetail(el_target){
 
 			if(detail_info){
 				storageManager.saveFavoriteItem2StorageWithDetailData(detail_info);
-
-				//$("#favorite_content_wrapper").html(template_favorite(storageManager.getAllFavoriteItemsAsArr()));
 			}
 			else{
 				console.log("お気に入り登録に失敗しました(詳細情報取得失敗)")
@@ -588,8 +557,6 @@ function addFavoriteItemFromDetail(el_target){
 function addSearchCondition(){
 	storageManager.setSearchCondition(current_search_condition);
 	alert_ex("検索条件を保存しました");
-
-	$("#stored_search_condition_content_wrapper").html(template_search_condition(storageManager.getAllSearchConditionItemsAsArr()));
 }
 
 // 詳細検索ページの分類リストの可視性を制御する
@@ -612,16 +579,8 @@ function controlBunruiList(current_target){
 
 //ajaxでリクエストを飛ばす
 function sendRequest(url, parameters, type, callback){
-	//$.support.cors = true;
-	//$.mobile.allowCrossDomainPages = true;
 
 	var str_parameters = convJSON2QueryString(parameters);
-
-	//console.log("str_parameters is: " + str_parameters);
-
-	if(is_debug){
-		str_parameters = "";
-	}
 
 	console.log("url: " + url + str_parameters);
 

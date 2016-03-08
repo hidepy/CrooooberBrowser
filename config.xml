@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.phonegap.helloworld" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>Hello World</name>
+    <name>CrooooberBrowser</name>
     <description>
-        Hello World sample application that responds to the deviceready event.
+        カー用品・バイク用品の中古、新品パーツを掲載するCroooober内の検索を、シンプルかつ快適に行うアプリです。
     </description>
     <author email="support@phonegap.com" href="http://phonegap.com">
         PhoneGap Team
@@ -56,10 +56,11 @@
     <gap:plugin name="cordova-plugin-whitelist" source="npm" />
 
     <icon src="icon.png" />
-    <icon gap:platform="android" gap:qualifier="ldpi" src="www/res/icon/android/icon-36-ldpi.png" />
-    <icon gap:platform="android" gap:qualifier="mdpi" src="www/res/icon/android/icon-48-mdpi.png" />
-    <icon gap:platform="android" gap:qualifier="hdpi" src="www/res/icon/android/icon-72-hdpi.png" />
-    <icon gap:platform="android" gap:qualifier="xhdpi" src="www/res/icon/android/icon-96-xhdpi.png" />
+    <icon gap:platform="android" gap:qualifier="mdpi" src="icons/android/mdpi.png" />
+    <icon gap:platform="android" gap:qualifier="hdpi" src="icons/android/hdpi.png" />
+    <icon gap:platform="android" gap:qualifier="xhdpi" src="icons/android/xhdpi.png" />
+    <icon gap:platform="android" gap:qualifier="xxhdpi" src="icons/android/xxhdpi.png" />
+    <icon gap:platform="android" gap:qualifier="xxxhdpi" src="icons/android/xxxhdpi.png" />
     <icon gap:platform="blackberry" src="www/res/icon/blackberry/icon-80.png" />
     <icon gap:platform="blackberry" gap:state="hover" src="www/res/icon/blackberry/icon-80.png" />
     <icon gap:platform="ios" height="57" src="www/res/icon/ios/icon-57.png" width="57" />
@@ -69,10 +70,11 @@
     <icon gap:platform="webos" src="www/res/icon/webos/icon-64.png" />
     <icon gap:platform="winphone" src="www/res/icon/windows-phone/icon-48.png" />
     <icon gap:platform="winphone" gap:role="background" src="www/res/icon/windows-phone/icon-173-tile.png" />
-    <gap:splash gap:platform="android" gap:qualifier="port-ldpi" src="www/res/screen/android/screen-ldpi-portrait.png" />
-    <gap:splash gap:platform="android" gap:qualifier="port-mdpi" src="www/res/screen/android/screen-mdpi-portrait.png" />
-    <gap:splash gap:platform="android" gap:qualifier="port-hdpi" src="www/res/screen/android/screen-hdpi-portrait.png" />
-    <gap:splash gap:platform="android" gap:qualifier="port-xhdpi" src="www/res/screen/android/screen-xhdpi-portrait.png" />
+    <gap:splash gap:platform="android" gap:qualifier="mdpi" src="splash/android/mdpi.png" />
+    <gap:splash gap:platform="android" gap:qualifier="hdpi" src="splash/android/hdpi.png" />
+    <gap:splash gap:platform="android" gap:qualifier="xhdpi" src="splash/android/xhdpi.png" />
+    <gap:splash gap:platform="android" gap:qualifier="xxhdpi" src="splash/android/xxhdpi.png" />
+    <gap:splash gap:platform="android" gap:qualifier="xxxhdpi" src="splash/android/xxxhdpi.png" />
     <gap:splash gap:platform="blackberry" src="www/res/screen/blackberry/screen-225.png" />
     <gap:splash gap:platform="ios" height="480" src="www/res/screen/ios/screen-iphone-portrait.png" width="320" />
     <gap:splash gap:platform="ios" height="960" src="www/res/screen/ios/screen-iphone-portrait-2x.png" width="640" />

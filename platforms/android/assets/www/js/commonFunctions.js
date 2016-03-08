@@ -25,6 +25,7 @@ function outLog(msg){
 	}
 	
 	//document.getElementById("contents_wrapper").innerHTML += msg + "<br>";
+	document.getElementById("_debug_msg").innerHTML += msg + "<br>";
 }
 
 function alert_ex(str){
@@ -108,20 +109,17 @@ function convArr2Hash(list, key){
 
 /* jQueryで取得したDOMのinnerHTMLを安全に取り出す */
 function getJqInner(jqObj){
-	console.log("in getJqInner")
 	if(jqObj){
-		console.log("jqObj exists");
 		if(jqObj.length){
-			console.log("has length");
 			return jqObj[0] ? jqObj[0].innerHTML : "";
 		}
-		console.log("has no length...");
-for(var p in jqObj){
-//console.log(p);
-}
+		console.log("[getJqInner]has no length...");
 	}
 	else{
+		console.log("[getJqInner]is null...");
 		return "";
 	}
 }
+
+
 

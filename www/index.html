@@ -8,44 +8,27 @@
 <!--
     <meta http-equiv="Content-Security-Policy" content="default-src *; img-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
 -->
-
+<!--
     <meta http-equiv="Content-Security-Policy" content="default-src *; img-src *;">
-
+-->
     <title>croooober browser</title>
 
-    <link rel="stylesheet" href="lib/onsen/css/onsenui.css">
-    <link rel="stylesheet" href="lib/onsen/css/onsen-css-components-blue-basic-theme.css">
+    <link rel="stylesheet" href="lib/onsen/css/onsenui.css" />
+    <link rel="stylesheet" href="lib/onsen/css/onsen-css-components-blue-basic-theme.css" />
     <link rel="stylesheet" href="css/list.css" />
 
-    <script src="lib/onsen/js/angular/angular.js"></script>
-    <script src="lib/onsen/js/angular/angular-animate.min.js"></script>
-    <script src="lib/onsen/js/angular/checklist-model.js"></script>
-    <script src="lib/onsen/js/onsenui.js"></script>
-
-    <script src="jquery-mobile/jquery-1.11.3.min.js" type="text/javascript"></script>|
-
-    <script type="text/javascript" src="js/DomParserExtention.js"></script>
     <script src="js/commonFunctions.js"></script>
     <script src="js/storageManager.js"></script>
     <script src="js/getCrooooberData.js"></script>
 
+    <script src="lib/onsen/js/angular/angular.js"></script>
+    <script src="lib/onsen/js/angular/checklist-model.js"></script>
+    <script src="lib/onsen/js/onsenui.js"></script>
+
+    <script src="jquery/jquery-1.11.3.min.js"></script>
+
     <script src="cordova.js"></script>
     <script src="js/app.js"></script>
-    <script>
-    /*
-        ons.ready(function() {
-            // onsen ready 
-            storageManager = new StorageManager();
-        });
-    */
-    </script>
-
-    <style>
-    .label_area{
-        width: 30%;
-        overflow: hidden;
-    }
-    </style>
 </head>
 
 <body>
@@ -59,31 +42,14 @@
         <ons-toolbar>
             <div class="left"><ons-back-button></ons-back-button>　croooober browser</div>
             <div class="right">
+                <!--
                 <ons-toolbar-button ng-click='myNavigator.pushPage("favorite.html")'><ons-icon icon="ion-android-star"></ons-icon></ons-toolbar-button>
                 <ons-toolbar-button ng-click='myNavigator.pushPage("page_setting_search_condition.html")'><ons-icon icon="ion-ios-search-strong"></ons-icon></ons-toolbar-button>
+            -->
             </div>
         </ons-toolbar>
     
         <div class="content_wrap">
-    <!-- 2016/03/02 hide add start -->
-        <!-- 検索方式を指定できる(これデバッグ用！！) -->
-        <!--
-            <div class="button-bar">
-                <div class="button-bar__item">
-                    <input type="radio" name="select_searching_type_debug" value="0" checked>
-                    <div class="button-bar__button">いつも通り</div>
-                </div>
-                <div class="button-bar__item">
-                    <input type="radio" name="select_searching_type_debug" value="1">
-                    <div class="button-bar__button">parseだけjQuery</div>
-                </div>
-                <div class="button-bar__item">
-                    <input type="radio" name="select_searching_type_debug" value="2">
-                    <div class="button-bar__button">直読み(スマホのみ動く)</div>
-                </div>
-            </div>
-        -->
-    <!-- 2016/03/02 hide add end -->
 
             <div class="button-bar">
                 <div class="button-bar__item">
@@ -101,6 +67,10 @@
             </div>
         </div>
 
+        <div id="_debug_msg">
+            here is debug msg area<br>
+        </div>
+
         <div id="search_result_num"></div>
 
         <ons-list id="item_header_search_result" ng-repeat="item in items" ng-click="processItemSelect($index, $event)">
@@ -109,7 +79,6 @@
                 <ons-col width="105px">
                     <div class="side-corner-tag">
                         <div ng-style="{'background-image': 'url({{item.pic_url}})'}" class="thumbnail"></div>
-                        <!--<img src="{{item.pic_url}}" class="thumbnail">-->
                         <p class="{{item.is_newArrival}}"><span>新着</span></p>
                     </div>
                 </ons-col>
@@ -119,9 +88,6 @@
                     <span class="tag {{item.is_junk}}">ジャンク</span>
                     <div class="title_box"><span class="item_header_id">{{item.item_number}}</span>
                     <span class="h_title">{{item.title}} </span></div>
-                    
-                    <!--<ons-button modifier="quiet" id="favorite_btn" ng-click="addFavoriteItemFromHeader(event)" datailurl="{{item.detail_url}}"><ons-icon icon="ion-android-star" size="28px"></ons-icon></ons-button>
-                    <ons-button modifier="quiet" id="favorite_btn" ng-click="addFavoriteItemFromHeader(event).show('#favorite_btn')" datailurl="{{item.detail_url}}"><ons-icon icon="ion-android-star" size="28px"></ons-icon></ons-button>-->
 
                     <p class="h_price">{{item.price}}</p>   
                 </ons-col>
@@ -199,6 +165,7 @@
 </ons-template>
 
 <!-- お気に入り一覧ページ -->
+<!--
 <ons-template id="favorite.html">
     <ons-page ng-controller="ViewFavoriteController">
         <ons-toolbar>
@@ -220,7 +187,6 @@
                 <ons-col width="105px">
                     <div class="side-corner-tag">
                         <div ng-style="{'background-image': 'url({{item.picture}})'}" class="thumbnail"></div>
-                        <!--<img ng-src="{{item.picture}}" class="thumbnail">-->
                     </div>
                 </ons-col>
                 <ons-col>
@@ -250,8 +216,11 @@
         </ons-bottom-toolbar>
     </ons-page>
 </ons-template>
+-->
+
 
 <!-- 保存した検索条件一覧ページ -->
+<!--
 <ons-template id="saved_search_condition.html">
     <ons-page ng-controller="ViewSavedSearchConditionController">
         <ons-toolbar>
@@ -298,8 +267,11 @@
         </ons-bottom-toolbar>
     </ons-page>
 </ons-template>
+-->
+
 
 <!-- 詳細検索ページ -->
+<!--
 <ons-template id="page_setting_search_condition.html">
     <ons-page ng-controller="SearchDetailConditionController" id="page_setting_search_condition">
 
@@ -345,7 +317,6 @@
             <div class="item_name">検索キーワード</div>
             <input type="search" id="setting_search_condition_keyword" class="search-input" placeholder="検索キーワード"/>
 
-            <!-- コネクタ -->
             <div class="item_name">検索方式(and検索, or検索)</div>
             <div class="button-bar">
                 <div class="button-bar__item">
@@ -388,12 +359,10 @@
             </ons-row>
 
             <div class="item_name">カテゴリ</div>
-        </div><!-- /.content_wrap -->
+        </div>
 
-        <!-- バイク用品用 -->
         <ons-list id="search_condition_bunrui_list_wrapper" ng-hide="is_car_serach" ng-repeat="item in b_categories">
 
-            <!--とりあえずヘッダは付与しないでいくよ-->
             <ons-list-item modifier="tappable" id="{{item.value}}">
               <label class="radio-button radio-button--list-item">
                 <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
@@ -402,10 +371,8 @@
             </ons-list-item>
         </ons-list>
 
-        <!-- 車用品用 -->
         <ons-list id="search_condition_bunrui_list_wrapper_car" ng-show="is_car_serach" ng-repeat="item in c_categories">
 
-            <!--とりあえずヘッダは付与しないでいくよ-->
             <ons-list-item modifier="tappable" id="{{item.value}}">
               <label class="radio-button radio-button--list-item">
                 <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
@@ -415,12 +382,7 @@
         </ons-list>
 </ons-page>
 </ons-template>
-
-<script type="text/javascript" src="cordova.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
-<script type="text/javascript">
-    app.initialize();
-</script>
+-->
 
 </body>
 </html>

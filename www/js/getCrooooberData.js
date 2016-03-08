@@ -5,7 +5,7 @@ var detail_search_url_direct = "http://www.croooober.com";
 var croooober_url = "http://www.croooober.com";
 
 // 各種データ保存/取得用オブジェクト
-var storageManager;
+var storageManager = new StorageManager();
 
 //現在表示されている商品リストを保持しておく
 var current_header_items = [];
@@ -16,7 +16,10 @@ var current_search_condition = {};
 //検索トップのタイプ(0->通常, 1->jqでparse, 2->直croooober&jqでparse)    1は廃止...
 var _debugging_type = "2";
 
+
+
 /* onsenのロード完了！ */
+/*
 ons.ready(function() {
     // onsen ready 
     storageManager = new StorageManager();
@@ -24,11 +27,8 @@ ons.ready(function() {
     //pc実行か実機実行かで判定
     _debugging_type = (window.device) ? "2" : "0";
 
-    /*
-    //この段階で、デフォルト検索区分をセットしておく
-	$("input[name=select_bike_or_car]").val([storageManager.searchType]);
-	*/
 });
+*/
 
 /* 本来なら、ここでは
 1. documentをget
@@ -38,10 +38,7 @@ ons.ready(function() {
 まで。 ビューを変更するのはナンセンスすぎてわろし
 */
 function createResultItemsHeader(data, type, parameters){ //type: 検索回数
-	console.log("in createResult.");
-	//outLog(data); //ここまで来てる
-
-	var dom_parser = new DOMParser();
+	outLog("in createResultItemsHeader. _debugging_type is:" + _debugging_type); //ここまで来てる
 	var got_html_document = null;
 
 	try{
@@ -50,7 +47,7 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 		var search_result_max_num = "-";
 
 		if((_debugging_type != "1") && (_debugging_type != "2")){ //デフォルトルートの場合
-
+			var dom_parser = new DOMParser();
 			got_html_document = dom_parser.parseFromString(data, "text/html");
 
 			if(got_html_document == null){
@@ -317,6 +314,8 @@ function getHeaderInfo(detail_param, search_key, callback){
     if(_debugging_type == "2"){
     	url = header_search_url_direct;
     }
+
+    outLog("before using storageManager.setSearchType");
 
     //保存した検索条件/純粋検索で分岐
 	if(detail_param && detail_param.is_from_stored_condition){

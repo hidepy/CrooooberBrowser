@@ -199,11 +199,11 @@
             <div class="item_name">検索対象</div>
             <div class="button-bar" ng-click="processBikeOrCarChange()">
                 <div class="button-bar__item">
-                    <input type="radio" name="select_bike_or_car" value="bike" checked />
+                    <input type="radio" name="select_bike_or_car_detail" value="bike" checked />
                     <div class="button-bar__button">バイク検索</div>
                 </div>
                 <div class="button-bar__item">
-                    <input type="radio" name="select_bike_or_car" value="car" />
+                    <input type="radio" name="select_bike_or_car_detail" value="car" />
                     <div class="button-bar__button">車検索</div>
                 </div>
             </div>
@@ -349,7 +349,7 @@
               <ons-row>
                 <ons-col width="30px" ng-show="delete_switching">
                     <div class="checkbox checkbox_col">
-                        <input type="checkbox" checklist-model="del.items" checklist-value="item.id"><div class="checkbox__checkmark"></div>
+                        <input type="checkbox" checklist-model="del.items" checklist-value="item.word"><div class="checkbox__checkmark"></div>
                     </div>
                 </ons-col>
                 <ons-col>
@@ -358,6 +358,8 @@
                         {{item.sort}}<br>
                         {{item.connector}}<br>
                         {{item.bunrui}}<br>
+                        {{item.bunrui_name}}<br>
+                        {{item.search_type}}<br>
                 </ons-col>
               </ons-row>
             </ons-list-item>

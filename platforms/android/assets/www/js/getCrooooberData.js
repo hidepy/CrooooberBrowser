@@ -417,6 +417,9 @@ console.log("search_type is: " + search_type);
 			url = url.replace("bparts", "cparts");
 		}
 
+		//検索タイプをパラメータに隠しプロパティとしてセットしておく(さらに検索などで使用する)
+		parameters.__search_type = search_type;
+
 console.log("request url is: " + url);
 
 		//ajaxリクエストを発行
@@ -444,15 +447,23 @@ function getHeaderInfoMore(event, callback){
 
 	var url = header_search_url;
 
-    if(_debugging_type == "2"){
-    	url = header_search_url_direct;
-    }
-
 	//現在までのトライ回数を取得する
 	var try_num = event.getAttribute("try_num");
 
 	//その時点までの検索条件を取得する
 	var parameters = JSON.parse(event.getAttribute("search_condition"));
+
+	//スマホルートなら
+    if(_debugging_type == "2"){
+    	url = header_search_url_direct;
+
+    	var search_type = parameters.__search_type;
+
+    	//検索対象のurlを検索タイプによって切り替える
+		if(search_type != "bike"){
+			url = url.replace("bparts", "cparts");
+		}
+    }
 
 	if(parameters){
 		parameters.page = Number(try_num) + 1; //次に読み込むページ番号

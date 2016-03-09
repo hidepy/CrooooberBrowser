@@ -89,7 +89,15 @@
         $scope.is_searching = false;
         $scope.is_searching_more = false;
 
-        //outLog("in main controller");
+        outLog("in main controller");
+
+        //最終検索時の車/バイクチェックを反映
+        if(storageManager.getSearchType() == "car"){
+            $("input[name=select_bike_or_car]").val(["car"]);
+        }
+        else{
+            $("input[name=select_bike_or_car]").val(["bike"]);
+        }
 
         //詳細検索ページから来た場合
         if(myNavigator.getCurrentPage().options.is_from_detail_search){
@@ -229,6 +237,14 @@
     module.controller('SearchDetailConditionController', function($scope, CategoryMaster) {
 
         outLog("in SearchDetailConditionController");
+
+        //最終検索時の車/バイクチェックを反映
+        if(storageManager.getSearchType() == "car"){
+            $("input[name=select_bike_or_car_detail]").val(["car"]);
+        }
+        else{
+            $("input[name=select_bike_or_car_detail]").val(["bike"]);
+        }
 
         //カテゴリ情報をコピー
         //1要素は, key=licatxxxx, value:{value: licatxxxx, name: カテゴリ名称, header: あるときは}
@@ -400,14 +416,19 @@
         //$scope.items = storageManager.getAllSearchConditionItemsAsArr();
 
         $scope.items = (function(){
-            var saved_cond = storageManager.getSearchCondition();
 
-            for(var key in saved_cond){
-                var bunrui_cd = save_cond[key].bunrui; //保存した検索条件 の bundui
-                var master_type = save_cond[key].search_type; //bk or cr
+            var saved_cond = storageManager.getAllSearchConditionItemsAsArr();
+
+            if(saved_cond == null){
+                saved_cond = [];
+            }
+
+            for(var i = 0; i < saved_cond.length; i++){
+                var bunrui_cd = saved_cond[i].bunrui;
+                var master_type = saved_cond[i].search_type;
 
                 //マスタから名称をひいてくる
-                saved_cond[key].bunrui_name = (master_type == "bike") ? CategoryMaster.b_categories_hash[bunrui_cd] : CategoryMaster.c_categories_hash[bunrui_cd];
+                saved_cond[i].bunrui_name = (master_type == "bike") ? CategoryMaster.b_categories_hash[bunrui_cd] : CategoryMaster.c_categories_hash[bunrui_cd];
             }
 
             return saved_cond;
@@ -434,6 +455,7 @@
                 myNavigator.resetToPage("main.html", {animation: "slide", is_from_detail_search: true, detail_search_cond: detail_param});
             }
             else{
+
                 //削除　ボタン表示中なら
                 var target_idx = $scope.del.items.indexOf($scope.items[index].word);
 

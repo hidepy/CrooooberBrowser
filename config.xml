@@ -49,7 +49,9 @@
     <!--
     <gap:plugin name="org.apache.cordova.media" />
     <gap:plugin name="org.apache.cordova.network-information" />
+-->
     <gap:plugin name="org.apache.cordova.splashscreen" />
+    <!--
     <gap:plugin name="org.apache.cordova.vibration" />
     -->
     <!-- cordova5.1.1 needs this description and plugin install-->

@@ -24,8 +24,7 @@ function outLog(msg){
 		console.log(msg);
 	}
 	
-	//document.getElementById("contents_wrapper").innerHTML += msg + "<br>";
-	document.getElementById("_debug_msg").innerHTML += msg + "<br>";
+	//document.getElementById("_debug_msg").innerHTML += msg + "<br>";
 }
 
 function alert_ex(str){

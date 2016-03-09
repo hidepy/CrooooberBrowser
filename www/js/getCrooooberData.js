@@ -317,14 +317,15 @@ function getHeaderInfo(detail_param, search_key, callback){
 
     outLog("before using storageManager.setSearchType");
 
-    //保存した検索条件/純粋検索で分岐
-	if(detail_param && detail_param.is_from_stored_condition){
+    //保存した検索条件/純粋検索で分岐 ※※
+	//if(detail_param && detail_param.is_from_stored_condition){
+	if(detail_param){ //detail_paramが存在する->詳細検索か保存した条件からの場合
 		//保存済の検索区分をセット
 		search_type = detail_param.search_type;
 	}
 	else{
 		//画面の検索区分をセット
-		search_type = $('input[name=select_bike_or_car]:checked').val() || "bike"; //
+		search_type = $('input[name=select_bike_or_car]:checked').val() || "bike";
 		storageManager.setSearchType(search_type);
 	}
 
@@ -386,21 +387,40 @@ function getHeaderInfo(detail_param, search_key, callback){
 				if(detail_param.kakaku_high){
 					parameters.kakaku_high = detail_param.kakaku_high;
 				}
-				/*
 				if(detail_param.sort){
 					var sort = detail_param.sort;
-					parameters.sort_type = ((sort == "1") ? "&arrival_date=desc" : ((sort == "2") ? "&kakaku=asc" : "&kakaku=desc") ) : "&arrival_date=desc";
+					switch(sort){
+						case "1":
+							parameters.sort_type = "&arrival_date=desc";
+							break;
+						case "2":
+							parameters.sort_type = "&kakaku=asc";
+							break;
+						case "3":
+							parameters.sort_type = "&kakaku=desc";
+							break;
+						default:
+							parameters.sort_type = "&arrival_date=desc";	
+							break;
+					}
+					//parameters.sort_type = ((sort == "1") ? "&arrival_date=desc" : ((sort == "2") ? "&kakaku=asc" : "&kakaku=desc") ) : "&arrival_date=desc";
 				}
-				*/
 
 //"q=".$target_word."&per_page=".$length."&page=".$page."&c_bunrui_cd=".$bunrui."&connector=".$connector."&kakaku_low=".$price_low."&kakaku_high=".$price_upper.$sort;
 			}
 		}
 
+console.log("search_type is: " + search_type);
+
 		//検索対象のurlを検索タイプによって切り替える
 		if(search_type != "bike"){
 			url = url.replace("bparts", "cparts");
 		}
+
+		//検索タイプをパラメータに隠しプロパティとしてセットしておく(さらに検索などで使用する)
+		parameters.__search_type = search_type;
+
+console.log("request url is: " + url);
 
 		//ajaxリクエストを発行
 		sendRequest(url, parameters, 1, callback);
@@ -427,15 +447,23 @@ function getHeaderInfoMore(event, callback){
 
 	var url = header_search_url;
 
-    if(_debugging_type == "2"){
-    	url = header_search_url_direct;
-    }
-
 	//現在までのトライ回数を取得する
 	var try_num = event.getAttribute("try_num");
 
 	//その時点までの検索条件を取得する
 	var parameters = JSON.parse(event.getAttribute("search_condition"));
+
+	//スマホルートなら
+    if(_debugging_type == "2"){
+    	url = header_search_url_direct;
+
+    	var search_type = parameters.__search_type;
+
+    	//検索対象のurlを検索タイプによって切り替える
+		if(search_type != "bike"){
+			url = url.replace("bparts", "cparts");
+		}
+    }
 
 	if(parameters){
 		parameters.page = Number(try_num) + 1; //次に読み込むページ番号

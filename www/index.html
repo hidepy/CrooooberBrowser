@@ -42,10 +42,8 @@
         <ons-toolbar>
             <div class="left"><ons-back-button></ons-back-button>　croooober browser</div>
             <div class="right">
-                <!--
                 <ons-toolbar-button ng-click='myNavigator.pushPage("favorite.html")'><ons-icon icon="ion-android-star"></ons-icon></ons-toolbar-button>
                 <ons-toolbar-button ng-click='myNavigator.pushPage("page_setting_search_condition.html")'><ons-icon icon="ion-ios-search-strong"></ons-icon></ons-toolbar-button>
-            -->
             </div>
         </ons-toolbar>
     
@@ -53,11 +51,11 @@
 
             <div class="button-bar">
                 <div class="button-bar__item">
-                    <input type="radio" name="select_bike_or_car" value="bike" checked>
+                    <input type="radio" name="select_bike_or_car" value="bike" checked />
                     <div class="button-bar__button">バイク検索</div>
                 </div>
                 <div class="button-bar__item">
-                    <input type="radio" name="select_bike_or_car" value="car">
+                    <input type="radio" name="select_bike_or_car" value="car" />
                     <div class="button-bar__button">車検索</div>
                 </div>
             </div>  
@@ -67,9 +65,11 @@
             </div>
         </div>
 
+<!--
         <div id="_debug_msg">
             here is debug msg area<br>
         </div>
+-->
 
         <div id="search_result_num"></div>
 
@@ -105,11 +105,13 @@
 <ons-template id="detail_content.html">
     <ons-page ng-controller="ViewDetailController" id="detail_content_wrapper">
         <ons-toolbar style="background-color: #fff;">
-            <div class="left"><ons-back-button></ons-back-button>croooober browser</div>
+            <div class="left"><ons-back-button></ons-back-button></div>
+            <!--
             <div class="right">
                 <ons-toolbar-button ng-click='myNavigator.pushPage("favorite.html")'><ons-icon icon="ion-android-star"></ons-icon></ons-toolbar-button>
                 <ons-toolbar-button ng-click='myNavigator.pushPage("page_setting_search_condition.html")'><ons-icon icon="ion-ios-search-strong"></ons-icon></ons-toolbar-button>
             </div>
+            -->
         </ons-toolbar>
 
         <div id="d_pic">
@@ -119,8 +121,6 @@
                 </ons-carousel-item>
             </ons-carousel>
         </div>
-
-        <div id="d_debug"></div>
 
         <ons-carousel id="thumb_carousel" var="thumb_img_carousel" swipeable overscrollable auto-scroll item-width="95px">
             <ons-carousel-item ng-repeat="item in detail.pictures" ng-click="item_img_carousel.setActiveCarouselItemIndex($index);" >
@@ -164,8 +164,123 @@
     </ons-page>
 </ons-template>
 
+
+<!-- 詳細検索ページ -->
+<ons-template id="page_setting_search_condition.html">
+    <ons-page ng-controller="SearchDetailConditionController" id="page_setting_search_condition">
+
+        <ons-toolbar>
+            <div class="left"><ons-back-button></ons-back-button></div>
+            <div class="center">詳細検索</div>
+            <div class="right">
+                <ons-toolbar-button ng-click='myNavigator.pushPage("favorite.html")'><ons-icon icon="ion-android-star"></ons-icon></ons-toolbar-button>
+                <ons-toolbar-button><ons-icon icon="ion-ios-search-strong"></ons-icon></ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+
+        <ons-bottom-toolbar class="fixed_action_bar">
+            <ons-row class="action">
+                <ons-col class="action-col" width="70%">
+                    <ons-button id="detail_search_button" class="button--cta button" ng-click="processDetailSearchButtonClick()"><ons-icon icon="ion-ios-search-strong"></ons-icon> 条件指定検索</ons-button>
+                </ons-col>
+
+                <ons-col class="action-col" id="search_condition_save" ng-click="processSaveSearchCondition()">
+                  <div class="action-icon"><ons-icon icon="ion-bookmark"></ons-icon></div>
+                  <div class="action-label">条件を保存</div>
+                </ons-col>
+            </ons-row>
+        </ons-bottom-toolbar>
+
+        <ul class="list">
+          <li class="list__item list__item--chevron" ng-click="movetoSavedSearchCondition()"><ons-icon icon="ion-ios-bookmarks-outline"></ons-icon> 保存した条件から検索</li>
+        </ul>
+
+        <div class="content_wrap">
+            <div class="item_name">検索対象</div>
+            <div class="button-bar" ng-click="processBikeOrCarChange()">
+                <div class="button-bar__item">
+                    <input type="radio" name="select_bike_or_car" value="bike" checked />
+                    <div class="button-bar__button">バイク検索</div>
+                </div>
+                <div class="button-bar__item">
+                    <input type="radio" name="select_bike_or_car" value="car" />
+                    <div class="button-bar__button">車検索</div>
+                </div>
+            </div>
+            
+            <div class="item_name">検索キーワード</div>
+            <input type="search" id="setting_search_condition_keyword" class="search-input" placeholder="検索キーワード" />
+
+            <div class="item_name">検索方式(and検索, or検索)</div>
+            <div class="button-bar">
+                <div class="button-bar__item">
+                    <input type="radio" name="select_and_or" value="and" checked />
+                    <div class="button-bar__button">and</div>
+                </div>
+                <div class="button-bar__item">
+                    <input type="radio" name="select_and_or" value="or" />
+                    <div class="button-bar__button">or</div>
+                </div>
+            </div>
+
+            <div class="item_name">ソート</div>
+            <div class="button-bar">
+                <div class="button-bar__item">
+                    <input id="search_condition_sort_newer" type="radio" name="search_condition_sort" value="1" checked />
+                    <div class="button-bar__button">新着順</div>
+                </div>
+                <div class="button-bar__item">
+                    <input id="search_condition_sort_kakakuLower" type="radio" name="search_condition_sort" value="2" />
+                    <div class="button-bar__button">安い順</div>
+                </div>
+                <div class="button-bar__item">
+                    <input id="search_condition_sort_kakakuHigher" type="radio" name="search_condition_sort" value="3" />
+                    <div class="button-bar__button">高い順</div>
+                </div>
+            </div>
+
+            <div class="item_name">設定金額</div>
+            <ons-row id="kakaku_option">
+                <ons-col>
+                    <input type="tel" class="text-input" id="setting_search_condition_kakaku_low" placeholder="下限" />
+                </ons-col>
+                <ons-col width="30px">
+                    ～
+                </ons-col>
+                <ons-col>
+                    <input type="tel" class="text-input" id="setting_search_condition_kakaku_high" placeholder="上限" />
+                </ons-col>
+            </ons-row>
+
+            <div class="item_name">カテゴリ</div>
+        </div>
+
+        <ons-list id="search_condition_bunrui_list_wrapper" ng-hide="is_car_serach" ng-repeat="item in b_categories">
+
+            <ons-list-item modifier="tappable" id="{{item.value}}">
+              <label class="radio-button radio-button--list-item">
+                <input type="radio" name="bunrui" /><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
+                {{item.name}}
+              </label>
+            </ons-list-item>
+        </ons-list>
+
+        <ons-list id="search_condition_bunrui_list_wrapper_car" ng-show="is_car_serach" ng-repeat="item in c_categories">
+
+            <ons-list-item modifier="tappable" id="{{item.value}}">
+              <label class="radio-button radio-button--list-item">
+                <input type="radio" name="bunrui" />
+                <div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
+                {{item.name}}
+              </label>
+            </ons-list-item>
+        </ons-list>
+</ons-page>
+</ons-template>
+
+
+
 <!-- お気に入り一覧ページ -->
-<!--
 <ons-template id="favorite.html">
     <ons-page ng-controller="ViewFavoriteController">
         <ons-toolbar>
@@ -216,11 +331,9 @@
         </ons-bottom-toolbar>
     </ons-page>
 </ons-template>
--->
 
 
 <!-- 保存した検索条件一覧ページ -->
-<!--
 <ons-template id="saved_search_condition.html">
     <ons-page ng-controller="ViewSavedSearchConditionController">
         <ons-toolbar>
@@ -267,122 +380,7 @@
         </ons-bottom-toolbar>
     </ons-page>
 </ons-template>
--->
 
-
-<!-- 詳細検索ページ -->
-<!--
-<ons-template id="page_setting_search_condition.html">
-    <ons-page ng-controller="SearchDetailConditionController" id="page_setting_search_condition">
-
-        <ons-toolbar>
-            <div class="left"><ons-back-button></ons-back-button></div>
-            <div class="center">詳細検索</div>
-            <div class="right">
-                <ons-toolbar-button ng-click='myNavigator.pushPage("favorite.html")'><ons-icon icon="ion-android-star"></ons-icon></ons-toolbar-button>
-                <ons-toolbar-button><ons-icon icon="ion-ios-search-strong"></ons-icon></ons-toolbar-button>
-            </div>
-        </ons-toolbar>
-
-        <ons-bottom-toolbar class="fixed_action_bar">
-            <ons-row class="action">
-                <ons-col class="action-col" width="70%">
-                    <ons-button id="detail_search_button" class="button--cta button" ng-click="processDetailSearchButtonClick()"><ons-icon icon="ion-ios-search-strong"></ons-icon> 条件指定検索</ons-button>
-                </ons-col>
-
-                <ons-col class="action-col" id="search_condition_save" ng-click="processSaveSearchCondition()">
-                  <div class="action-icon"><ons-icon icon="ion-bookmark"></ons-icon></div>
-                  <div class="action-label">条件を保存</div>
-                </ons-col>
-            </ons-row>
-        </ons-bottom-toolbar>
-
-        <ul class="list">
-          <li class="list__item list__item--chevron" ng-click="movetoSavedSearchCondition()"><ons-icon icon="ion-ios-bookmarks-outline"></ons-icon> 保存した条件から検索</li>
-        </ul>
-
-        <div class="content_wrap">
-            <div class="item_name">検索対象</div>
-            <div class="button-bar" ng-click="bikeAndCarCheckChange()">
-                <div class="button-bar__item">
-                    <input type="radio" name="select_bike_or_car" value="bike" checked>
-                    <div class="button-bar__button">バイク検索</div>
-                </div>
-                <div class="button-bar__item">
-                    <input type="radio" name="select_bike_or_car" value="car">
-                    <div class="button-bar__button">車検索</div>
-                </div>
-            </div>
-            
-            <div class="item_name">検索キーワード</div>
-            <input type="search" id="setting_search_condition_keyword" class="search-input" placeholder="検索キーワード"/>
-
-            <div class="item_name">検索方式(and検索, or検索)</div>
-            <div class="button-bar">
-                <div class="button-bar__item">
-                    <input type="radio" name="select_and_or" value="and" checked>
-                    <div class="button-bar__button">and</div>
-                </div>
-                <div class="button-bar__item">
-                    <input type="radio" name="select_and_or" value="or">
-                    <div class="button-bar__button">or</div>
-                </div>
-            </div>
-
-            <div class="item_name">ソート</div>
-            <div class="button-bar">
-                <div class="button-bar__item">
-                    <input id="search_condition_sort_newer" type="radio" name="search_condition_sort" value="1" checked>
-                    <div class="button-bar__button">新着順</div>
-                </div>
-                <div class="button-bar__item">
-                    <input id="search_condition_sort_kakakuLower" type="radio" name="search_condition_sort" value="2">
-                    <div class="button-bar__button">安い順</div>
-                </div>
-                <div class="button-bar__item">
-                    <input id="search_condition_sort_kakakuHigher" type="radio" name="search_condition_sort" value="3">
-                    <div class="button-bar__button">高い順</div>
-                </div>
-            </div>
-
-            <div class="item_name">設定金額</div>
-            <ons-row id="kakaku_option">
-                <ons-col>
-                    <input type="tel" class="text-input" id="setting_search_condition_kakaku_low" placeholder="下限">
-                </ons-col>
-                <ons-col width="30px">
-                    ～
-                </ons-col>
-                <ons-col>
-                    <input type="tel" class="text-input" id="setting_search_condition_kakaku_high" placeholder="上限">
-                </ons-col>
-            </ons-row>
-
-            <div class="item_name">カテゴリ</div>
-        </div>
-
-        <ons-list id="search_condition_bunrui_list_wrapper" ng-hide="is_car_serach" ng-repeat="item in b_categories">
-
-            <ons-list-item modifier="tappable" id="{{item.value}}">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                {{item.name}}
-              </label>
-            </ons-list-item>
-        </ons-list>
-
-        <ons-list id="search_condition_bunrui_list_wrapper_car" ng-show="is_car_serach" ng-repeat="item in c_categories">
-
-            <ons-list-item modifier="tappable" id="{{item.value}}">
-              <label class="radio-button radio-button--list-item">
-                <input type="radio" name="bunrui"><div class="radio-button__checkmark radio-button--list-item__checkmark"></div>
-                {{item.name}}
-              </label>
-            </ons-list-item>
-        </ons-list>
-</ons-page>
-</ons-template>
--->
 
 </body>
 </html>

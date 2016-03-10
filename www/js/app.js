@@ -427,8 +427,38 @@
                 var bunrui_cd = saved_cond[i].bunrui;
                 var master_type = saved_cond[i].search_type;
 
-                //マスタから名称をひいてくる
+                //マスタからカテゴリ名称をひいてくる
                 saved_cond[i].bunrui_name = (master_type == "bike") ? CategoryMaster.b_categories_hash[bunrui_cd] : CategoryMaster.c_categories_hash[bunrui_cd];
+
+                saved_cond[i].search_type_name = (master_type == "bike") ? "バイク" : "車";
+
+                switch(saved_cond[i].sort){
+                    case "1":
+                        saved_cond[i].sort_name = "新着順";
+                        break;
+                    case "2":
+                        saved_cond[i].sort_name = "安い順";
+                        break;
+                    case "3":
+                        saved_cond[i].sort_name = "高い順";
+                        break;
+                    default:
+                        saved_cond[i].sort_name = "";
+                        break;
+                }
+
+                saved_cond[i].price_disp = (function(low, high){
+                    var low_str = isNaN(low) ? "" : "" + low;
+                    var high_str = isNaN(high) ? "" : "" + low;
+
+                    if((low_str == "") && (high_str == "")){
+                        return " ";
+                    }
+                    else{
+                        return "" + low_str + " ～ " + high_str;
+                    }
+
+                })(saved_cond[i].kakaku_low, saved_cond[i].kakaku_high);
             }
 
             return saved_cond;

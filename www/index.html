@@ -173,8 +173,10 @@
             <div class="left"><ons-back-button></ons-back-button></div>
             <div class="center">詳細検索</div>
             <div class="right">
+                <!--
                 <ons-toolbar-button ng-click='myNavigator.pushPage("favorite.html")'><ons-icon icon="ion-android-star"></ons-icon></ons-toolbar-button>
                 <ons-toolbar-button><ons-icon icon="ion-ios-search-strong"></ons-icon></ons-toolbar-button>
+                -->
             </div>
         </ons-toolbar>
 
@@ -345,6 +347,9 @@
         </ons-toolbar>
 
         <ons-list id="item_header_search_result" ng-repeat="item in items" ng-click="processItemSelect($index, $event)">
+
+        <!-- 2016/03/10 hide mod start -->
+        <!--
             <ons-list-item modifier="tappable" class="item list-item-container list__item--chevron">
               <ons-row>
                 <ons-col width="30px" ng-show="delete_switching">
@@ -364,6 +369,28 @@
               </ons-row>
             </ons-list-item>
         </ons-list>
+        -->
+
+        <ons-list-item modifier="tappable" class="item list-item-container">
+            <ons-row>
+                <ons-col width="30px" ng-show="delete_switching">
+                    <div class="checkbox checkbox_col">
+                        <input type="checkbox" checklist-model="del.items" checklist-value="item.id"><div class="checkbox__checkmark"></div>
+                    </div>
+                </ons-col>
+                <ons-col width="70%">
+                    <h2>{{item.word}}</h2>
+                </ons-col>
+                <ons-col>                    
+                    <p>{{item.search_type_name}}検索</p>
+                    <p>{{item.connector}}条件</p>
+                    <p>{{item.sort_name}}</p>
+                    <p>{{price_disp}}</p>
+                    <p>{{items.bunrui_name}}</p>
+                </ons-col>
+            </ons-row>
+        </ons-list-item>
+        <!-- 2016/03/10 hide mod end -->
 
         <ons-bottom-toolbar id="favorite_action" ng-show="delete_switching" class="fixed_action_bar">
             <ons-row class="action">

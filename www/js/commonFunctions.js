@@ -58,6 +58,9 @@ function dumpObject(obj, depth){
 
 /* 時間を文字列に変換 */
 function formatDate(date){
+	if(date == null){
+		date = new Date();
+	}
 	return ("" + date.getFullYear() + ("00" + (date.getMonth() + 1)).slice(-2) + ("00" + date.getDate()).slice(-2) + ("00" + date.getHours()).slice(-2) + ("00" + date.getMinutes()).slice(-2) + ("00" + date.getSeconds()).slice(-2) );
 }
 

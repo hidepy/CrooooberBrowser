@@ -258,7 +258,22 @@ console.log("star_box length: " + jQuery(".star_box", el_tbody).length);
 			console.log("failed to get rank...");
 			console.log(e.message);
 		}
-		var comment = (!is_mobile) ? el.querySelector(".riq01 .riq01_in > p > span").innerHTML : getJqInner(jQuery(".desc_cont > p", got_html_document));
+		/* 2016/06/06 hide mod start */
+		//var comment = (!is_mobile) ? el.querySelector(".riq01 .riq01_in > p > span").innerHTML : getJqInner(jQuery(".desc_cont > p", got_html_document));
+		var comment = "";
+		comment = (function(){
+
+			var l_comment;
+
+			l_comment = (!is_mobile) ? el.querySelector(".fix-reccomended").innerHTML : getJqInner(jQuery(".fix-reccomended", got_html_document));
+			if(l_comment){
+				console.log("comment element get ok.");
+				return l_comment;
+			}
+
+			return (!is_mobile) ? el.querySelector(".riq01 .riq01_in > p > span").innerHTML : getJqInner(jQuery(".desc_cont > p", got_html_document));
+		})();
+		/* 2016/06/06 hide mod end */
 
 		//必要箇所を抽出
 		var data = {

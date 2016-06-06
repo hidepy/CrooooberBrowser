@@ -92,8 +92,19 @@ StorageManager.prototype.setSearchCondition = function(param){
 
 	alert_ex("現在の検索条件を保存しました");
 }
-StorageManager.prototype.getAllSearchConditionItemsAsArr = function(){
-	return convHash2Arr(this.searchConditionHash);
+StorageManager.prototype.getAllSearchConditionItemsAsArr = function(sort_by_datetime){
+	var res_arr = convHash2Arr(this.searchConditionHash);
+
+	if(sort_by_datetime){ //日付でソートフラグがtrueなら
+		//ref_date_timeによりソート
+		res_arr.sort(function(a,b){
+		    if(a.ref_date_time < b.ref_date_time) return -1;
+		    if(a.ref_date_time > b.ref_date_time) return 1;
+		    return 0;
+		});
+	}
+
+	return res_arr;
 }
 //複数削除機能
 //	id_arrは配列の想定
@@ -218,8 +229,19 @@ StorageManager.prototype.getAllFavoriteItems = function(){
 	return this.favoriteItemHash;
 }
 
-StorageManager.prototype.getAllFavoriteItemsAsArr = function(){
-	return convHash2Arr(this.favoriteItemHash);
+StorageManager.prototype.getAllFavoriteItemsAsArr = function(sort_by_datetime){
+	var res_arr = convHash2Arr(this.favoriteItemHash);
+
+	if(sort_by_datetime){
+		//ref_date_timeによりソート
+		res_arr.sort(function(a,b){
+		    if(a.ref_date_time < b.ref_date_time) return -1;
+		    if(a.ref_date_time > b.ref_date_time) return 1;
+		    return 0;
+		});
+	}
+
+	return res_arr;
 }
 
 //ヘッダ一覧画面でお気に入りを押した場合

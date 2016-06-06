@@ -304,7 +304,8 @@
                 kakaku_low: $("#setting_search_condition_kakaku_low").val(),
                 kakaku_high: $("#setting_search_condition_kakaku_high").val(),
                 sort: sort_kbn || "1",
-                search_type: $('input[name=select_bike_or_car]:checked').val() || "bike"
+                search_type: $('input[name=select_bike_or_car]:checked').val() || "bike",
+                ref_date_time: formatDate()
             };
 
             return detail_param;
@@ -334,7 +335,7 @@
         outLog("in view favorite controller");
 
         //お気に入り情報のロード
-        $scope.items = storageManager.getAllFavoriteItemsAsArr();
+        $scope.items = storageManager.getAllFavoriteItemsAsArr(true);
 
         //削除するデータリスト
         $scope.del = {
@@ -417,7 +418,7 @@
 
         $scope.items = (function(){
 
-            var saved_cond = storageManager.getAllSearchConditionItemsAsArr();
+            var saved_cond = storageManager.getAllSearchConditionItemsAsArr(true);
 
             if(saved_cond == null){
                 saved_cond = [];

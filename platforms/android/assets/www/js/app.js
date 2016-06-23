@@ -171,7 +171,7 @@
 
 
     //詳細ページのコントローラ
-    module.controller('ViewDetailController', function($scope) {
+    module.controller('ViewDetailController', function($scope, $sce) {
 
         $scope.detail = {};
 
@@ -190,6 +190,7 @@
 
             $scope.$apply(function(){
                 $scope.detail = data;
+                $scope.detail.comment = $sce.trustAsHtml(data.comment);
             });
 
             item_img_carousel.refresh();
@@ -252,12 +253,19 @@
         $scope.c_categories = CategoryMaster.c_categories_hash;
 
         //バイク/車カテゴリ制御用フラグ
-        $scope.is_car_serach = false;
+        /* 2016/06/06 hide mod start */
+        //$scope.is_car_serach = false;
+        $scope.is_car_search = (storageManager.getSearchType() == "car");
+        console.log("detail search loading... is_car_search is: " + $scope.is_car_search);
+        /* 2016/06/06 hide mod end */
 
         $scope.processBikeOrCarChange = function(){
             outLog("in processBikeOrCarChange");
 
-            $scope.is_car_serach = ($('input[name=select_bike_or_car]:checked').val() == "car");
+            /* 2016/06/06 hide mod start */
+            ///$scope.is_car_serach = ($('input[name=select_bike_or_car]:checked').val() == "car");
+            $scope.is_car_search = ($('input[name=select_bike_or_car_detail]:checked').val() == "car");
+            /* 2016/06/06 hide mod end */
         };
 
         //現在の検索条件を保存
@@ -275,7 +283,11 @@
             
             var bunrui_cd = (function(){
                 
-                var is_car = ($('input[name=select_bike_or_car]:checked').val() == "car");
+                /* 2016/06/06 hide mod start */
+                //なんか取得対象が違っていそうだったので修正
+                //var is_car = ($('input[name=select_bike_or_car]:checked').val() == "car");
+                var is_car = ($('input[name=select_bike_or_car_detail]:checked').val() == "car");
+                /* 2016/06/06 hide mod end */
 
                 var query = is_car ? "_car" : "";
 
@@ -304,7 +316,11 @@
                 kakaku_low: $("#setting_search_condition_kakaku_low").val(),
                 kakaku_high: $("#setting_search_condition_kakaku_high").val(),
                 sort: sort_kbn || "1",
-                search_type: $('input[name=select_bike_or_car]:checked').val() || "bike",
+                /* 2016/06/06 hide mod start */
+                //取得対象がちがそうだった
+                //search_type: $('input[name=select_bike_or_car]:checked').val() || "bike",
+                search_type: $('input[name=select_bike_or_car_detail]:checked').val() || "bike",
+                /* 2016/06/06 hide mod end */
                 ref_date_time: formatDate()
             };
 
@@ -317,6 +333,13 @@
 
             //詳細検索条件を生成
             var detail_param = create_search_condition_params();
+
+            /* 2016/06/06 hide add start */
+            // 正規の文字列が入っていれば、ストレージに格納
+            if((detail_param.search_type == "bike") || (detail_param.search_type == "car")){
+                storageManager.setSearchType(detail_param.search_type);
+            }
+            /* 2016/06/06 hide add end */
 
             //先にページに戻る
             myNavigator.resetToPage("main.html", {animation: "slide", is_from_detail_search: true, detail_search_cond: detail_param});

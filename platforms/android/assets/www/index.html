@@ -142,7 +142,7 @@
             <li class="list__name">商品ランク</li>
             <li class="list__item">{{detail.rank}}</li>
             <li class="list__name">コメント</li>
-            <li class="list__item">{{detail.comment}}</li>
+            <li class="list__item" ng-bind-html="detail.comment"></li>
         </ul>
 
         <ons-button id="d_favorite_btn" class="button line_b_btn" onclick="addFavoriteItemFromDetail(this)"><ons-icon icon="ion-android-star"></ons-icon> お気に入りに追加</ons-button>
@@ -257,7 +257,7 @@
             <div class="item_name">カテゴリ</div>
         </div>
 
-        <ons-list id="search_condition_bunrui_list_wrapper" ng-hide="is_car_serach" ng-repeat="item in b_categories">
+        <ons-list id="search_condition_bunrui_list_wrapper" ng-hide="is_car_search" ng-repeat="item in b_categories">
 
             <ons-list-item modifier="tappable" id="{{item.value}}">
               <label class="radio-button radio-button--list-item">
@@ -267,7 +267,7 @@
             </ons-list-item>
         </ons-list>
 
-        <ons-list id="search_condition_bunrui_list_wrapper_car" ng-show="is_car_serach" ng-repeat="item in c_categories">
+        <ons-list id="search_condition_bunrui_list_wrapper_car" ng-show="is_car_search" ng-repeat="item in c_categories">
 
             <ons-list-item modifier="tappable" id="{{item.value}}">
               <label class="radio-button radio-button--list-item">

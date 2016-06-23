@@ -363,6 +363,9 @@ function getHeaderInfo(detail_param, search_key, callback){
 			}
 		}
 
+		//2016/06/07 localeをセット
+		parameters.locale = "ja";
+
 		if(detail_param){ //詳細検索時のパラメータ
 			if(_debugging_type != "2"){ //既存通りの場合
 				parameters.word = detail_param.word;

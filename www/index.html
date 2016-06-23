@@ -293,7 +293,7 @@
             </div>
         </ons-toolbar>
 
-        <ons-list id="item_header_search_result" ng-repeat="item in items" ng-click="processItemSelect($index, $event)">
+        <ons-list id="item_header_search_result" ng-repeat="item in items track by $index" ng-click="processItemSelect($index, $event)">
             <ons-list-item modifier="tappable" class="item list-item-container">
               <ons-row>
                 <ons-col width="30px" ng-show="delete_switching">
@@ -346,7 +346,7 @@
             </div>
         </ons-toolbar>
 
-        <ons-list id="item_header_search_result" ng-repeat="item in items" ng-click="processItemSelect($index, $event)">
+        <ons-list id="item_header_search_result" ng-repeat="item in items track by $index" ng-click="processItemSelect($index, $event)">
 
         <!-- 2016/03/10 hide mod start -->
         <!--

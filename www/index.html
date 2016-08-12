@@ -11,21 +11,21 @@
 <!--
     <meta http-equiv="Content-Security-Policy" content="default-src *; img-src *;">
 -->
-    <title>croooober browser</title>
+    <title>CrooooberBrowser</title>
 
     <link rel="stylesheet" href="lib/onsen/css/onsenui.css" />
     <link rel="stylesheet" href="lib/onsen/css/onsen-css-components-blue-basic-theme.css" />
     <link rel="stylesheet" href="css/list.css" />
 
+    <script src="lib/onsen/js/angular/angular.min.js"></script>
+    <script src="lib/onsen/js/angular/checklist-model.js"></script>
+    <script src="lib/onsen/js/onsenui.min.js"></script>
+
+    <script src="jquery/jquery-1.11.3.min.js"></script>
+
     <script src="js/commonFunctions.js"></script>
     <script src="js/storageManager.js"></script>
     <script src="js/getCrooooberData.js"></script>
-
-    <script src="lib/onsen/js/angular/angular.js"></script>
-    <script src="lib/onsen/js/angular/checklist-model.js"></script>
-    <script src="lib/onsen/js/onsenui.js"></script>
-
-    <script src="jquery/jquery-1.11.3.min.js"></script>
 
     <script src="cordova.js"></script>
     <script src="js/app.js"></script>
@@ -40,13 +40,16 @@
     <ons-page ng-controller="MainController" id="main">
 
         <ons-toolbar>
-            <div class="left"><ons-back-button></ons-back-button>　croooober browser</div>
+            <div class="left" style="padding-left: 8px;">CrooooberBrowser</div>
             <div class="right">
-                <ons-toolbar-button ng-click='myNavigator.pushPage("favorite.html")'><ons-icon icon="ion-android-star"></ons-icon></ons-toolbar-button>
-                <ons-toolbar-button ng-click='myNavigator.pushPage("page_setting_search_condition.html")'><ons-icon icon="ion-ios-search-strong"></ons-icon></ons-toolbar-button>
+              <ons-toolbar-button ng-click="move2Top()">
+                <ons-icon icon="ion-arrow-up-a" style="font-size: 32px"></ons-icon>
+              </ons-toolbar-button>
+              <ons-toolbar-button ng-click='myNavigator.pushPage("favorite.html")'><ons-icon icon="ion-android-star" style="font-size: 32px"></ons-icon></ons-toolbar-button>
+              <ons-toolbar-button ng-click='myNavigator.pushPage("page_setting_search_condition.html")'><ons-icon icon="ion-ios-search-strong" style="font-size: 32px"></ons-icon></ons-toolbar-button>
             </div>
         </ons-toolbar>
-    
+
         <div class="content_wrap">
 
             <div class="button-bar">
@@ -58,18 +61,12 @@
                     <input type="radio" name="select_bike_or_car" value="car" />
                     <div class="button-bar__button">車検索</div>
                 </div>
-            </div>  
+            </div>
 
             <div class="search_item_form">
-                <input type="search" id="search_key" class="search_key search-input" data-clear-btn placeholder="検索したい商品を入力"/><ons-button id="button_search" class="button search_button" ng-click="processSearchButtonClick()" should-spin={{is_searching}}>検索</ons-button>   
+                <input type="search" id="search_key" class="search_key search-input" data-clear-btn placeholder="検索したい商品を入力" ng-keydown="handleSearchKeydown($event)" /><ons-button id="button_search" class="button search_button" ng-click="processSearchButtonClick()" should-spin={{is_searching}}>検索</ons-button>
             </div>
         </div>
-
-<!--
-        <div id="_debug_msg">
-            here is debug msg area<br>
-        </div>
--->
 
         <div id="search_result_num"></div>
 
@@ -89,7 +86,7 @@
                     <div class="title_box"><span class="item_header_id">{{item.item_number}}</span>
                     <span class="h_title">{{item.title}} </span></div>
 
-                    <p class="h_price">{{item.price}}</p>   
+                    <p class="h_price">{{item.price}}</p>
                 </ons-col>
               </ons-row>
             </ons-list-item>
@@ -103,6 +100,7 @@
 </ons-template>
 
 <ons-template id="detail_content.html">
+  <ons-gesture-detector ng-swiperight="myNavigator.popPage()">
     <ons-page ng-controller="ViewDetailController" id="detail_content_wrapper">
         <ons-toolbar style="background-color: #fff;">
             <div class="left"><ons-back-button></ons-back-button></div>
@@ -139,10 +137,17 @@
             <li class="list__header">商品情報</li>
             <li class="list__name">メーカー</li>
             <li class="list__item">{{detail.maker_name}}</li>
+            <li class="list__name">店舗</li>
+            <li class="list__item">{{detail.shop}}</li>
             <li class="list__name">商品ランク</li>
             <li class="list__item">{{detail.rank}}</li>
             <li class="list__name">コメント</li>
-            <li class="list__item" ng-bind-html="detail.comment"></li>
+            <!--<li class="list__item" ng-bind-html="detail.comment"></li>-->
+            <!--
+            <li class="list__item">{{detail.comment}}</li>
+            -->
+
+            <li class="list__item"><p ng-bind-html="detail.comment"></p></li>
         </ul>
 
         <ons-button id="d_favorite_btn" class="button line_b_btn" onclick="addFavoriteItemFromDetail(this)"><ons-icon icon="ion-android-star"></ons-icon> お気に入りに追加</ons-button>
@@ -159,14 +164,16 @@
             <ons-col class="action-col" width="30%" id="d_delete_cache" ng-click="deleteCacheItem()">
               <div class="action-icon"><ons-icon icon="ion-trash-a"></ons-icon></div>
               <div class="action-label">キャッシュを削除</div>
-            </ons-col>            
+            </ons-col>
         </ons-row>
     </ons-page>
+  </ons-gesture-detector>
 </ons-template>
 
 
 <!-- 詳細検索ページ -->
 <ons-template id="page_setting_search_condition.html">
+  <ons-gesture-detector ng-swiperight="myNavigator.popPage()">
     <ons-page ng-controller="SearchDetailConditionController" id="page_setting_search_condition">
 
         <ons-toolbar>
@@ -194,7 +201,7 @@
         </ons-bottom-toolbar>
 
         <ul class="list">
-          <li class="list__item list__item--chevron" ng-click="movetoSavedSearchCondition()"><ons-icon icon="ion-ios-bookmarks-outline"></ons-icon> 保存した条件から検索</li>
+          <li class="list__item list__item--chevron" ng-click="movetoSavedSearchCondition()" style="font-size: 24px;"><ons-icon icon="ion-ios-bookmarks-outline" style="font-size: 24px;"></ons-icon> 保存した条件から検索</li>
         </ul>
 
         <div class="content_wrap">
@@ -209,7 +216,7 @@
                     <div class="button-bar__button">車検索</div>
                 </div>
             </div>
-            
+
             <div class="item_name">検索キーワード</div>
             <input type="search" id="setting_search_condition_keyword" class="search-input" placeholder="検索キーワード" />
 
@@ -277,13 +284,15 @@
               </label>
             </ons-list-item>
         </ons-list>
-</ons-page>
+    </ons-page>
+  </ons-gesture-detector>
 </ons-template>
 
 
 
 <!-- お気に入り一覧ページ -->
 <ons-template id="favorite.html">
+  <ons-gesture-detector ng-swiperight="myNavigator.popPage()">
     <ons-page ng-controller="ViewFavoriteController">
         <ons-toolbar>
             <div class="left"><ons-back-button></ons-back-button></div>
@@ -293,7 +302,10 @@
             </div>
         </ons-toolbar>
 
+<!--
         <ons-list id="item_header_search_result" ng-repeat="item in items track by $index" ng-click="processItemSelect($index, $event)">
+    -->
+        <ons-list ng-repeat="item in items track by $index" ng-click="processItemSelect($index, $event)">
             <ons-list-item modifier="tappable" class="item list-item-container">
               <ons-row>
                 <ons-col width="30px" ng-show="delete_switching">
@@ -309,34 +321,43 @@
                 <ons-col>
                     <div class="title_box" style="height: 5em;">
                         <span class="h_title">{{item.title}} </span>
-                    </div> 
+                    </div>
                     <p class="h_price">{{item.price}}</p>
                 </ons-col>
               </ons-row>
             </ons-list-item>
         </ons-list>
 
+        <!--
         <ons-bottom-toolbar id="favorite_action" ng-show="delete_switching" class="fixed_action_bar">
+    -->
+        <ons-bottom-toolbar ng-show="delete_switching" class="fixed_action_bar">
             <ons-row class="action">
-                <ons-col class="action-col" id="search_condition_save" ng-click="uncheckAll()">
+                <!--<ons-col class="action-col" id="search_condition_save" ng-click="uncheckAll()">-->
+                <ons-col class="action-col" ng-click="uncheckAll()">
                   <div class="action-icon"><ons-icon icon="ion-ios-circle-outline"></ons-icon></div>
                   <div class="action-label">全解除</div>
                 </ons-col>
                 <ons-col class="action-col" width="50%">
                     <ons-button class="button" ng-click="deleteRecord()" ng-class="{bg_red: del.items.length > 0 }"><ons-icon icon="ion-ios-trash-outline"></ons-icon> 削除<small>({{del.items.length}})</small></ons-button>
                 </ons-col>
+                <!--
                 <ons-col class="action-col" id="search_condition_clear" ng-click="checkAll()">
+            -->
+                <ons-col class="action-col" ng-click="checkAll()">
                   <div class="action-icon"><ons-icon icon="ion-ios-checkmark-outline"></ons-icon></div>
                   <div class="action-label">全選択</div>
                 </ons-col>
             </ons-row>
         </ons-bottom-toolbar>
     </ons-page>
+  </ons-gesture-detector>
 </ons-template>
 
 
 <!-- 保存した検索条件一覧ページ -->
 <ons-template id="saved_search_condition.html">
+  <ons-gesture-detector ng-swiperight="myNavigator.popPage()">
     <ons-page ng-controller="ViewSavedSearchConditionController">
         <ons-toolbar>
             <div class="left"><ons-back-button></ons-back-button></div>
@@ -346,70 +367,48 @@
             </div>
         </ons-toolbar>
 
-        <ons-list id="item_header_search_result" ng-repeat="item in items track by $index" ng-click="processItemSelect($index, $event)">
+        <ons-list ng-repeat="item in items track by $index" ng-click="processItemSelect($index, $event)">
 
-        <!-- 2016/03/10 hide mod start -->
-        <!--
-            <ons-list-item modifier="tappable" class="item list-item-container list__item--chevron">
-              <ons-row>
-                <ons-col width="30px" ng-show="delete_switching">
-                    <div class="checkbox checkbox_col">
-                        <input type="checkbox" checklist-model="del.items" checklist-value="item.word"><div class="checkbox__checkmark"></div>
-                    </div>
-                </ons-col>
-                <ons-col>
-                        <span class="h_title">{{item.word}} </span><br>
-                        {{item.kakaku_low}} ~ {{item.kakaku_high}}<br>
-                        {{item.sort}}<br>
-                        {{item.connector}}<br>
-                        {{item.bunrui}}<br>
-                        {{item.bunrui_name}}<br>
-                        {{item.search_type}}<br>
-                </ons-col>
-              </ons-row>
+            <ons-list-item modifier="tappable" class="item list-item-container">
+                <ons-row>
+                    <ons-col width="30px" ng-show="delete_switching">
+                        <div class="checkbox checkbox_col">
+                            <input type="checkbox" checklist-model="del.items" checklist-value="item.id"><div class="checkbox__checkmark"></div>
+                        </div>
+                    </ons-col>
+                    <ons-col width="70%">
+                        <h2>{{item.word}}</h2>
+                    </ons-col>
+                    <ons-col>
+                        <p>{{item.search_type_name}}検索</p>
+                        <p>{{item.connector}}条件</p>
+                        <p>{{item.sort_name}}</p>
+                        <p>{{price_disp}}</p>
+                        <p>{{items.bunrui_name}}</p>
+                    </ons-col>
+                </ons-row>
             </ons-list-item>
         </ons-list>
-        -->
 
-        <ons-list-item modifier="tappable" class="item list-item-container">
-            <ons-row>
-                <ons-col width="30px" ng-show="delete_switching">
-                    <div class="checkbox checkbox_col">
-                        <input type="checkbox" checklist-model="del.items" checklist-value="item.id"><div class="checkbox__checkmark"></div>
-                    </div>
-                </ons-col>
-                <ons-col width="70%">
-                    <h2>{{item.word}}</h2>
-                </ons-col>
-                <ons-col>                    
-                    <p>{{item.search_type_name}}検索</p>
-                    <p>{{item.connector}}条件</p>
-                    <p>{{item.sort_name}}</p>
-                    <p>{{price_disp}}</p>
-                    <p>{{items.bunrui_name}}</p>
-                </ons-col>
-            </ons-row>
-        </ons-list-item>
-        <!-- 2016/03/10 hide mod end -->
-
-        <ons-bottom-toolbar id="favorite_action" ng-show="delete_switching" class="fixed_action_bar">
+        <ons-bottom-toolbar ng-show="delete_switching" class="fixed_action_bar">
             <ons-row class="action">
-                <ons-col class="action-col" id="search_condition_save" ng-click="uncheckAll()">
+                <ons-col class="action-col" ng-click="uncheckAll()">
                   <div class="action-icon"><ons-icon icon="ion-ios-circle-outline"></ons-icon></div>
                   <div class="action-label">全解除</div>
                 </ons-col>
                 <ons-col class="action-col" width="50%">
                     <ons-button class="button" ng-click="deleteRecord()" ng-class="{bg_red: del.items.length > 0 }"><ons-icon icon="ion-ios-trash-outline"></ons-icon> 削除<small>({{del.items.length}})</small></ons-button>
                 </ons-col>
-                <ons-col class="action-col" id="search_condition_clear" ng-click="checkAll()">
+
+                <ons-col class="action-col" ng-click="checkAll()">
                   <div class="action-icon"><ons-icon icon="ion-ios-checkmark-outline"></ons-icon></div>
                   <div class="action-label">全選択</div>
                 </ons-col>
             </ons-row>
         </ons-bottom-toolbar>
     </ons-page>
+  </ons-gesture-detector>
 </ons-template>
-
 
 </body>
 </html>

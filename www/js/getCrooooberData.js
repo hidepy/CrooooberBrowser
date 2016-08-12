@@ -21,7 +21,7 @@ var _debugging_type = "2";
 /* onsenのロード完了！ */
 /*
 ons.ready(function() {
-    // onsen ready 
+    // onsen ready
     storageManager = new StorageManager();
 
     //pc実行か実機実行かで判定
@@ -55,7 +55,7 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 
 				return false;
 			}
-			
+
 			//parseに失敗した場合...
 			if(got_html_document.getElementsByTagName("parsererror").length > 0){
 				got_html_document = null;
@@ -64,7 +64,7 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 			//検索結果の件数取得
 			search_result_num = got_html_document.querySelector(".search_result_num");
 			search_result_max_num = "-";
-			
+
 			if(search_result_num){
 
 				//最大件数の取得
@@ -143,7 +143,7 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 		//検索結果の商品一覧にデータをはめ込む
 		var display_data;
 		{
-			if(type == 1){ 				
+			if(type == 1){
 				//直前まで保存していた商品リストを破棄
 				current_header_items = [];
 
@@ -209,7 +209,7 @@ function createResultItemDetail(data, type, parameters, optional_parameter){
 
 				return false;
 			}
-			
+
 			//parseに失敗した場合...
 			if(got_html_document.getElementsByTagName("parsererror").length > 0){
 				got_html_document = null;
@@ -244,8 +244,6 @@ function createResultItemDetail(data, type, parameters, optional_parameter){
 			return arr;
 		})(el);
 
-console.log("star_box length: " + jQuery(".star_box", el_tbody).length);
-
 		var title = (!is_mobile) ? el.querySelector("#title > .item_title").innerHTML : getJqInner(jQuery("#cont h2", got_html_document));
 		var price = (!is_mobile) ? el.querySelector(".price_box > .price_in > .price").innerHTML : getJqInner(jQuery(".price > h5", got_html_document));
 		var picture = pictures[0];
@@ -266,14 +264,36 @@ console.log("star_box length: " + jQuery(".star_box", el_tbody).length);
 			var l_comment;
 
 			l_comment = (!is_mobile) ? el.querySelector(".fix-reccomended").innerHTML : getJqInner(jQuery(".fix-reccomended", got_html_document));
+
 			if(l_comment){
 				console.log("comment element get ok.");
+				l_comment = l_comment.replace(/<\/?p>|<br\s*\/?>/g, "");
 				return l_comment;
 			}
 
 			return (!is_mobile) ? el.querySelector(".riq01 .riq01_in > p > span").innerHTML : getJqInner(jQuery(".desc_cont > p", got_html_document));
 		})();
 		/* 2016/06/06 hide mod end */
+
+		/* 2016/08/11 hide add start */
+		var shop = "";
+		if(is_mobile){
+			//jQuery(".detail_cont > .ta01 > tbody > tr", got_html_document)
+			if(el_tbody){
+				for(var i = 0; i < el_tbody.length; i++){
+					if(el_tbody[i]){
+						var el_th = el_tbody[i].querySelector("th");
+						if(el_th && el_th.innerHTML == "取扱ショップ"){
+							var el_td = el_tbody[i].querySelector("td");
+							shop = (el_td) ? el_td.innerHTML : "";
+							shop = shop.replace(/<a[^>]*>|<\/a>/g, "");
+							break;
+						}
+					}
+				}
+			}
+		}
+		/* 2016/08/11 hide add end */
 
 		//必要箇所を抽出
 		var data = {
@@ -288,7 +308,7 @@ console.log("star_box length: " + jQuery(".star_box", el_tbody).length);
 			rank: rank,
 			//comment: el.querySelector(".riq01 .riq01_in > p").innerHTML,
 			comment: comment,
-			//tbody: el.querySelector(".riq01 .ta01 > tbody").innerHTML,
+			shop: shop, // 2016/08/11 add
 			ref_date_time: formatDate(new Date())
 		};
 
@@ -418,7 +438,7 @@ function getHeaderInfo(detail_param, search_key, callback){
 							parameters.sort_type = "&kakaku=desc";
 							break;
 						default:
-							parameters.sort_type = "&arrival_date=desc";	
+							parameters.sort_type = "&arrival_date=desc";
 							break;
 					}
 					//parameters.sort_type = ((sort == "1") ? "&arrival_date=desc" : ((sort == "2") ? "&kakaku=asc" : "&kakaku=desc") ) : "&arrival_date=desc";
@@ -445,7 +465,7 @@ console.log("request url is: " + url);
 
 		//現在の検索条件を保存する
 		current_search_condition = parameters;
-		
+
 		if(detail_param){
 			current_search_condition["is_detail_search"] = true;
 		}
@@ -642,7 +662,7 @@ function sendRequest(url, parameters, type, callback){
 			//outLog(data);
 
 			console.log("ajax success!!");
-			
+
 			callback(data, type, parameters);
 			//createResult(data, type, parameters);
 
@@ -662,4 +682,3 @@ function sendRequest(url, parameters, type, callback){
 		}
 	});
 }
-

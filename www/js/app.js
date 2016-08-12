@@ -3,6 +3,10 @@
     //var module = angular.module('app', ['onsen','checklist-model']);
     //var storage_manager = new StorageManager("SOFTCREAM_COLLECTION_LIST");
 
+    ons.ready(function(){
+      admob.createBannerView({publisherId: "ca-app-pub-2131186805773040/3967075617"});
+    });
+
     var module = angular.module('CrooooberBrowserApp', ['onsen','checklist-model']);
 
     /* カテゴリマスタ */
@@ -120,10 +124,21 @@
                 $scope.is_searching = false;
 
                 $scope.$apply(function(){
-                    $scope.items = createResultItemsHeader(data, type, parameters); 
+                    $scope.items = createResultItemsHeader(data, type, parameters);
                 });
             });
         }
+
+        $scope.move2Top = function(){
+          $('.page__content').animate({scrollTop:0},'fast');
+        };
+
+        // Enter押下で検索駆動
+        $scope.handleSearchKeydown = function(event){
+          if (event.which == 13) {
+            $scope.processSearchButtonClick();
+          }
+        };
 
         //通常検索の処理
         $scope.processSearchButtonClick = function(){
@@ -155,10 +170,10 @@
             getHeaderInfoMore(null, function(data, type, parameters){
 
                 $scope.$apply(function(){
-                    
+
                     $scope.is_searching_more = false;
 
-                    $scope.items = createResultItemsHeader(data, type, parameters); 
+                    $scope.items = createResultItemsHeader(data, type, parameters);
                 });
             });
         };
@@ -206,13 +221,16 @@
 
         }, function(detail_item){
             $scope.$apply(function(){
+                console.log(detail_item.comment);
                 $scope.detail = detail_item;
+                $scope.detail.comment = $sce.trustAsHtml(detail_item.comment);
+
             });
         });
 
         //キャッシュを削除押下時
         $scope.deleteCacheItem = function(){
-            
+
             outLog("in deleteCacheItem");
 
             var el_detail_title = document.getElementById("d_title");
@@ -280,9 +298,9 @@
         function create_search_condition_params(){
 
             var sort_kbn = $("input[name=search_condition_sort]:checked").val();
-            
+
             var bunrui_cd = (function(){
-                
+
                 /* 2016/06/06 hide mod start */
                 //なんか取得対象が違っていそうだったので修正
                 //var is_car = ($('input[name=select_bike_or_car]:checked').val() == "car");
@@ -302,7 +320,7 @@
                 }
 
                 return "";
-            })();   
+            })();
 
             var connector = $('input[name=select_and_or]:checked').val();
             if((connector != "and") && (connector != "or")){ //andでもorでもないならデフォルト値をセット
@@ -396,7 +414,7 @@
                 }
                 else{
                     $scope.del.items.push($scope.items[index].id);
-                }                
+                }
             }
         };
 
@@ -422,10 +440,10 @@
 
             for(var i in $scope.items){
                 //outLog($scope.items[i].id);
-                $scope.del.items.push($scope.items[i].id);  
+                $scope.del.items.push($scope.items[i].id);
             }
         };
-        
+
         $scope.uncheckAll = function() {
             $scope.del.items = [];
         };
@@ -520,7 +538,7 @@
                 }
                 else{
                     $scope.del.items.push($scope.items[index].word);
-                }                
+                }
             }
         };
 
@@ -546,10 +564,10 @@
 
             for(var i in $scope.items){
                 //outLog($scope.items[i].id);
-                $scope.del.items.push($scope.items[i].id);  
+                $scope.del.items.push($scope.items[i].id);
             }
         };
-        
+
         $scope.uncheckAll = function() {
             $scope.del.items = [];
         };

@@ -111,7 +111,7 @@ function createResultItemsHeader(data, type, parameters){ //type: 検索回数
 
 				var title = el.querySelector("h3 > a") ? el.querySelector("h3 > a").innerHTML : el.querySelector("h4").innerHTML;
 				var detail_url = el.querySelector("h3 > a") ? el.querySelector("h3 > a").getAttribute("href") : el.querySelector("a").getAttribute("href");
-				var price = el.querySelector(".price span") ? el.querySelector(".price span").innerHTML : el.querySelector(".price_box > p").innerHTML;
+				var price = el.querySelector(".price span") ? el.querySelector(".price span").innerHTML : el.querySelector(".price_box p").innerHTML;
 				var is_newArrival = (el_feature && el_feature.querySelector(".i_li01,.cat01")) ? "h_newArrival_show" : "h_newArrival_hide";
 				var is_new = (el_feature && el_feature.querySelector(".i_li02,.cat02")) ? "h_new_show" : "h_new_hide";
 				var is_old = (el_feature && el_feature.querySelector(".i_li03,.cat03")) ? "h_old_show" : "h_old_hide";
